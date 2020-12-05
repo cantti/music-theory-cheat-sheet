@@ -1,0 +1,13 @@
+// customise bootstrap here
+
+// $body-bg: #000;
+
+@import "~bootstrap/scss/bootstrap";
+
+body {
+    background-color: theme-color("dark");
+}
+
+.navbar-nav {
+    font-size: $font-size-lg;
+}
