@@ -99,18 +99,18 @@ const minorKeys: Note[][] = [
 ];
 
 const CircleOfFifths = () => {
-    const overlay = (keys: Note[], scale: 'major' | 'minor') => {
+    const overlay = (tonics: Note[], scale: 'major' | 'minor') => {
         return (
-            <Popover id={keys[0].letter + keys[0].symbol}>
+            <Popover id={tonics[0].letter + tonics[0].symbol}>
                 <Popover.Content>
-                    {keys.map((key) => (
-                        <div key={key.letter + key.symbol}>
-                            <div className="font-weight-bold mt-2 text-center">
-                                {formatNote(key) +
+                    {tonics.map((tonic) => (
+                        <div key={tonic.letter + tonic.symbol}>
+                            <div className="font-weight-bold text-center">
+                                {formatNote(tonic) +
                                     (scale === 'minor' ? 'm' : '')}
                             </div>
                             {notesByIntervals(
-                                keys[0],
+                                tonic,
                                 scale === 'major'
                                     ? naturalMajor.intervals
                                     : naturalMinor.intervals

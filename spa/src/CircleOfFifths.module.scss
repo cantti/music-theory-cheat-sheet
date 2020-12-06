@@ -4,13 +4,21 @@ $fontSize: 2rem;
 
 .circle {
     border-radius: 50%;
+    border: 2px solid gray;
 }
 
 .majorCircle {
     width: 90%;
+
+    //to align to center
+    margin-left: 5%;
+
+    //to make height same as width
     height: 0;
     padding-bottom: 90%;
+
     position: relative;
+    margin-top: 2em;
 }
 
 $minorCircleWidth: 60%;
@@ -26,8 +34,6 @@ $minorCircleWidth: 60%;
     padding-bottom: $minorCircleWidth;
 }
 
-$radius: 50%;
-
 .key {
     position: absolute;
     background: linear-gradient(#6f9daf, #5e7d8a);
@@ -36,16 +42,22 @@ $radius: 50%;
     height: $fontSize * 1.6;
     text-align: center;
 
+    //to make key in the middle of circle board
+    margin-left: -1.5em;
+    margin-top: -1.5em;
+
     // align elements to center vertically and horizontally
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     cursor: pointer;
 }
 
 @for $i from 0 through 11 {
     .circle .key:nth-child(#{$i + 1}) {
+        $radius: 50%;
         left: $radius + math.sin($i * 30deg) * $radius;
         top: $radius - math.cos($i * 30deg) * $radius;
     }
