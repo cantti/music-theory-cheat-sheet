@@ -76,7 +76,7 @@ function totalSemitonesByInterval(interval: Interval): number {
     }
 }
 
-export function notesByInterval(
+export function notesByIntervals(
     root: Note,
     intervals: Array<Interval>
 ): Note[] {

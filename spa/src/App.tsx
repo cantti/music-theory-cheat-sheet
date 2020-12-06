@@ -21,6 +21,7 @@ import {
     Link,
     NavLink,
 } from 'react-router-dom';
+import CircleOfFifths from './CircleOfFifths';
 
 const App = () => {
     return (
@@ -57,7 +58,7 @@ const App = () => {
                         <DiscographyList />
                     </Route>
                     <Route path="/scales">scales</Route>
-                    <Route path="/circle">circle</Route>
+                    <Route path="/circle"><CircleOfFifths /></Route>
                 </Switch>
             </Container>
         </Router>

@@ -1,0 +1,52 @@
+@use 'sass:math';
+
+$fontSize: 2rem;
+
+.circle {
+    border-radius: 50%;
+}
+
+.majorCircle {
+    width: 90%;
+    height: 0;
+    padding-bottom: 90%;
+    position: relative;
+}
+
+$minorCircleWidth: 60%;
+
+.minorCircle {
+    position: absolute;
+    left: (100% - $minorCircleWidth) / 2;
+    top: (100% - $minorCircleWidth) / 2;
+    width: $minorCircleWidth;
+
+    //to make height same as width
+    height: 0;
+    padding-bottom: $minorCircleWidth;
+}
+
+$radius: 50%;
+
+.key {
+    position: absolute;
+    background: linear-gradient(#6f9daf, #5e7d8a);
+    border-radius: 50%;
+    width: $fontSize * 1.6;
+    height: $fontSize * 1.6;
+    text-align: center;
+
+    // align elements to center vertically and horizontally
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+@for $i from 0 through 11 {
+    .circle .key:nth-child(#{$i + 1}) {
+        left: $radius + math.sin($i * 30deg) * $radius;
+        top: $radius - math.cos($i * 30deg) * $radius;
+    }
+}

@@ -1,39 +1,77 @@
-import { Scale } from "./Scale";
+import { Scale } from './Scale';
 
 export const naturalMajor: Scale = {
-    name: "Natural Major",
+    name: 'Natural Major',
     intervals: [
         {
-            name: "Unison",
-            quality: "Perfect",
+            name: 'Unison',
+            quality: 'Perfect',
         },
         {
-            name: "Second",
-            quality: "Major",
+            name: 'Second',
+            quality: 'Major',
         },
         {
-            name: "Third",
-            quality: "Major",
+            name: 'Third',
+            quality: 'Major',
         },
         {
-            name: "Fourth",
-            quality: "Perfect",
+            name: 'Fourth',
+            quality: 'Perfect',
         },
         {
-            name: "Fifth",
-            quality: "Perfect",
+            name: 'Fifth',
+            quality: 'Perfect',
         },
         {
-            name: "Sixth",
-            quality: "Major",
+            name: 'Sixth',
+            quality: 'Major',
         },
         {
-            name: "Seventh",
-            quality: "Major",
+            name: 'Seventh',
+            quality: 'Major',
         },
         {
-            name: "Octave",
-            quality: "Perfect",
+            name: 'Octave',
+            quality: 'Perfect',
+        },
+    ],
+};
+
+export const naturalMinor: Scale = {
+    name: 'Natural Minor',
+    intervals: [
+        {
+            name: 'Unison',
+            quality: 'Perfect',
+        },
+        {
+            name: 'Second',
+            quality: 'Major',
+        },
+        {
+            name: 'Third',
+            quality: 'Minor',
+        },
+        {
+            name: 'Fourth',
+            quality: 'Perfect',
+        },
+        {
+            name: 'Fifth',
+            quality: 'Perfect',
+        },
+        {
+            name: 'Sixth',
+            quality: 'Minor',
+        },
+        {
+            name: 'Seventh',
+            quality: 'Minor',
+        },
+        {
+            name: 'Octave',
+            quality: 'Perfect',
         },
     ],
 };

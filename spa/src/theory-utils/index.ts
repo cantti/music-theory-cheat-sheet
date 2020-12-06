@@ -1,2 +1,2 @@
-export { notesByInterval } from "./notesByInterval";
-export { getNoteIndex } from "./getNoteIndex";
+export { notesByIntervals as notesByInterval } from './notesByIntervals';
+export { getNoteIndex } from './getNoteIndex';
