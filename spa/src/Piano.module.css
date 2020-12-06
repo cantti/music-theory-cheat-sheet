@@ -1,3 +1,5 @@
+/* TODO: rewrite with sass */
+
 .piano {
     display: flex;
     flex-direction: row;
@@ -15,7 +17,7 @@
 
 .whiteKey {
     flex: 1 1;
-    height: 200px;
+    height: 20vh;
     background: linear-gradient(#f1f1f1, #ffffff);
     display: flex;
     flex-direction: column;
@@ -27,8 +29,8 @@
 .blackKey {
     display: flex;
     flex-direction: column;
-    width: 50%;
-    margin-left: 75%;
+    width: 80%;
+    margin-left: 60%; /* 100% - width * 0.5 */
     z-index: 2;
     height: 50%;
     background: linear-gradient(#585858, #000000);
@@ -40,18 +42,20 @@
 .keyHighlighter {
     text-align: center;
     margin-top: auto;
-    margin-bottom: 10%;
-    font-size: 1.5rem;
-}
+    margin-bottom: 40%;
+    background: #000000;
 
-.keyHighlighter::before {
-    content: ' \25CF';
-}
+    width: 30%;
 
-.whiteKey .keyHighlighter {
-    color: black;
+    /* to make same height as width */
+    height: 0;
+    padding-bottom: 30%;
+
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .blackKey .keyHighlighter {
-    color: white;
+    background: #ffffff;
 }

@@ -2,66 +2,56 @@
 
 $fontSize: 2rem;
 
+$keySize: $fontSize * 1.5;
+
+.circleOfFifths {
+    //compensate key size
+    padding-top: $keySize * 0.5;
+    padding-bottom: $keySize * 0.5;
+}
+
 .circle {
     border-radius: 50%;
     border: 2px solid gray;
 }
 
 .majorCircle {
-    width: 90%;
+    $size: 90%;
+
+    width: $size;
 
     //to align to center
-    margin-left: 5%;
+    margin-left: (100% - $size) * 0.5;
 
     //to make height same as width
     height: 0;
-    padding-bottom: 90%;
+    padding-bottom: $size;
 
     position: relative;
-
-    //compensate key size
-    margin-top: 2em;
-    margin-bottom: 2em;
 }
 
-$minorCircleWidth: 60%;
-
 .minorCircle {
+    $size: 60%;
+
     position: absolute;
-    left: (100% - $minorCircleWidth) / 2;
-    top: (100% - $minorCircleWidth) / 2;
-    width: $minorCircleWidth;
+    left: (100% - $size) / 2;
+    top: (100% - $size) / 2;
+    width: $size;
 
     //to make height same as width
     height: 0;
-    padding-bottom: $minorCircleWidth;
+    padding-bottom: $size;
 }
 
 .key {
     position: absolute;
-    background: linear-gradient(#6f9daf, #5e7d8a);
-    border-radius: 50%;
-    width: $fontSize * 1.6;
-    height: $fontSize * 1.6;
-    text-align: center;
+    width: $keySize;
+    height: $keySize;
+    line-height: 1;
 
-    //to make key in the middle of circle board
-    margin-left: -1.5em;
-    margin-top: -1.5em;
-
-    // align elements to center vertically and horizontally
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    cursor: pointer;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    color: #fff;
-}
-
-.key.active {
-    background: linear-gradient(#6f9daf, #95c4d8);
+    //to make key in the middle of circle board (based on width and height property
+    margin-left: -$keySize * 0.5;
+    margin-top: -$keySize * 0.5;
 }
 
 @for $i from 0 through 11 {
@@ -70,19 +60,4 @@ $minorCircleWidth: 60%;
         left: $radius + math.sin($i * 30deg) * $radius;
         top: $radius - math.cos($i * 30deg) * $radius;
     }
-}
-
-.keyClickEnter {
-    transform: scale(1);
-}
-.keyClickEnterActive {
-    transform: scale(0.9);
-    transition: transform 40ms;
-}
-.keyClickExit {
-    transform: scale(0.9);
-}
-.keyClickExitActive {
-    transform: scale(1);
-    transition: transform 40ms;
 }

@@ -11,12 +11,9 @@ import {
 } from 'react-bootstrap';
 import styles from './CircleOfFifths.module.scss';
 import Piano from './Piano';
-import { Letter, letters } from './theory-utils/Letter';
 import { Note } from './theory-utils/Note';
 import { notesByIntervals } from './theory-utils/notesByIntervals';
-import { Scale } from './theory-utils/Scale';
 import { naturalMajor, naturalMinor } from './theory-utils/scales';
-import { CSSTransition } from 'react-transition-group';
 
 const parseNote = (parse: string) => {
     let note: Note = {
@@ -117,12 +114,11 @@ type Key = {
 
 const CircleOfFifths = () => {
     const [activeKey, setActiveKey] = React.useState<Key | null>(null);
-    const [clickedKey, setClickedKey] = React.useState<Note | null>(null);
 
-    const overlay = (tonics: Note[], mode: Mode) => {
+    const getKeyOverlay = (tonics: Note[], mode: Mode) => {
         return (
             <Popover
-                id={tonics[0].letter + tonics[0].symbol}
+                id={tonics[0].letter + tonics[0].symbol + mode}
                 className={tonics.length === 1 ? 'd-none' : ''}
             >
                 <Popover.Content>
@@ -132,12 +128,13 @@ const CircleOfFifths = () => {
                                 key={idx}
                                 type="radio"
                                 variant="outline-secondary"
-                                value={''}
+                                value=""
+                                size="sm"
                                 checked={
                                     activeKey !== null &&
                                     activeKey.tonic === tonic
                                 }
-                                onClick={() => handleKeyClick({ tonic, mode })}
+                                onClick={() => setActiveKey({ tonic, mode })}
                             >
                                 {formatNote(tonic) +
                                     (mode === 'minor' ? 'm' : '')}
@@ -149,76 +146,65 @@ const CircleOfFifths = () => {
         );
     };
 
-    const handleKeyClick = (key: Key) => {
-        setActiveKey(key);
-    };
-
     const formatKeys = (keys: Note[][], mode: Mode) => {
         return keys.map((ks, idx) => (
-            <CSSTransition
-                in={clickedKey === ks[0]}
-                timeout={40}
-                onEntered={() => setClickedKey(null)}
-                classNames={{
-                    enter: styles.keyClickEnter,
-                    enterActive: styles.keyClickEnterActive,
-                    exit: styles.keyClickExit,
-                    exitActive: styles.keyClickEnterActive,
-                }}
+            <OverlayTrigger
+                trigger="click"
+                placement="top"
+                rootClose={true}
+                overlay={getKeyOverlay(ks, mode)}
+                key={idx}
             >
-                <OverlayTrigger
-                    trigger="click"
-                    placement="top"
-                    rootClose={true}
-                    overlay={overlay(ks, mode)}
-                    key={ks[0].letter + ks[0].symbol}
-                >
-                    <div
-                        className={
-                            styles.key +
-                            ' ' +
-                            (activeKey != null &&
-                            (activeKey.tonic === ks[0] ||
-                                activeKey.tonic === ks[1]) &&
-                            activeKey.mode === mode
-                                ? styles.active
-                                : '')
+                <Button
+                    className={styles.key + ' rounded-circle'}
+                    size="sm"
+                    variant="info"
+                    onClick={() => {
+                        //otherwise user should select key in overlay
+                        if (ks.length === 1) {
+                            setActiveKey({ tonic: ks[0], mode });
                         }
-                        onClick={() => {
-                            if (ks.length === 1) {
-                                handleKeyClick({ tonic: ks[0], mode });
-                            }
-                            setClickedKey(ks[0]);
-                        }}
-                    >
-                        {ks.map((k) => (
-                            <div key={k.letter}>
-                                {formatNote(k) + (mode === 'minor' ? 'm' : '')}
-                            </div>
-                        ))}
-                    </div>
-                </OverlayTrigger>
-            </CSSTransition>
+                    }}
+                    active={
+                        activeKey != null &&
+                        (activeKey.tonic === ks[0] ||
+                            activeKey.tonic === ks[1]) &&
+                        activeKey.mode === mode
+                    }
+                >
+                    {ks.map((k, idx) => (
+                        <div key={idx}>
+                            {formatNote(k) + (mode === 'minor' ? 'm' : '')}
+                        </div>
+                    ))}
+                </Button>
+            </OverlayTrigger>
         ));
     };
 
     return (
         <>
+            <h1>Circle Of Fifths</h1>
             <Row>
                 <Col xs={12} md={6}>
-                    <h2>Click on key to get more info</h2>
-
-                    <div className={styles.circle + ' ' + styles.majorCircle}>
-                        {formatKeys(majorKeys, 'major')}
+                    <h3>Click on the key to get more info</h3>
+                    <div className={styles.circleOfFifths}>
                         <div
-                            className={styles.circle + ' ' + styles.minorCircle}
+                            className={styles.circle + ' ' + styles.majorCircle}
                         >
-                            {formatKeys(minorKeys, 'minor')}
+                            {formatKeys(majorKeys, 'major')}
+                            <div
+                                className={
+                                    styles.circle + ' ' + styles.minorCircle
+                                }
+                            >
+                                {formatKeys(minorKeys, 'minor')}
+                            </div>
                         </div>
                     </div>
                 </Col>
-                <Col xs={12} lg={6}>
-                    <h2>Notes on piano</h2>
+                <Col xs={12} md={6}>
+                    <h3>Notes on piano</h3>
                     <Piano
                         highlightedNotes={
                             activeKey != null
@@ -234,12 +220,12 @@ const CircleOfFifths = () => {
                     />
                     {activeKey != null && (
                         <div>
-                            <h2>Key</h2>
+                            <h3>Key</h3>
                             <div className="mb-4">
-                                {activeKey.tonic.letter}{' '}
+                                {formatNote(activeKey.tonic)}{' '}
                                 {activeKey.mode === 'major' ? 'Major' : 'Minor'}
                             </div>
-                            <h2>Notes</h2>
+                            <h3>Notes</h3>
                             <Table bordered>
                                 <thead>
                                     <tr className="bg-light text-center">
