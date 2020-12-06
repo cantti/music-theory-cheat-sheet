@@ -12,7 +12,7 @@ import {
     Carousel,
     Container,
 } from 'react-bootstrap';
-import { BsMusicNoteBeamed } from 'react-icons/bs';
+import { GiMusicalNotes } from 'react-icons/gi';
 import DiscographyList from './DiscographyList';
 import {
     BrowserRouter as Router,
@@ -26,30 +26,29 @@ import CircleOfFifths from './CircleOfFifths';
 const App = () => {
     return (
         <Router>
-            <Container className="text-light">
-                <div className="display-2 text-light text-center">
-                    Cantti's Dub Music
-                </div>
-                <Navbar
-                    bg="dark"
-                    variant="dark"
-                    className="justify-content-center mb-3"
-                >
-                    <Nav>
-                        <Nav.Link as={NavLink} to="/about">
-                            About
-                        </Nav.Link>
-                        <Nav.Link as={NavLink} to="/discography">
-                            Discography
-                        </Nav.Link>
-                        <Nav.Link as={NavLink} to="/scales">
-                            Scales
-                        </Nav.Link>
-                        <Nav.Link as={NavLink} to="/circle">
-                        circle
-                        </Nav.Link>
-                    </Nav>
-                </Navbar>
+            <Navbar bg="light" expand="lg">
+                <Container>
+                    <Navbar.Brand href="#home">
+                        <GiMusicalNotes className="mr-3" />
+                        Music Theory Helpers
+                    </Navbar.Brand>
+                    <Navbar.Toggle />
+                    <Navbar.Collapse id="basic-navbar-nav">
+                        <Nav>
+                            <Nav.Link as={NavLink} to="/circle">
+                                Circle Of Fifths
+                            </Nav.Link>
+                            <Nav.Link as={NavLink} to="/scales">
+                                Scales
+                            </Nav.Link>
+                            <Nav.Link as={NavLink} to="/discography">
+                                About me
+                            </Nav.Link>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
+            <Container>
                 <Switch>
                     <Route exact path="/">
                         Home
@@ -58,7 +57,9 @@ const App = () => {
                         <DiscographyList />
                     </Route>
                     <Route path="/scales">scales</Route>
-                    <Route path="/circle"><CircleOfFifths /></Route>
+                    <Route path="/circle">
+                        <CircleOfFifths />
+                    </Route>
                 </Switch>
             </Container>
         </Router>

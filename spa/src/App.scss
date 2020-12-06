@@ -2,12 +2,14 @@
 
 // $body-bg: #000;
 
-@import "~bootstrap/scss/bootstrap";
+@import '~bootstrap/scss/bootstrap';
 
-body {
-    background-color: theme-color("dark");
+.alert-enter {
+    opacity: 0.5;
+    transform: scale(0.9);
 }
-
-.navbar-nav {
-    font-size: $font-size-lg;
+.alert-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 300ms, transform 300ms;
 }

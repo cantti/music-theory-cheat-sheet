@@ -18,7 +18,10 @@ $fontSize: 2rem;
     padding-bottom: 90%;
 
     position: relative;
+
+    //compensate key size
     margin-top: 2em;
+    margin-bottom: 2em;
 }
 
 $minorCircleWidth: 60%;
@@ -53,6 +56,12 @@ $minorCircleWidth: 60%;
     justify-content: center;
 
     cursor: pointer;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    color: #fff;
+}
+
+.key.active {
+    background: linear-gradient(#6f9daf, #95c4d8);
 }
 
 @for $i from 0 through 11 {
@@ -61,4 +70,19 @@ $minorCircleWidth: 60%;
         left: $radius + math.sin($i * 30deg) * $radius;
         top: $radius - math.cos($i * 30deg) * $radius;
     }
+}
+
+.keyClickEnter {
+    transform: scale(1);
+}
+.keyClickEnterActive {
+    transform: scale(0.9);
+    transition: transform 40ms;
+}
+.keyClickExit {
+    transform: scale(0.9);
+}
+.keyClickExitActive {
+    transform: scale(1);
+    transition: transform 40ms;
 }
