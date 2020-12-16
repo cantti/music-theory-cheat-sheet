@@ -1,1 +1,6 @@
-export type IntervalQuality = 'Perfect' | 'Minor' | 'Major' | 'Diminished' | 'Augmented';
+export type IntervalQuality =
+    | "Perfect"
+    | "Minor"
+    | "Major"
+    | "Diminished"
+    | "Augmented";

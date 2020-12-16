@@ -1,10 +1,10 @@
-import { letters } from "./Letter";
-import { Note } from "./Note";
-import { symbols } from "./Symbol";
+import { letterIndices } from "./letterIndices";
+import { Note } from "./types/Note";
+import { symbolShifts } from "./symbolShifts";
 
 const getNoteIndex = (note: Note) =>
     note.octave * 12 +
-    letters.find((x) => x.letter === note.letter)!.index +
-    symbols.find((x) => x.symbol === note.symbol)!.shift;
+    letterIndices.find((x) => x.letter === note.letter)!.index +
+    symbolShifts.find((x) => x.symbol === note.symbol)!.shift;
 
 export { getNoteIndex };

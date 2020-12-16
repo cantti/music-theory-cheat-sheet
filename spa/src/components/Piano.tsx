@@ -1,20 +1,20 @@
-import React from 'react';
-import { getNoteIndex } from './theory-utils';
-import { Note } from './theory-utils/Note';
-import styles from './Piano.module.css';
+import React from "react";
+import { getNoteIndex } from "../theory-utils/getNoteIndex";
+import { Note } from "../theory-utils/types/Note";
+import styles from "./Piano.module.css";
 
-interface PianoProps {
+type PianoProps = {
     highlightedNotes?: Note[];
     startOctave?: number;
     endOctave?: number;
     className?: string;
-}
+};
 
 const Piano = ({
     highlightedNotes = [],
     startOctave = undefined,
     endOctave = undefined,
-    className = '',
+    className = "",
 }: PianoProps) => {
     let octaves: number[] = [];
 
@@ -41,90 +41,90 @@ const Piano = ({
             .includes(getNoteIndex(note));
 
     return (
-        <div className={styles.piano + ' ' + className}>
+        <div className={styles.piano + " " + className}>
             {octaves.map((octave) => (
                 <div className={styles.octave} key={octave}>
                     <div className={styles.whiteKey}>
                         <div className={styles.blackKey}>
                             {isHighlightNecessary({
-                                letter: 'C',
-                                symbol: 'Sharp',
+                                letter: "C",
+                                symbol: "Sharp",
                                 octave: octave,
                             }) && <div className={styles.keyHighlighter} />}
                         </div>
                         {isHighlightNecessary({
-                            letter: 'C',
-                            symbol: 'None',
+                            letter: "C",
+                            symbol: "None",
                             octave: octave,
                         }) && <div className={styles.keyHighlighter} />}
                     </div>
                     <div className={styles.whiteKey}>
                         <div className={styles.blackKey}>
                             {isHighlightNecessary({
-                                letter: 'D',
-                                symbol: 'Sharp',
+                                letter: "D",
+                                symbol: "Sharp",
                                 octave: octave,
                             }) && <div className={styles.keyHighlighter} />}
                         </div>
                         {isHighlightNecessary({
-                            letter: 'D',
-                            symbol: 'None',
+                            letter: "D",
+                            symbol: "None",
                             octave: octave,
                         }) && <div className={styles.keyHighlighter} />}
                     </div>
                     <div className={styles.whiteKey}>
                         {isHighlightNecessary({
-                            letter: 'E',
-                            symbol: 'None',
+                            letter: "E",
+                            symbol: "None",
                             octave: octave,
                         }) && <div className={styles.keyHighlighter} />}
                     </div>
                     <div className={styles.whiteKey}>
                         <div className={styles.blackKey}>
                             {isHighlightNecessary({
-                                letter: 'F',
-                                symbol: 'Sharp',
+                                letter: "F",
+                                symbol: "Sharp",
                                 octave: octave,
                             }) && <div className={styles.keyHighlighter} />}
                         </div>
                         {isHighlightNecessary({
-                            letter: 'F',
-                            symbol: 'None',
+                            letter: "F",
+                            symbol: "None",
                             octave: octave,
                         }) && <div className={styles.keyHighlighter} />}
                     </div>
                     <div className={styles.whiteKey}>
                         <div className={styles.blackKey}>
                             {isHighlightNecessary({
-                                letter: 'G',
-                                symbol: 'Sharp',
+                                letter: "G",
+                                symbol: "Sharp",
                                 octave: octave,
                             }) && <div className={styles.keyHighlighter} />}
                         </div>
                         {isHighlightNecessary({
-                            letter: 'G',
-                            symbol: 'None',
+                            letter: "G",
+                            symbol: "None",
                             octave: octave,
                         }) && <div className={styles.keyHighlighter} />}
                     </div>
                     <div className={styles.whiteKey}>
                         <div className={styles.blackKey}>
                             {isHighlightNecessary({
-                                letter: 'A',
-                                symbol: 'Sharp',
+                                letter: "A",
+                                symbol: "Sharp",
                                 octave: octave,
                             }) && <div className={styles.keyHighlighter} />}
                         </div>
                         {isHighlightNecessary({
-                            letter: 'A',
-                            symbol: 'None',
+                            letter: "A",
+                            symbol: "None",
                             octave: octave,
                         }) && <div className={styles.keyHighlighter} />}
                     </div>
                     <div className={styles.whiteKey}>
                         {isHighlightNecessary({
-                            letter: 'B',
-                            symbol: 'None',
+                            letter: "B",
+                            symbol: "None",
                             octave: octave,
                         }) && <div className={styles.keyHighlighter} />}
                     </div>

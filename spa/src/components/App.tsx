@@ -1,27 +1,15 @@
-import React from 'react';
-import './App.css';
-import { notesByInterval } from './theory-utils';
-import { naturalMajor } from './theory-utils/scales';
-import Piano from './Piano';
-import './App.scss';
-import {
-    Navbar,
-    Nav,
-    NavDropdown,
-    Card,
-    Carousel,
-    Container,
-} from 'react-bootstrap';
-import { GiMusicalNotes } from 'react-icons/gi';
-import DiscographyList from './DiscographyList';
+import React from "react";
+import { Container, Nav, Navbar } from "react-bootstrap";
+import { GiMusicalNotes } from "react-icons/gi";
 import {
     BrowserRouter as Router,
-    Switch,
-    Route,
-    Link,
     NavLink,
-} from 'react-router-dom';
-import CircleOfFifths from './CircleOfFifths';
+    Route,
+    Switch,
+} from "react-router-dom";
+import "./App.scss";
+import CircleOfFifths from "./CircleOfFifths";
+import DiscographyList from "./DiscographyList";
 
 const App = () => {
     return (

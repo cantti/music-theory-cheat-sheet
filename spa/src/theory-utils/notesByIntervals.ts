@@ -1,9 +1,10 @@
-import { debug } from "console";
-import { Interval } from "./Interval";
-import { IntervalNumber, diatonicNumbers } from "./IntervalNumber";
-import { Letter, letters } from "./Letter";
-import { Note } from "./Note";
-import { Symbol, symbols } from "./Symbol";
+import { Interval } from "./types/Interval";
+import { IntervalNumber } from "./types/IntervalNumber";
+import { Letter } from "./types/Letter";
+import { letterIndices } from "./letterIndices";
+import { Note } from "./types/Note";
+import { Symbol } from "./types/Symbol";
+import { symbolShifts } from "./symbolShifts";
 
 const majorScaleSemitones: {
     interval: Interval;
@@ -80,35 +81,46 @@ export function notesByIntervals(
     root: Note,
     intervals: Array<Interval>
 ): Note[] {
+    const sortedIntervals: IntervalNumber[] = [
+        "Unison",
+        "Second",
+        "Third",
+        "Fourth",
+        "Fifth",
+        "Sixth",
+        "Seventh",
+        "Octave",
+    ];
+
     let result: Note[] = [];
 
     intervals.forEach((interval) => {
         const newNoteLetter: Letter =
-            letters[
-                (letters.findIndex((x) => x.letter === root.letter) +
-                    diatonicNumbers.indexOf(interval.name)) %
-                    letters.length
+            letterIndices[
+                (letterIndices.findIndex((x) => x.letter === root.letter) +
+                    sortedIntervals.indexOf(interval.name)) %
+                    letterIndices.length
             ].letter;
 
         const newNoteOctave: number = Math.trunc(
             root.octave +
-                (letters.findIndex((x) => x.letter === root.letter) +
-                    diatonicNumbers.indexOf(interval.name)) /
-                    letters.length
+                (letterIndices.findIndex((x) => x.letter === root.letter) +
+                    sortedIntervals.indexOf(interval.name)) /
+                    letterIndices.length
         );
 
         const rootIndex =
             root.octave * 12 +
-            letters.find((x) => x.letter === root.letter)!.index +
-            symbols.find((x) => x.symbol === root.symbol)!.shift;
+            letterIndices.find((x) => x.letter === root.letter)!.index +
+            symbolShifts.find((x) => x.symbol === root.symbol)!.shift;
 
         const symbolShift: number =
             rootIndex +
             totalSemitonesByInterval(interval) -
             (newNoteOctave * 12 +
-                letters.find((x) => x.letter === newNoteLetter)!.index);
+                letterIndices.find((x) => x.letter === newNoteLetter)!.index);
 
-        const newNoteSymbol: Symbol = symbols.find(
+        const newNoteSymbol: Symbol = symbolShifts.find(
             (x) => x.shift === symbolShift
         )!.symbol;
 
