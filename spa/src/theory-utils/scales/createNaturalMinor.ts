@@ -1,6 +1,6 @@
 import { Scale } from "../types/Scale";
 
-export const naturalMinor: Scale = {
+export const createNaturalMinor = (): Scale => ({
     name: "Natural Minor",
     intervals: [
         {
@@ -36,4 +36,4 @@ export const naturalMinor: Scale = {
             quality: "Perfect",
         },
     ],
-};
+});
