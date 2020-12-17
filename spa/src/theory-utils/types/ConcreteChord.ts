@@ -1,5 +1,5 @@
-import { ChordName } from "../chords";
-import { Note } from "./Note";
+import { ChordName } from '../chords';
+import { Note } from './Note';
 
 export type ConcreteChord = {
     root: Note;

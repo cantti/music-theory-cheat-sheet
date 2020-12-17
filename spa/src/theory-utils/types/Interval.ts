@@ -1,5 +1,5 @@
-import { IntervalNumber } from "./IntervalNumber";
-import { IntervalQuality } from "../IntervalQuality";
+import { IntervalNumber } from './IntervalNumber';
+import { IntervalQuality } from '../IntervalQuality';
 
 export interface Interval {
     quality: IntervalQuality;

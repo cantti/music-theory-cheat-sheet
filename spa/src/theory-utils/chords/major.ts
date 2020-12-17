@@ -1,11 +1,11 @@
-import { Chord } from "../types/Chord";
+import { Chord } from '../types/Chord';
 
 export const createMajor = (): Chord => ({
-    name: "Major",
-    shortName: "",
+    name: 'Major',
+    shortName: '',
     intervals: [
-        { name: "Unison", quality: "Perfect" },
-        { name: "Third", quality: "Major" },
-        { name: "Fifth", quality: "Perfect" },
+        { name: 'Unison', quality: 'Perfect' },
+        { name: 'Third', quality: 'Major' },
+        { name: 'Fifth', quality: 'Perfect' },
     ],
 });

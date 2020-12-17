@@ -1,6 +1,6 @@
-import React from "react";
-import { Carousel, Row } from "react-bootstrap";
-import { discography } from "../data/discography";
+import React from 'react';
+import { Carousel, Row } from 'react-bootstrap';
+import { discography } from '../data/discography';
 
 const DiscographyList = () => {
     const [index, setIndex] = React.useState(0);

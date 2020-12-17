@@ -1,15 +1,15 @@
-import React from "react";
-import { Container, Nav, Navbar } from "react-bootstrap";
-import { GiMusicalNotes } from "react-icons/gi";
+import React from 'react';
+import { Container, Nav, Navbar } from 'react-bootstrap';
+import { GiMusicalNotes } from 'react-icons/gi';
 import {
     BrowserRouter as Router,
     NavLink,
     Route,
     Switch,
-} from "react-router-dom";
-import "./App.scss";
-import CircleOfFifths from "./CircleOfFifths";
-import DiscographyList from "./DiscographyList";
+} from 'react-router-dom';
+import './App.scss';
+import CircleOfFifths from './CircleOfFifths';
+import DiscographyList from './DiscographyList';
 
 const App = () => {
     return (

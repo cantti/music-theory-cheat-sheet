@@ -1,61 +1,61 @@
-import _ from "lodash";
-import React from "react";
-import { Button, Col, Row, Table } from "react-bootstrap";
-import { getChordsByScale } from "../theory-utils/chords";
-import { formatNote } from "../theory-utils/formatNote";
-import { notesByIntervals } from "../theory-utils/notesByIntervals";
-import { parseNote } from "../theory-utils/parseNote";
-import { ScaleName } from "../theory-utils/scales";
-import { getScale } from "../theory-utils/scales/";
-import { ConcreteScale } from "../theory-utils/types/ConcreteScale";
-import { Note } from "../theory-utils/types/Note";
-import styles from "./CircleOfFifths.module.scss";
-import Piano from "./Piano";
+import _ from 'lodash';
+import React from 'react';
+import { Button, Col, Row, Table } from 'react-bootstrap';
+import { getChordsByScale } from '../theory-utils/chords';
+import { formatNote } from '../theory-utils/formatNote';
+import { notesByIntervals } from '../theory-utils/notesByIntervals';
+import { parseNote } from '../theory-utils/parseNote';
+import { ScaleName } from '../theory-utils/scales';
+import { getScale } from '../theory-utils/scales/';
+import { ConcreteScale } from '../theory-utils/types/ConcreteScale';
+import { Note } from '../theory-utils/types/Note';
+import styles from './CircleOfFifths.module.scss';
+import Piano from './Piano';
 
 const majorKeys: Note[][] = [
-    [parseNote("C")],
-    [parseNote("G")],
-    [parseNote("D")],
-    [parseNote("A")],
-    [parseNote("E")],
-    [parseNote("B"), parseNote("Cb")],
-    [parseNote("F#"), parseNote("Gb")],
-    [parseNote("C#"), parseNote("Db")],
-    [parseNote("Ab")],
-    [parseNote("Eb")],
-    [parseNote("Bb")],
-    [parseNote("F")],
+    [parseNote('C')],
+    [parseNote('G')],
+    [parseNote('D')],
+    [parseNote('A')],
+    [parseNote('E')],
+    [parseNote('B'), parseNote('Cb')],
+    [parseNote('F#'), parseNote('Gb')],
+    [parseNote('C#'), parseNote('Db')],
+    [parseNote('Ab')],
+    [parseNote('Eb')],
+    [parseNote('Bb')],
+    [parseNote('F')],
 ];
 
 const minorKeys: Note[][] = [
-    [parseNote("A")],
-    [parseNote("E")],
-    [parseNote("B")],
-    [parseNote("F#")],
-    [parseNote("C#")],
-    [parseNote("G#"), parseNote("Ab")],
-    [parseNote("D#"), parseNote("Eb")],
-    [parseNote("A#"), parseNote("Bb")],
-    [parseNote("F")],
-    [parseNote("C")],
-    [parseNote("G")],
-    [parseNote("D")],
+    [parseNote('A')],
+    [parseNote('E')],
+    [parseNote('B')],
+    [parseNote('F#')],
+    [parseNote('C#')],
+    [parseNote('G#'), parseNote('Ab')],
+    [parseNote('D#'), parseNote('Eb')],
+    [parseNote('A#'), parseNote('Bb')],
+    [parseNote('F')],
+    [parseNote('C')],
+    [parseNote('G')],
+    [parseNote('D')],
 ];
 
-const minorRomanNumerals = ["i", "iidim", "III", "iv", "v", "VI", "VII"];
+const minorRomanNumerals = ['i', 'iidim', 'III', 'iv', 'v', 'VI', 'VII'];
 
-const majorRomanNumerals = ["I", "ii", "iii", "IV", "V", "vi", "vii"];
+const majorRomanNumerals = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii'];
 
 const CircleOfFifths = () => {
     const [activeKey, setActiveKey] = React.useState<ConcreteScale>({
-        tonic: parseNote("C"),
-        scaleName: "major",
+        tonic: parseNote('C'),
+        scaleName: 'major',
     });
 
     const formatKeys = (keys: Note[][], scaleName: ScaleName) => {
         return keys.map((ks, idx) => (
             <Button
-                className={styles.key + " rounded-circle"}
+                className={styles.key + ' rounded-circle'}
                 key={idx}
                 size="sm"
                 variant="info"
@@ -63,8 +63,8 @@ const CircleOfFifths = () => {
                     setActiveKey({
                         tonic:
                             ks.length === 1 ||
-                            _.isEqual(ks[0], parseNote("G#")) ||
-                            _.isEqual(ks[0], parseNote("B"))
+                            _.isEqual(ks[0], parseNote('G#')) ||
+                            _.isEqual(ks[0], parseNote('B'))
                                 ? ks[0]
                                 : ks[1],
                         scaleName,
@@ -79,7 +79,7 @@ const CircleOfFifths = () => {
                 {ks.map((k, idx) => (
                     <div key={idx}>
                         {formatNote(k) +
-                            (scaleName === "naturalMinor" ? "m" : "")}
+                            (scaleName === 'naturalMinor' ? 'm' : '')}
                     </div>
                 ))}
             </Button>
@@ -101,15 +101,15 @@ const CircleOfFifths = () => {
                     </div>
                     <div className={styles.circleOfFifths}>
                         <div
-                            className={styles.circle + " " + styles.majorCircle}
+                            className={styles.circle + ' ' + styles.majorCircle}
                         >
-                            {formatKeys(majorKeys, "major")}
+                            {formatKeys(majorKeys, 'major')}
                             <div
                                 className={
-                                    styles.circle + " " + styles.minorCircle
+                                    styles.circle + ' ' + styles.minorCircle
                                 }
                             >
-                                {formatKeys(minorKeys, "naturalMinor")}
+                                {formatKeys(minorKeys, 'naturalMinor')}
                             </div>
                         </div>
                     </div>
@@ -127,14 +127,14 @@ const CircleOfFifths = () => {
                         <h3>Key</h3>
                         <div className="mb-4">
                             {`${formatNote(activeKey.tonic)} ${
-                                activeKey.scaleName === "major"
-                                    ? "Major"
-                                    : "Minor"
+                                activeKey.scaleName === 'major'
+                                    ? 'Major'
+                                    : 'Minor'
                             }`}
                         </div>
 
                         <h3>Notes</h3>
-                        <Table bordered style={{ tableLayout: "fixed" }}>
+                        <Table bordered style={{ tableLayout: 'fixed' }}>
                             <thead>
                                 <tr className="bg-light text-center">
                                     {Array.from({ length: 8 }).map((_, idx) => (
@@ -152,10 +152,10 @@ const CircleOfFifths = () => {
                         </Table>
 
                         <h3>Chords</h3>
-                        <Table bordered style={{ tableLayout: "fixed" }}>
+                        <Table bordered style={{ tableLayout: 'fixed' }}>
                             <thead>
                                 <tr className="bg-light text-center">
-                                    {(activeKey.scaleName === "major"
+                                    {(activeKey.scaleName === 'major'
                                         ? majorRomanNumerals
                                         : minorRomanNumerals
                                     ).map((x, idx) => (

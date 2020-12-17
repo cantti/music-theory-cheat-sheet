@@ -1,5 +1,5 @@
-import { Letter } from "./Letter";
-import { Symbol } from "./Symbol";
+import { Letter } from './Letter';
+import { Symbol } from './Symbol';
 
 export interface Note {
     letter: Letter;

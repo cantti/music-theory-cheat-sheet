@@ -1,4 +1,4 @@
-import { Interval } from "./Interval";
+import { Interval } from './Interval';
 
 export interface Chord {
     name: string;

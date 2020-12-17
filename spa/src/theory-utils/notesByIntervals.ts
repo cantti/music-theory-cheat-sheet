@@ -1,62 +1,62 @@
-import { Interval } from "./types/Interval";
-import { IntervalNumber } from "./types/IntervalNumber";
-import { Letter } from "./types/Letter";
-import { letterIndices } from "./letterIndices";
-import { Note } from "./types/Note";
-import { Symbol } from "./types/Symbol";
-import { symbolShifts } from "./symbolShifts";
+import { Interval } from './types/Interval';
+import { IntervalNumber } from './types/IntervalNumber';
+import { Letter } from './types/Letter';
+import { letterIndices } from './letterIndices';
+import { Note } from './types/Note';
+import { Symbol } from './types/Symbol';
+import { symbolShifts } from './symbolShifts';
 
 const majorScaleSemitones: {
     interval: Interval;
     semitones: number;
 }[] = [
     {
-        interval: { name: "Unison", quality: "Perfect" },
+        interval: { name: 'Unison', quality: 'Perfect' },
         semitones: 0,
     },
     {
-        interval: { name: "Second", quality: "Major" },
+        interval: { name: 'Second', quality: 'Major' },
         semitones: 2,
     },
     {
-        interval: { name: "Third", quality: "Major" },
+        interval: { name: 'Third', quality: 'Major' },
         semitones: 4,
     },
     {
-        interval: { name: "Fourth", quality: "Perfect" },
+        interval: { name: 'Fourth', quality: 'Perfect' },
         semitones: 5,
     },
     {
-        interval: { name: "Fifth", quality: "Perfect" },
+        interval: { name: 'Fifth', quality: 'Perfect' },
         semitones: 7,
     },
     {
-        interval: { name: "Sixth", quality: "Major" },
+        interval: { name: 'Sixth', quality: 'Major' },
         semitones: 9,
     },
     {
-        interval: { name: "Seventh", quality: "Major" },
+        interval: { name: 'Seventh', quality: 'Major' },
         semitones: 11,
     },
     {
-        interval: { name: "Octave", quality: "Perfect" },
+        interval: { name: 'Octave', quality: 'Perfect' },
         semitones: 12,
     },
 ];
 
 function totalSemitonesByInterval(interval: Interval): number {
-    const errorMessage: string = "Invalid interval";
+    const errorMessage: string = 'Invalid interval';
     const majorScaleInterval = majorScaleSemitones.filter(
         (x) => x.interval.name === interval.name
     )[0];
-    if (interval.quality === "Major" || interval.quality === "Perfect") {
+    if (interval.quality === 'Major' || interval.quality === 'Perfect') {
         return majorScaleInterval.semitones;
     }
-    if (majorScaleInterval.interval.quality === "Perfect") {
+    if (majorScaleInterval.interval.quality === 'Perfect') {
         switch (interval.quality) {
-            case "Diminished":
+            case 'Diminished':
                 return majorScaleInterval.semitones - 1;
-            case "Augmented":
+            case 'Augmented':
                 return majorScaleInterval.semitones + 1;
             default:
                 throw new Error(errorMessage);
@@ -65,11 +65,11 @@ function totalSemitonesByInterval(interval: Interval): number {
     //Major
     else {
         switch (interval.quality) {
-            case "Minor":
+            case 'Minor':
                 return majorScaleInterval.semitones - 1;
-            case "Diminished":
+            case 'Diminished':
                 return majorScaleInterval.semitones - 2;
-            case "Augmented":
+            case 'Augmented':
                 return majorScaleInterval.semitones + 1;
             default:
                 throw new Error(errorMessage);
@@ -82,14 +82,14 @@ export function notesByIntervals(
     intervals: Array<Interval>
 ): Note[] {
     const sortedIntervals: IntervalNumber[] = [
-        "Unison",
-        "Second",
-        "Third",
-        "Fourth",
-        "Fifth",
-        "Sixth",
-        "Seventh",
-        "Octave",
+        'Unison',
+        'Second',
+        'Third',
+        'Fourth',
+        'Fifth',
+        'Sixth',
+        'Seventh',
+        'Octave',
     ];
 
     let result: Note[] = [];

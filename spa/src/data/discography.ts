@@ -1,7 +1,7 @@
-import SteppersStoryImg from "./album-covers/steppers-story.jpg";
-import DubSelection from "./album-covers/dub-selection.jpg";
-import YoungWarriors from "./album-covers/young-warriors.jpg";
-import SpaceTravel from "./album-covers/space-travel.jpg";
+import SteppersStoryImg from './album-covers/steppers-story.jpg';
+import DubSelection from './album-covers/dub-selection.jpg';
+import YoungWarriors from './album-covers/young-warriors.jpg';
+import SpaceTravel from './album-covers/space-travel.jpg';
 
 interface Album {
     title: string;
@@ -13,32 +13,32 @@ interface Album {
 
 const discography: Album[] = [
     {
-        title: "Steppers Story",
+        title: 'Steppers Story',
         description: ``,
-        date: new Date("2014-10-12"),
+        date: new Date('2014-10-12'),
         image: SteppersStoryImg,
-        link: "https://cantti.bandcamp.com/album/steppers-story",
+        link: 'https://cantti.bandcamp.com/album/steppers-story',
     },
     {
-        title: "Young Warriors",
+        title: 'Young Warriors',
         description: ``,
-        date: new Date("2016-03-04"),
+        date: new Date('2016-03-04'),
         image: YoungWarriors,
-        link: "https://cantti.bandcamp.com/album/young-warriors",
+        link: 'https://cantti.bandcamp.com/album/young-warriors',
     },
     {
-        title: "Space Travel",
+        title: 'Space Travel',
         description: ``,
-        date: new Date("2018-01-14"),
+        date: new Date('2018-01-14'),
         image: SpaceTravel,
-        link: "https://cantti.bandcamp.com/album/space-travel",
+        link: 'https://cantti.bandcamp.com/album/space-travel',
     },
     {
-        title: "Dub Selection 1",
+        title: 'Dub Selection 1',
         description: ``,
-        date: new Date("2019-12-17"),
+        date: new Date('2019-12-17'),
         image: DubSelection,
-        link: "https://cantti.bandcamp.com/album/dub-selection-1",
+        link: 'https://cantti.bandcamp.com/album/dub-selection-1',
     },
 ];
 

@@ -1,6 +1,6 @@
-import { letterIndices } from "./letterIndices";
-import { Note } from "./types/Note";
-import { symbolShifts } from "./symbolShifts";
+import { letterIndices } from './letterIndices';
+import { Note } from './types/Note';
+import { symbolShifts } from './symbolShifts';
 
 const getNoteIndex = (note: Note) =>
     note.octave * 12 +

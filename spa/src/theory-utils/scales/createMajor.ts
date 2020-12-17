@@ -1,39 +1,39 @@
-import { Scale } from "../types/Scale";
+import { Scale } from '../types/Scale';
 
 export const createMajor = (): Scale => ({
-    name: "Natural Major",
+    name: 'Natural Major',
     intervals: [
         {
-            name: "Unison",
-            quality: "Perfect",
+            name: 'Unison',
+            quality: 'Perfect',
         },
         {
-            name: "Second",
-            quality: "Major",
+            name: 'Second',
+            quality: 'Major',
         },
         {
-            name: "Third",
-            quality: "Major",
+            name: 'Third',
+            quality: 'Major',
         },
         {
-            name: "Fourth",
-            quality: "Perfect",
+            name: 'Fourth',
+            quality: 'Perfect',
         },
         {
-            name: "Fifth",
-            quality: "Perfect",
+            name: 'Fifth',
+            quality: 'Perfect',
         },
         {
-            name: "Sixth",
-            quality: "Major",
+            name: 'Sixth',
+            quality: 'Major',
         },
         {
-            name: "Seventh",
-            quality: "Major",
+            name: 'Seventh',
+            quality: 'Major',
         },
         {
-            name: "Octave",
-            quality: "Perfect",
+            name: 'Octave',
+            quality: 'Perfect',
         },
     ],
 });

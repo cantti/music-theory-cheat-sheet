@@ -1,3 +1,1 @@
-export type Symbol = "None" | "Sharp" | "DoubleSharp" | "Flat" | "DoubleFlat";
-
-
+export type Symbol = 'None' | 'Sharp' | 'DoubleSharp' | 'Flat' | 'DoubleFlat';

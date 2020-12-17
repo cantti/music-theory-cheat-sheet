@@ -1,5 +1,5 @@
-import { ScaleName } from "../scales";
-import { Note } from "./Note";
+import { ScaleName } from '../scales';
+import { Note } from './Note';
 
 export type ConcreteScale = {
     tonic: Note;
