@@ -2,58 +2,52 @@
 
 .piano {
     display: flex;
-    flex-direction: row;
+    height: 20vh;
 }
 
 .octave {
-    flex: 1 1;
     display: flex;
-    flex-direction: row;
+    flex-grow: 1;
 }
 
-/* .octave:not(:last-child) .whiteKey{
-    border
-} */
-
 .whiteKey {
-    flex: 1 1;
-    height: 20vh;
+    /* to position keyHighlighter at the bottom  */
+    position: relative;
+
+    flex-grow: 1;
     background: linear-gradient(#f1f1f1, #ffffff);
-    display: flex;
-    flex-direction: column;
     border-radius: 0 0 5px 5px;
     margin-right: 2px;
     border: 1px solid black;
 }
 
 .blackKey {
-    display: flex;
-    flex-direction: column;
+    /* to position keyHighlighter at the bottom  */
+    position: relative;
+
     width: 80%;
-    margin-left: 60%; /* 100% - width * 0.5 */
-    z-index: 2;
+    left: 60%;
     height: 50%;
+    z-index: 1;
     background: linear-gradient(#585858, #000000);
     border-radius: 0 0 5px 5px;
+
+    /* to compensate whiteKey border */
     margin-top: -1px;
-    border-top: 1px solid black;
 }
 
 .keyHighlighter {
-    text-align: center;
-    margin-top: auto;
-    margin-bottom: 40%;
-    background: #000000;
-
+    position: absolute;
     width: 30%;
+    left: 35%;
+    bottom: 5%;
+    background: #000000;
 
     /* to make same height as width */
     height: 0;
     padding-bottom: 30%;
 
     border-radius: 50%;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .blackKey .keyHighlighter {
