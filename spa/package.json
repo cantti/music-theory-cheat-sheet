@@ -29,6 +29,7 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
+        "build-and-copy": "react-scripts build && rm -rf ../api/ClientApp && mv build ../api/ClientApp",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },
