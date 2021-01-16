@@ -8,7 +8,7 @@ import {
     Switch,
 } from 'react-router-dom';
 import './App.scss';
-import CircleOfFifths from './CircleOfFifths';
+import KeysInfo from './KeysInfo';
 import DiscographyList from './DiscographyList';
 
 const App = () => {
@@ -18,16 +18,13 @@ const App = () => {
                 <Container>
                     <Navbar.Brand href="#home">
                         <GiMusicalNotes className="mr-3" />
-                        Music Theory Helpers
+                        Шпаргалка по теории музыки
                     </Navbar.Brand>
                     <Navbar.Toggle />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav>
-                            <Nav.Link as={NavLink} to="/circle">
-                                Circle Of Fifths
-                            </Nav.Link>
-                            <Nav.Link as={NavLink} to="/scales">
-                                Scales
+                            <Nav.Link as={NavLink} to="/keys">
+                                Тональности
                             </Nav.Link>
                             <Nav.Link as={NavLink} to="/discography">
                                 About me
@@ -44,9 +41,8 @@ const App = () => {
                     <Route path="/discography">
                         <DiscographyList />
                     </Route>
-                    <Route path="/scales">scales</Route>
-                    <Route path="/circle">
-                        <CircleOfFifths />
+                    <Route path="/keys">
+                        <KeysInfo />
                     </Route>
                 </Switch>
             </Container>
