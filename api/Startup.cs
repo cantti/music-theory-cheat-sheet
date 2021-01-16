@@ -62,15 +62,7 @@ namespace MusicTheoryCheatSheet.Api
                 endpoints.MapControllers();
             });
 
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
-                }
-            });
+            app.UseSpa(spa => { });
         }
     }
 }
