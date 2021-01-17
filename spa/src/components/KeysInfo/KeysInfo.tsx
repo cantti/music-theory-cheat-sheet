@@ -140,11 +140,11 @@ const minorRomanNumerals = ['i', 'iidim', 'III', 'iv', 'v', 'VI', 'VII'];
 
 const majorRomanNumerals = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii'];
 
-//allKeys ordered by letter like c, d, e, ... , b for select
-const allKeysForSelect = _.orderBy(
-    allKeys,
-    (x) => letterIndices.find((li) => li.letter === x.tonic.letter)!.index
-);
+//allKeys ordered by letter like c, d, e, ... , b and then by symbol (none, flat, sharp) for select
+const allKeysForSelect = _.orderBy(allKeys, [
+    (x) => letterIndices.find((li) => li.letter === x.tonic.letter)!.index,
+    (x) => (x.tonic.symbol === 'None' ? 0 : x.tonic.symbol === 'Flat' ? 1 : 2),
+]);
 
 export const KeysInfo = () => {
     const [activeKey, setActiveKey] = React.useState<ConcreteScale>(allKeys[0]);
