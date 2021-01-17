@@ -8,8 +8,8 @@ import {
     Switch,
 } from 'react-router-dom';
 import './App.scss';
-import KeysInfo from './KeysInfo';
-import DiscographyList from './DiscographyList';
+import { KeysInfo } from './KeysInfo';
+import { AboutMe } from './AboutMe';
 
 const App = () => {
     return (
@@ -27,7 +27,7 @@ const App = () => {
                                 Тональности
                             </Nav.Link>
                             <Nav.Link as={NavLink} to="/discography">
-                                About me
+                                Обо мне
                             </Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
@@ -39,7 +39,7 @@ const App = () => {
                         Home
                     </Route>
                     <Route path="/discography">
-                        <DiscographyList />
+                        <AboutMe />
                     </Route>
                     <Route path="/keys">
                         <KeysInfo />

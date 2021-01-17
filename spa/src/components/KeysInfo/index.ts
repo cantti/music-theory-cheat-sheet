@@ -1,1 +1,1 @@
-export { default } from './KeysInfo';
+export { KeysInfo } from './KeysInfo';

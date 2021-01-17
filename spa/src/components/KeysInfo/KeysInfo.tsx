@@ -129,7 +129,7 @@ const minorRomanNumerals = ['i', 'iidim', 'III', 'iv', 'v', 'VI', 'VII'];
 
 const majorRomanNumerals = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii'];
 
-const KeysInfo = () => {
+export const KeysInfo = () => {
     const [activeKey, setActiveKey] = React.useState<ConcreteScale>(allKeys[0]);
 
     const [activeKeyIndex, setActiveKeyIndex] = React.useState(
@@ -277,5 +277,3 @@ const KeysInfo = () => {
         </>
     );
 };
-
-export default KeysInfo;
