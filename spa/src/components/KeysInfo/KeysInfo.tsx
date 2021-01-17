@@ -140,7 +140,7 @@ const minorRomanNumerals = ['i', 'iidim', 'III', 'iv', 'v', 'VI', 'VII'];
 
 const majorRomanNumerals = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii'];
 
-//allKey ordered by letter like c, d, e, ... , b for select
+//allKeys ordered by letter like c, d, e, ... , b for select
 const allKeysForSelect = _.orderBy(
     allKeys,
     (x) => letterIndices.find((li) => li.letter === x.tonic.letter)!.index
