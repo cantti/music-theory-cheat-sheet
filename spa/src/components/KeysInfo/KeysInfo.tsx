@@ -11,6 +11,7 @@ import { ConcreteScale } from '../../theory-utils/types/ConcreteScale';
 import styles from './KeysInfo.module.scss';
 import Piano from '../Piano';
 import { aboutText } from './aboutText';
+import { letterIndices } from '../../theory-utils/letterIndices';
 
 const allKeys: ConcreteScale[] = [
     { tonic: parseNote('C'), scaleName: 'major' },
@@ -43,19 +44,27 @@ const majorKeys = allKeys.filter((x) => x.scaleName === 'major');
 
 const minorKeys = allKeys.filter((x) => x.scaleName === 'naturalMinor');
 
-const isKeysEqual = (key1: ConcreteScale, key2: ConcreteScale) => {
+const keysEqual = (key1: ConcreteScale, key2: ConcreteScale) => {
     return _.isEqual(key1, key2);
 };
 
-const formatKey = (key: ConcreteScale) => {
-    return (
-        formatNote(key.tonic) + (key.scaleName === 'naturalMinor' ? 'm' : '')
-    );
+const formatKey = (key: ConcreteScale, kind: 'short' | 'long' = 'short') => {
+    if (kind === 'short') {
+        return (
+            formatNote(key.tonic) +
+            (key.scaleName === 'naturalMinor' ? 'm' : '')
+        );
+    } else {
+        return (
+            formatNote(key.tonic) +
+            (key.scaleName === 'naturalMinor' ? ' minor' : ' major')
+        );
+    }
 };
 
 const getTopKeyForButton = (key: ConcreteScale): ConcreteScale | undefined => {
     if (
-        isKeysEqual(key, {
+        keysEqual(key, {
             tonic: parseNote('Gb'),
             scaleName: 'major',
         })
@@ -66,7 +75,7 @@ const getTopKeyForButton = (key: ConcreteScale): ConcreteScale | undefined => {
         };
     }
     if (
-        isKeysEqual(key, {
+        keysEqual(key, {
             tonic: parseNote('Db'),
             scaleName: 'major',
         })
@@ -77,7 +86,7 @@ const getTopKeyForButton = (key: ConcreteScale): ConcreteScale | undefined => {
         };
     }
     if (
-        isKeysEqual(key, {
+        keysEqual(key, {
             tonic: parseNote('Eb'),
             scaleName: 'naturalMinor',
         })
@@ -88,7 +97,7 @@ const getTopKeyForButton = (key: ConcreteScale): ConcreteScale | undefined => {
         };
     }
     if (
-        isKeysEqual(key, {
+        keysEqual(key, {
             tonic: parseNote('Bb'),
             scaleName: 'naturalMinor',
         })
@@ -100,9 +109,11 @@ const getTopKeyForButton = (key: ConcreteScale): ConcreteScale | undefined => {
     }
 };
 
-const getBottomKeyForButton = (key: ConcreteScale): ConcreteScale | undefined => {
+const getBottomKeyForButton = (
+    key: ConcreteScale
+): ConcreteScale | undefined => {
     if (
-        isKeysEqual(key, {
+        keysEqual(key, {
             tonic: parseNote('B'),
             scaleName: 'major',
         })
@@ -113,7 +124,7 @@ const getBottomKeyForButton = (key: ConcreteScale): ConcreteScale | undefined =>
         };
     }
     if (
-        isKeysEqual(key, {
+        keysEqual(key, {
             tonic: parseNote('G#'),
             scaleName: 'naturalMinor',
         })
@@ -129,11 +140,17 @@ const minorRomanNumerals = ['i', 'iidim', 'III', 'iv', 'v', 'VI', 'VII'];
 
 const majorRomanNumerals = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii'];
 
+//allKey ordered by letter like c, d, e, ... , b for select
+const allKeysForSelect = _.orderBy(
+    allKeys,
+    (x) => letterIndices.find((li) => li.letter === x.tonic.letter)!.index
+);
+
 export const KeysInfo = () => {
     const [activeKey, setActiveKey] = React.useState<ConcreteScale>(allKeys[0]);
 
     const [activeKeyIndex, setActiveKeyIndex] = React.useState(
-        allKeys.indexOf(activeKey).toString()
+        allKeysForSelect.indexOf(activeKey).toString()
     );
 
     const formatKeys = (keys: ConcreteScale[]) => {
@@ -145,11 +162,13 @@ export const KeysInfo = () => {
                 variant="info"
                 onClick={() => {
                     setActiveKey(key);
-                    setActiveKeyIndex(allKeys.indexOf(key).toString());
+                    setActiveKeyIndex(allKeysForSelect.indexOf(key).toString());
                 }}
                 active={key === activeKey}
             >
-                {!!getTopKeyForButton(key) && <div>{formatKey(getTopKeyForButton(key)!)}</div>}
+                {!!getTopKeyForButton(key) && (
+                    <div>{formatKey(getTopKeyForButton(key)!)}</div>
+                )}
                 <div>{formatKey(key)}</div>
                 {!!getBottomKeyForButton(key) && (
                     <div>{formatKey(getBottomKeyForButton(key)!)}</div>
@@ -184,12 +203,14 @@ export const KeysInfo = () => {
                             value={activeKeyIndex}
                             onChange={(e) => {
                                 setActiveKeyIndex(e.target.value);
-                                setActiveKey(allKeys[parseInt(e.target.value)]);
+                                setActiveKey(
+                                    allKeysForSelect[parseInt(e.target.value)]
+                                );
                             }}
                         >
-                            {allKeys.map((key, idx) => (
+                            {allKeysForSelect.map((key, idx) => (
                                 <option key={idx} value={idx}>
-                                    {formatKey(key)}
+                                    {formatKey(key, 'long')}
                                 </option>
                             ))}
                         </Form.Control>
