@@ -16,8 +16,8 @@ export const AboutMe = () => {
             </p>
             <Row>
                 {_.orderBy(discography, (x) => x.date, ['desc']).map(
-                    (album) => (
-                        <Col xs={12} md={6} lg={3}>
+                    (album, index) => (
+                        <Col xs={12} md={6} lg={3} key={index}>
                             <Card className="mb-3">
                                 <Card.Img variant="top" src={album.image} />
                                 <Card.Body>
