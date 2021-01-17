@@ -2,14 +2,15 @@ import _ from 'lodash';
 import React from 'react';
 import { Button, Col, Form, Row, Table } from 'react-bootstrap';
 import Markdown from 'react-markdown';
-import { getChordsByScale } from '../theory-utils/chords';
-import { formatNote } from '../theory-utils/formatNote';
-import { notesByIntervals } from '../theory-utils/notesByIntervals';
-import { parseNote } from '../theory-utils/parseNote';
-import { getScale } from '../theory-utils/scales';
-import { ConcreteScale } from '../theory-utils/types/ConcreteScale';
-import styles from './CircleOfFifths.module.scss';
-import Piano from './Piano';
+import { getChordsByScale } from '../../theory-utils/chords';
+import { formatNote } from '../../theory-utils/formatNote';
+import { notesByIntervals } from '../../theory-utils/notesByIntervals';
+import { parseNote } from '../../theory-utils/parseNote';
+import { getScale } from '../../theory-utils/scales';
+import { ConcreteScale } from '../../theory-utils/types/ConcreteScale';
+import styles from './KeysInfo.module.scss';
+import Piano from '../Piano';
+import { aboutText } from './aboutText';
 
 const allKeys: ConcreteScale[] = [
     { tonic: parseNote('C'), scaleName: 'major' },
@@ -42,7 +43,7 @@ const majorKeys = allKeys.filter((x) => x.scaleName === 'major');
 
 const minorKeys = allKeys.filter((x) => x.scaleName === 'naturalMinor');
 
-const keysEqual = (key1: ConcreteScale, key2: ConcreteScale) => {
+const isKeysEqual = (key1: ConcreteScale, key2: ConcreteScale) => {
     return _.isEqual(key1, key2);
 };
 
@@ -52,9 +53,9 @@ const formatKey = (key: ConcreteScale) => {
     );
 };
 
-const getTopKey = (key: ConcreteScale): ConcreteScale | undefined => {
+const getTopKeyForButton = (key: ConcreteScale): ConcreteScale | undefined => {
     if (
-        keysEqual(key, {
+        isKeysEqual(key, {
             tonic: parseNote('Gb'),
             scaleName: 'major',
         })
@@ -65,7 +66,7 @@ const getTopKey = (key: ConcreteScale): ConcreteScale | undefined => {
         };
     }
     if (
-        keysEqual(key, {
+        isKeysEqual(key, {
             tonic: parseNote('Db'),
             scaleName: 'major',
         })
@@ -76,7 +77,7 @@ const getTopKey = (key: ConcreteScale): ConcreteScale | undefined => {
         };
     }
     if (
-        keysEqual(key, {
+        isKeysEqual(key, {
             tonic: parseNote('Eb'),
             scaleName: 'naturalMinor',
         })
@@ -87,7 +88,7 @@ const getTopKey = (key: ConcreteScale): ConcreteScale | undefined => {
         };
     }
     if (
-        keysEqual(key, {
+        isKeysEqual(key, {
             tonic: parseNote('Bb'),
             scaleName: 'naturalMinor',
         })
@@ -99,9 +100,9 @@ const getTopKey = (key: ConcreteScale): ConcreteScale | undefined => {
     }
 };
 
-const getBottomKey = (key: ConcreteScale): ConcreteScale | undefined => {
+const getBottomKeyForButton = (key: ConcreteScale): ConcreteScale | undefined => {
     if (
-        keysEqual(key, {
+        isKeysEqual(key, {
             tonic: parseNote('B'),
             scaleName: 'major',
         })
@@ -112,7 +113,7 @@ const getBottomKey = (key: ConcreteScale): ConcreteScale | undefined => {
         };
     }
     if (
-        keysEqual(key, {
+        isKeysEqual(key, {
             tonic: parseNote('G#'),
             scaleName: 'naturalMinor',
         })
@@ -127,12 +128,6 @@ const getBottomKey = (key: ConcreteScale): ConcreteScale | undefined => {
 const minorRomanNumerals = ['i', 'iidim', 'III', 'iv', 'v', 'VI', 'VII'];
 
 const majorRomanNumerals = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii'];
-
-const articleMd = `На этой странице вы можете получить подробную информацию о любой тональности. Для удобства все тональности указаны на интерактивном кварто-квинтовом круге.
-
-**Кварто-квинтовый круг** — это способ изображения мажорных и минорных тональностей. На внешней стороны круга — **мажорные** тональности, на внутренней — **минорные**. Притом минорные тональности на круге являются **параллельными** мажорным. Следующая за тоникой по часовой стрелке нота на круге — **доминанта**. А **субдоминанта** — следующая нота на круге против часовой стрелки.
-
-Кварто-квинтовый круг помогает понять какие аккорды присутствуют тональности, а также какие аккорды можно заимствовать из других тональностей. Например, тональность До мажор (C Major) и Соль мажор (G Major) имеют 4 общих аккорда (C, G, D, Am, Em, Bm). Значит в тональности до мажор, можно попробовать использовать заимствованные из Соль мажор аккорды D и Bm. Существуют и другие способы заимствования аккордов с помощью кварто-квинтового круга.`;
 
 const KeysInfo = () => {
     const [activeKey, setActiveKey] = React.useState<ConcreteScale>(allKeys[0]);
@@ -154,10 +149,10 @@ const KeysInfo = () => {
                 }}
                 active={key === activeKey}
             >
-                {!!getTopKey(key) && <div>{formatKey(getTopKey(key)!)}</div>}
+                {!!getTopKeyForButton(key) && <div>{formatKey(getTopKeyForButton(key)!)}</div>}
                 <div>{formatKey(key)}</div>
-                {!!getBottomKey(key) && (
-                    <div>{formatKey(getBottomKey(key)!)}</div>
+                {!!getBottomKeyForButton(key) && (
+                    <div>{formatKey(getBottomKeyForButton(key)!)}</div>
                 )}
             </Button>
         ));
@@ -174,7 +169,7 @@ const KeysInfo = () => {
             <Row>
                 <Col xs={12} md={6}>
                     <h3>О чем это все</h3>
-                    <Markdown>{articleMd}</Markdown>
+                    <Markdown>{aboutText}</Markdown>
                 </Col>
                 <Col xs={12} md={6}>
                     <h3>Кварто-квинтовый круг</h3>
