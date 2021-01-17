@@ -4,6 +4,7 @@ import { GiMusicalNotes } from 'react-icons/gi';
 import {
     BrowserRouter as Router,
     NavLink,
+    Redirect,
     Route,
     Switch,
 } from 'react-router-dom';
@@ -16,7 +17,7 @@ const App = () => {
         <Router>
             <Navbar bg="light" expand="lg">
                 <Container>
-                    <Navbar.Brand href="#home">
+                    <Navbar.Brand href="/">
                         <GiMusicalNotes className="mr-3" />
                         Шпаргалка по теории музыки
                     </Navbar.Brand>
@@ -36,7 +37,7 @@ const App = () => {
             <Container>
                 <Switch>
                     <Route exact path="/">
-                        Home
+                        <Redirect to="/keys" />
                     </Route>
                     <Route path="/discography">
                         <AboutMe />
