@@ -149,10 +149,6 @@ const allKeysForSelect = _.orderBy(
 export const KeysInfo = () => {
     const [activeKey, setActiveKey] = React.useState<ConcreteScale>(allKeys[0]);
 
-    const [activeKeyIndex, setActiveKeyIndex] = React.useState(
-        allKeysForSelect.indexOf(activeKey).toString()
-    );
-
     const formatKeys = (keys: ConcreteScale[]) => {
         return keys.map((key, idx) => (
             <Button
@@ -160,10 +156,7 @@ export const KeysInfo = () => {
                 key={idx}
                 size="sm"
                 variant="info"
-                onClick={() => {
-                    setActiveKey(key);
-                    setActiveKeyIndex(allKeysForSelect.indexOf(key).toString());
-                }}
+                onClick={() => setActiveKey(key)}
                 active={key === activeKey}
             >
                 {!!getTopKeyForButton(key) && (
@@ -200,9 +193,10 @@ export const KeysInfo = () => {
                         <Form.Control
                             as="select"
                             custom
-                            value={activeKeyIndex}
+                            value={allKeysForSelect
+                                .indexOf(activeKey)
+                                .toString()}
                             onChange={(e) => {
-                                setActiveKeyIndex(e.target.value);
                                 setActiveKey(
                                     allKeysForSelect[parseInt(e.target.value)]
                                 );
