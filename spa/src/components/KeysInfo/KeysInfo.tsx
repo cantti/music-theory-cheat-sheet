@@ -225,7 +225,7 @@ export const KeysInfo = () => {
                     </div>
                 </Col>
                 <Col xs={12} md={6}>
-                    <h3>Notes on piano</h3>
+                    <h3>Ноты на клавиатуре</h3>
                     <Piano
                         highlightedNotes={notesInKey}
                         startOctave={activeKey == null ? 0 : undefined}
@@ -234,8 +234,8 @@ export const KeysInfo = () => {
                     />
                 </Col>
                 <Col xs={12} md={6}>
-                    <h3>Notes</h3>
-                    <Table bordered style={{ tableLayout: 'fixed' }}>
+                    <h3>Ноты</h3>
+                    <Table bordered responsive>
                         <thead>
                             <tr className="bg-light text-center">
                                 {Array.from({ length: 8 }).map((_, idx) => (
@@ -253,8 +253,8 @@ export const KeysInfo = () => {
                     </Table>
                 </Col>
                 <Col xs={12} md={6}>
-                    <h3>Chords</h3>
-                    <Table bordered style={{ tableLayout: 'fixed' }}>
+                    <h3>Аккорды</h3>
+                    <Table bordered responsive>
                         <thead>
                             <tr className="bg-light text-center">
                                 {(activeKey.scaleName === 'major'
