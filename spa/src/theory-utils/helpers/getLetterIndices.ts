@@ -1,6 +1,6 @@
-import { Letter } from './types/Letter';
+import { Letter } from '../note/Letter';
 
-export const letterIndices: { letter: Letter; index: number }[] = [
+export const getLetterIndices = (): { letter: Letter; index: number }[] => [
     { letter: 'C', index: 0 },
     { letter: 'D', index: 2 },
     { letter: 'E', index: 4 },

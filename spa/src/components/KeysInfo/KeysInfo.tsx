@@ -2,137 +2,68 @@ import _ from 'lodash';
 import React from 'react';
 import { Button, Col, Form, Row, Table } from 'react-bootstrap';
 import Markdown from 'react-markdown';
-import { getChordsByScale } from '../../theory-utils/chords';
-import { formatNote } from '../../theory-utils/formatNote';
-import { notesByIntervals } from '../../theory-utils/notesByIntervals';
-import { parseNote } from '../../theory-utils/parseNote';
-import { getScale } from '../../theory-utils/scales';
-import { ConcreteScale } from '../../theory-utils/types/ConcreteScale';
-import styles from './KeysInfo.module.scss';
+import { getChordsByScale } from '../../theory-utils/helpers/getChordsByScale';
+import { getLetterIndices } from '../../theory-utils/helpers/getLetterIndices';
+import { Note } from '../../theory-utils/note/Note';
+import { MajorScale } from '../../theory-utils/scales/MajorScale';
+import { NaturalMinorScale } from '../../theory-utils/scales/NaturalMinorScale';
+import { Scale } from '../../theory-utils/scales/Scale';
 import Piano from '../Piano';
 import { aboutText } from './aboutText';
-import { letterIndices } from '../../theory-utils/letterIndices';
+import styles from './KeysInfo.module.scss';
 
-const allKeys: ConcreteScale[] = [
-    { tonic: parseNote('C'), scaleName: 'major' },
-    { tonic: parseNote('G'), scaleName: 'major' },
-    { tonic: parseNote('D'), scaleName: 'major' },
-    { tonic: parseNote('A'), scaleName: 'major' },
-    { tonic: parseNote('E'), scaleName: 'major' },
-    { tonic: parseNote('B'), scaleName: 'major' },
-    { tonic: parseNote('Gb'), scaleName: 'major' },
-    { tonic: parseNote('Db'), scaleName: 'major' },
-    { tonic: parseNote('Ab'), scaleName: 'major' },
-    { tonic: parseNote('Eb'), scaleName: 'major' },
-    { tonic: parseNote('Bb'), scaleName: 'major' },
-    { tonic: parseNote('F'), scaleName: 'major' },
-    { tonic: parseNote('A'), scaleName: 'naturalMinor' },
-    { tonic: parseNote('E'), scaleName: 'naturalMinor' },
-    { tonic: parseNote('B'), scaleName: 'naturalMinor' },
-    { tonic: parseNote('F#'), scaleName: 'naturalMinor' },
-    { tonic: parseNote('C#'), scaleName: 'naturalMinor' },
-    { tonic: parseNote('G#'), scaleName: 'naturalMinor' },
-    { tonic: parseNote('Eb'), scaleName: 'naturalMinor' },
-    { tonic: parseNote('Bb'), scaleName: 'naturalMinor' },
-    { tonic: parseNote('F'), scaleName: 'naturalMinor' },
-    { tonic: parseNote('C'), scaleName: 'naturalMinor' },
-    { tonic: parseNote('G'), scaleName: 'naturalMinor' },
-    { tonic: parseNote('D'), scaleName: 'naturalMinor' },
+const allKeys: Scale[] = [
+    new MajorScale(Note.fromString('C')),
+    new MajorScale(Note.fromString('G')),
+    new MajorScale(Note.fromString('D')),
+    new MajorScale(Note.fromString('A')),
+    new MajorScale(Note.fromString('E')),
+    new MajorScale(Note.fromString('B')),
+    new MajorScale(Note.fromString('Gb')),
+    new MajorScale(Note.fromString('Db')),
+    new MajorScale(Note.fromString('Ab')),
+    new MajorScale(Note.fromString('Eb')),
+    new MajorScale(Note.fromString('Bb')),
+    new MajorScale(Note.fromString('F')),
+    new NaturalMinorScale(Note.fromString('A')),
+    new NaturalMinorScale(Note.fromString('E')),
+    new NaturalMinorScale(Note.fromString('B')),
+    new NaturalMinorScale(Note.fromString('F#')),
+    new NaturalMinorScale(Note.fromString('C#')),
+    new NaturalMinorScale(Note.fromString('G#')),
+    new NaturalMinorScale(Note.fromString('Eb')),
+    new NaturalMinorScale(Note.fromString('Bb')),
+    new NaturalMinorScale(Note.fromString('F')),
+    new NaturalMinorScale(Note.fromString('C')),
+    new NaturalMinorScale(Note.fromString('G')),
+    new NaturalMinorScale(Note.fromString('D')),
 ];
 
-const majorKeys = allKeys.filter((x) => x.scaleName === 'major');
+const majorKeys = allKeys.filter((x) => x instanceof MajorScale);
 
-const minorKeys = allKeys.filter((x) => x.scaleName === 'naturalMinor');
+const minorKeys = allKeys.filter((x) => x instanceof NaturalMinorScale);
 
-const keysEqual = (key1: ConcreteScale, key2: ConcreteScale) => {
-    return _.isEqual(key1, key2);
-};
-
-const formatKey = (key: ConcreteScale, kind: 'short' | 'long' = 'short') => {
-    if (kind === 'short') {
-        return (
-            formatNote(key.tonic) +
-            (key.scaleName === 'naturalMinor' ? 'm' : '')
-        );
-    } else {
-        return (
-            formatNote(key.tonic) +
-            (key.scaleName === 'naturalMinor' ? ' minor' : ' major')
-        );
+const getTopKeyForButton = (key: Scale): Scale | undefined => {
+    if (key.equals(new MajorScale(Note.fromString('Gb')))) {
+        return new MajorScale(Note.fromString('F#'));
+    }
+    if (key.equals(new MajorScale(Note.fromString('Db')))) {
+        return new MajorScale(Note.fromString('C#'));
+    }
+    if (key.equals(new NaturalMinorScale(Note.fromString('Eb')))) {
+        return new NaturalMinorScale(Note.fromString('D#'));
+    }
+    if (key.equals(new NaturalMinorScale(Note.fromString('Bb')))) {
+        return new NaturalMinorScale(Note.fromString('A#'));
     }
 };
 
-const getTopKeyForButton = (key: ConcreteScale): ConcreteScale | undefined => {
-    if (
-        keysEqual(key, {
-            tonic: parseNote('Gb'),
-            scaleName: 'major',
-        })
-    ) {
-        return {
-            tonic: parseNote('F#'),
-            scaleName: 'major',
-        };
+const getBottomKeyForButton = (key: Scale): Scale | undefined => {
+    if (key.equals(new MajorScale(Note.fromString('B')))) {
+        return new MajorScale(Note.fromString('Cb'));
     }
-    if (
-        keysEqual(key, {
-            tonic: parseNote('Db'),
-            scaleName: 'major',
-        })
-    ) {
-        return {
-            tonic: parseNote('C#'),
-            scaleName: 'major',
-        };
-    }
-    if (
-        keysEqual(key, {
-            tonic: parseNote('Eb'),
-            scaleName: 'naturalMinor',
-        })
-    ) {
-        return {
-            tonic: parseNote('D#'),
-            scaleName: 'naturalMinor',
-        };
-    }
-    if (
-        keysEqual(key, {
-            tonic: parseNote('Bb'),
-            scaleName: 'naturalMinor',
-        })
-    ) {
-        return {
-            tonic: parseNote('A#'),
-            scaleName: 'naturalMinor',
-        };
-    }
-};
-
-const getBottomKeyForButton = (
-    key: ConcreteScale
-): ConcreteScale | undefined => {
-    if (
-        keysEqual(key, {
-            tonic: parseNote('B'),
-            scaleName: 'major',
-        })
-    ) {
-        return {
-            tonic: parseNote('Cb'),
-            scaleName: 'major',
-        };
-    }
-    if (
-        keysEqual(key, {
-            tonic: parseNote('G#'),
-            scaleName: 'naturalMinor',
-        })
-    ) {
-        return {
-            tonic: parseNote('Ab'),
-            scaleName: 'naturalMinor',
-        };
+    if (key.equals(new NaturalMinorScale(Note.fromString('G#')))) {
+        return new NaturalMinorScale(Note.fromString('Ab'));
     }
 };
 
@@ -142,14 +73,14 @@ const majorRomanNumerals = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii'];
 
 //allKeys ordered by letter like c, d, e, ... , b and then by symbol (none, flat, sharp) for select
 const allKeysForSelect = _.orderBy(allKeys, [
-    (x) => letterIndices.find((li) => li.letter === x.tonic.letter)!.index,
+    (x) => getLetterIndices().find((li) => li.letter === x.tonic.letter)!.index,
     (x) => (x.tonic.symbol === 'None' ? 0 : x.tonic.symbol === 'Flat' ? 1 : 2),
 ]);
 
 export const KeysInfo = () => {
-    const [activeKey, setActiveKey] = React.useState<ConcreteScale>(allKeys[0]);
+    const [activeKey, setActiveKey] = React.useState<Scale>(allKeys[0]);
 
-    const formatKeys = (keys: ConcreteScale[]) => {
+    const formatKeys = (keys: Scale[]) => {
         return keys.map((key, idx) => (
             <Button
                 className={styles.key + ' rounded-circle'}
@@ -160,20 +91,17 @@ export const KeysInfo = () => {
                 active={key === activeKey}
             >
                 {!!getTopKeyForButton(key) && (
-                    <div>{formatKey(getTopKeyForButton(key)!)}</div>
+                    <div>{getTopKeyForButton(key)!.format()}</div>
                 )}
-                <div>{formatKey(key)}</div>
+                <div>{key.format()}</div>
                 {!!getBottomKeyForButton(key) && (
-                    <div>{formatKey(getBottomKeyForButton(key)!)}</div>
+                    <div>{getBottomKeyForButton(key)!.format()}</div>
                 )}
             </Button>
         ));
     };
 
-    const notesInKey = notesByIntervals(
-        activeKey.tonic,
-        getScale(activeKey.scaleName).intervals
-    );
+    const notesInKey = activeKey.getNotes();
 
     return (
         <>
@@ -204,7 +132,7 @@ export const KeysInfo = () => {
                         >
                             {allKeysForSelect.map((key, idx) => (
                                 <option key={idx} value={idx}>
-                                    {formatKey(key, 'long')}
+                                    {key.format('long')}
                                 </option>
                             ))}
                         </Form.Control>
@@ -246,7 +174,7 @@ export const KeysInfo = () => {
                         <tbody>
                             <tr className="text-center">
                                 {notesInKey.map((note, idx) => (
-                                    <td key={idx}>{formatNote(note)}</td>
+                                    <td key={idx}>{note.format()}</td>
                                 ))}
                             </tr>
                         </tbody>
@@ -257,7 +185,7 @@ export const KeysInfo = () => {
                     <Table bordered responsive>
                         <thead>
                             <tr className="bg-light text-center">
-                                {(activeKey.scaleName === 'major'
+                                {(activeKey instanceof MajorScale
                                     ? majorRomanNumerals
                                     : minorRomanNumerals
                                 ).map((x, idx) => (
@@ -267,7 +195,7 @@ export const KeysInfo = () => {
                         </thead>
                         <tbody>
                             <tr className="text-center">
-                                {getChordsByScale(activeKey.scaleName).map(
+                                {getChordsByScale(activeKey)!.map(
                                     (chords, colIdx) => (
                                         <td key={colIdx}>
                                             {chords.map((chord, rowIdx) => (
@@ -275,9 +203,9 @@ export const KeysInfo = () => {
                                                     className="mb-2"
                                                     key={rowIdx}
                                                 >
-                                                    {formatNote(
-                                                        notesInKey[colIdx]
-                                                    )}
+                                                    {notesInKey[
+                                                        colIdx
+                                                    ].format()}
                                                     {chord.shortName}
                                                 </div>
                                             ))}

@@ -1,45 +1,45 @@
-import { Interval } from './types/Interval';
-import { IntervalNumber } from './types/IntervalNumber';
-import { Letter } from './types/Letter';
-import { letterIndices } from './letterIndices';
-import { Note } from './types/Note';
-import { Symbol } from './types/Symbol';
-import { symbolShifts } from './symbolShifts';
+import { Interval } from '../interval/Interval';
+import { IntervalNumber } from "../interval/IntervalNumber";
+import { Letter } from '../note/Letter';
+import { Note } from '../note/Note';
+import { Symbol } from '../note/Symbol';
+import { getSymbolShifts } from './getSymbolShifts';
+import { getLetterIndices } from './getLetterIndices';
 
 const majorScaleSemitones: {
     interval: Interval;
     semitones: number;
 }[] = [
     {
-        interval: { name: 'Unison', quality: 'Perfect' },
+        interval: new Interval('Unison', 'Perfect'),
         semitones: 0,
     },
     {
-        interval: { name: 'Second', quality: 'Major' },
+        interval: new Interval('Second', 'Major'),
         semitones: 2,
     },
     {
-        interval: { name: 'Third', quality: 'Major' },
+        interval: new Interval('Third', 'Major'),
         semitones: 4,
     },
     {
-        interval: { name: 'Fourth', quality: 'Perfect' },
+        interval: new Interval('Fourth', 'Perfect'),
         semitones: 5,
     },
     {
-        interval: { name: 'Fifth', quality: 'Perfect' },
+        interval: new Interval('Fifth', 'Perfect'),
         semitones: 7,
     },
     {
-        interval: { name: 'Sixth', quality: 'Major' },
+        interval: new Interval('Sixth', 'Major'),
         semitones: 9,
     },
     {
-        interval: { name: 'Seventh', quality: 'Major' },
+        interval: new Interval('Seventh', 'Major'),
         semitones: 11,
     },
     {
-        interval: { name: 'Octave', quality: 'Perfect' },
+        interval: new Interval('Octave', 'Perfect'),
         semitones: 12,
     },
 ];
@@ -77,7 +77,7 @@ function totalSemitonesByInterval(interval: Interval): number {
     }
 }
 
-export function notesByIntervals(
+export function getNotesByIntervals(
     root: Note,
     intervals: Array<Interval>
 ): Note[] {
@@ -96,41 +96,35 @@ export function notesByIntervals(
 
     intervals.forEach((interval) => {
         const newNoteLetter: Letter =
-            letterIndices[
-                (letterIndices.findIndex((x) => x.letter === root.letter) +
+            getLetterIndices()[
+                (getLetterIndices().findIndex((x) => x.letter === root.letter) +
                     sortedIntervals.indexOf(interval.name)) %
-                    letterIndices.length
+                    getLetterIndices().length
             ].letter;
 
         const newNoteOctave: number = Math.trunc(
             root.octave +
-                (letterIndices.findIndex((x) => x.letter === root.letter) +
+                (getLetterIndices().findIndex((x) => x.letter === root.letter) +
                     sortedIntervals.indexOf(interval.name)) /
-                    letterIndices.length
+                    getLetterIndices().length
         );
 
         const rootIndex =
             root.octave * 12 +
-            letterIndices.find((x) => x.letter === root.letter)!.index +
-            symbolShifts.find((x) => x.symbol === root.symbol)!.shift;
+            getLetterIndices().find((x) => x.letter === root.letter)!.index +
+            getSymbolShifts().find((x) => x.symbol === root.symbol)!.shift;
 
         const symbolShift: number =
             rootIndex +
             totalSemitonesByInterval(interval) -
             (newNoteOctave * 12 +
-                letterIndices.find((x) => x.letter === newNoteLetter)!.index);
+                getLetterIndices().find((x) => x.letter === newNoteLetter)!.index);
 
-        const newNoteSymbol: Symbol = symbolShifts.find(
+        const newNoteSymbol: Symbol = getSymbolShifts().find(
             (x) => x.shift === symbolShift
         )!.symbol;
 
-        let newNote: Note = {
-            letter: newNoteLetter,
-            octave: newNoteOctave,
-            symbol: newNoteSymbol,
-        };
-
-        result.push(newNote);
+        result.push(new Note(newNoteLetter, newNoteSymbol, newNoteOctave));
     });
 
     return result;
