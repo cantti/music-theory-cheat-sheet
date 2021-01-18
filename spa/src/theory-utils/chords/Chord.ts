@@ -5,9 +5,21 @@ import { getNotesByIntervals } from '../helpers/getNotesByIntervals';
 export abstract class Chord {
     constructor(public tonic: Note = new Note()) {}
 
-    abstract name: string;
-    abstract shortName: string;
-    abstract intervals: Interval[];
+    protected _name: string = '';
+    protected _shortName: string = '';
+    protected _intervals: Interval[] = [];
+
+    get name() {
+        return this._name;
+    }
+
+    get shortName(): string {
+        return this._shortName;
+    }
+
+    get intervals(): Interval[] {
+        return this._intervals;
+    }
 
     format(kind: 'short' | 'long' = 'short') {
         if (kind === 'short') {

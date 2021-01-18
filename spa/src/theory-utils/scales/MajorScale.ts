@@ -3,9 +3,9 @@ import { Interval } from '../interval/Interval';
 import { Scale } from './Scale';
 
 class MajorScale extends Scale {
-    name: string = 'Major';
-    shortName: string = '';
-    intervals: Interval[] = [
+    _name = 'Major';
+    _shortName = '';
+    _intervals = [
         new Interval('Unison', 'Perfect'),
         new Interval('Second', 'Major'),
         new Interval('Third', 'Major'),
