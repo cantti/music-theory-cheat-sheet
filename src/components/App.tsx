@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { GiMusicalNotes } from 'react-icons/gi';
 import {
-    BrowserRouter as Router,
+    HashRouter as Router,
     NavLink,
     Redirect,
     Route,
