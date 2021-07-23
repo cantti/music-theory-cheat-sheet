@@ -1,26 +1,26 @@
 {
   "files": {
-    "main.css": "/music-theory-cheat-sheet/static/css/main.a80cba9c.chunk.css",
-    "main.js": "/music-theory-cheat-sheet/static/js/main.ab700654.chunk.js",
-    "main.js.map": "/music-theory-cheat-sheet/static/js/main.ab700654.chunk.js.map",
-    "runtime-main.js": "/music-theory-cheat-sheet/static/js/runtime-main.49d93d50.js",
-    "runtime-main.js.map": "/music-theory-cheat-sheet/static/js/runtime-main.49d93d50.js.map",
-    "static/js/2.84452b9e.chunk.js": "/music-theory-cheat-sheet/static/js/2.84452b9e.chunk.js",
-    "static/js/2.84452b9e.chunk.js.map": "/music-theory-cheat-sheet/static/js/2.84452b9e.chunk.js.map",
-    "index.html": "/music-theory-cheat-sheet/index.html",
-    "static/css/main.a80cba9c.chunk.css.map": "/music-theory-cheat-sheet/static/css/main.a80cba9c.chunk.css.map",
-    "static/js/2.84452b9e.chunk.js.LICENSE.txt": "/music-theory-cheat-sheet/static/js/2.84452b9e.chunk.js.LICENSE.txt",
-    "static/media/dub-selection.f52b95d6.jpg": "/music-theory-cheat-sheet/static/media/dub-selection.f52b95d6.jpg",
-    "static/media/final-lap.1ac94bda.jpg": "/music-theory-cheat-sheet/static/media/final-lap.1ac94bda.jpg",
-    "static/media/korobochka.e4e78f32.jpg": "/music-theory-cheat-sheet/static/media/korobochka.e4e78f32.jpg",
-    "static/media/space-travel.bcbcab14.jpg": "/music-theory-cheat-sheet/static/media/space-travel.bcbcab14.jpg",
-    "static/media/steppers-story.2159cf3d.jpg": "/music-theory-cheat-sheet/static/media/steppers-story.2159cf3d.jpg",
-    "static/media/young-warriors.f1739983.jpg": "/music-theory-cheat-sheet/static/media/young-warriors.f1739983.jpg"
+    "main.css": "./static/css/main.a80cba9c.chunk.css",
+    "main.js": "./static/js/main.7b1c9de0.chunk.js",
+    "main.js.map": "./static/js/main.7b1c9de0.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.403e2821.js",
+    "runtime-main.js.map": "./static/js/runtime-main.403e2821.js.map",
+    "static/js/2.84452b9e.chunk.js": "./static/js/2.84452b9e.chunk.js",
+    "static/js/2.84452b9e.chunk.js.map": "./static/js/2.84452b9e.chunk.js.map",
+    "index.html": "./index.html",
+    "static/css/main.a80cba9c.chunk.css.map": "./static/css/main.a80cba9c.chunk.css.map",
+    "static/js/2.84452b9e.chunk.js.LICENSE.txt": "./static/js/2.84452b9e.chunk.js.LICENSE.txt",
+    "static/media/dub-selection.f52b95d6.jpg": "./static/media/dub-selection.f52b95d6.jpg",
+    "static/media/final-lap.1ac94bda.jpg": "./static/media/final-lap.1ac94bda.jpg",
+    "static/media/korobochka.e4e78f32.jpg": "./static/media/korobochka.e4e78f32.jpg",
+    "static/media/space-travel.bcbcab14.jpg": "./static/media/space-travel.bcbcab14.jpg",
+    "static/media/steppers-story.2159cf3d.jpg": "./static/media/steppers-story.2159cf3d.jpg",
+    "static/media/young-warriors.f1739983.jpg": "./static/media/young-warriors.f1739983.jpg"
   },
   "entrypoints": [
-    "static/js/runtime-main.49d93d50.js",
+    "static/js/runtime-main.403e2821.js",
     "static/js/2.84452b9e.chunk.js",
     "static/css/main.a80cba9c.chunk.css",
-    "static/js/main.ab700654.chunk.js"
+    "static/js/main.7b1c9de0.chunk.js"
   ]
 }
