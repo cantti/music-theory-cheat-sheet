@@ -11,6 +11,7 @@ import {
 import './App.scss';
 import { KeysInfo } from './KeysInfo';
 import { AboutMe } from './AboutMe';
+import { DetectScaleByNotes } from './DetectScaleByNotes';
 
 const App = () => {
     return (
@@ -27,6 +28,9 @@ const App = () => {
                             <Nav.Link as={NavLink} to="/keys">
                                 Тональности
                             </Nav.Link>
+                            <Nav.Link as={NavLink} to="/detect-scale-by-notes">
+                                Определить тональность
+                            </Nav.Link>
                             <Nav.Link as={NavLink} to="/discography">
                                 Обо мне
                             </Nav.Link>
@@ -38,6 +42,9 @@ const App = () => {
                 <Switch>
                     <Route exact path="/">
                         <Redirect to="/keys" />
+                    </Route>
+                    <Route path="/detect-scale-by-notes">
+                        <DetectScaleByNotes />
                     </Route>
                     <Route path="/discography">
                         <AboutMe />

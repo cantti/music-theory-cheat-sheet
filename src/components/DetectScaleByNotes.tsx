@@ -1,0 +1,117 @@
+import React from 'react';
+import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Note } from '../theory-utils/note/Note';
+import { getScalesByNotes } from '../theory-utils/utils/getScalesByNotes';
+
+const optionsForInput: { note?: Note; display: string }[] = [
+    { display: 'Не выбрана' },
+    { note: Note.fromString('C'), display: 'C' },
+    { note: Note.fromString('C#'), display: 'C#/Eb' },
+    { note: Note.fromString('D'), display: 'D' },
+    { note: Note.fromString('D#'), display: 'D#/Eb' },
+    { note: Note.fromString('E'), display: 'E' },
+    { note: Note.fromString('F'), display: 'F' },
+    { note: Note.fromString('F#'), display: 'F#/Gb' },
+    { note: Note.fromString('G'), display: 'G' },
+    { note: Note.fromString('G#'), display: 'G#/Ab' },
+    { note: Note.fromString('A'), display: 'A' },
+    { note: Note.fromString('A#'), display: 'A#/Bb' },
+    { note: Note.fromString('B'), display: 'B' },
+];
+
+const noteInputCount = 7;
+
+export const DetectScaleByNotes = () => {
+    const [inputsValues, setInputsValues] = React.useState(
+        Array(noteInputCount)
+            .fill(undefined)
+            .map((_, i) => ({
+                inputIndex: i,
+                value: optionsForInput[0],
+            }))
+    );
+
+    const possibleScales = getScalesByNotes(
+        inputsValues
+            .map((x) => x.value?.note)
+            .filter((x): x is Note => x != null)
+    );
+
+    const handleInputsValueChange = (
+        inputIndex: number,
+        e: React.BaseSyntheticEvent
+    ) => {
+        setInputsValues(
+            inputsValues.map((x) => {
+                if (x.inputIndex === inputIndex) {
+                    const newInputValue = { ...x };
+                    newInputValue.value =
+                        optionsForInput[parseInt(e.target.value)];
+                    return newInputValue;
+                }
+                return x;
+            })
+        );
+    };
+
+    return (
+        <div>
+            <h1 className="display-4">Определить тональность</h1>
+            <p>Здесь вы можете определить тональность по нотам.</p>
+            <p>Выберите ноты.</p>
+
+            <Row>
+                {inputsValues.map((_inputValue, inputIndex) => (
+                    <Col xs={12} md={3} key={inputIndex}>
+                        <Form.Control
+                            as="select"
+                            custom
+                            value={optionsForInput.indexOf(
+                                inputsValues.find(
+                                    (x) => x.inputIndex === inputIndex
+                                )!.value
+                            )}
+                            onChange={(e) =>
+                                handleInputsValueChange(inputIndex, e)
+                            }
+                            className="mb-3"
+                        >
+                            {optionsForInput.map((option, idx) => (
+                                <option key={idx} value={idx}>
+                                    {option.display}
+                                </option>
+                            ))}
+                        </Form.Control>
+                    </Col>
+                ))}
+            </Row>
+            <div className="mb-3">
+                <Button
+                    variant="outline-secondary"
+                    onClick={() =>
+                        setInputsValues(
+                            inputsValues.map((x) => {
+                                const newInputValue = { ...x };
+                                newInputValue.value = optionsForInput[0];
+                                return newInputValue;
+                            })
+                        )
+                    }
+                >
+                    Очистить
+                </Button>
+            </div>
+            {inputsValues.filter((x) => x.value.note == null).length !==
+                noteInputCount && (
+                <>
+                    <p>Тональности с такими нотами:</p>
+                    <ul>
+                        {possibleScales.map((x) => (
+                            <li>{x.format('long')}</li>
+                        ))}
+                    </ul>
+                </>
+            )}
+        </div>
+    );
+};

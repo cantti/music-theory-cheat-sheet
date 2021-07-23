@@ -1,5 +1,5 @@
-import { getLetterIndices } from '../helpers/getLetterIndices';
-import { getSymbolShifts } from '../helpers/getSymbolShifts';
+import { getLetterIndices } from '../utils/getLetterIndices';
+import { getSymbolShifts } from '../utils/getSymbolShifts';
 import { Letter } from './Letter';
 import { Symbol } from './Symbol';
 

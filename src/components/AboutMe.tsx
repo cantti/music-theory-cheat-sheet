@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Row, Card, Button, CardColumns } from 'react-bootstrap';
+import { Col, Row, Card } from 'react-bootstrap';
 import { discography } from '../data/discography';
 import _ from 'lodash';
 

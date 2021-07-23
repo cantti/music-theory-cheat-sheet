@@ -1,5 +1,0 @@
-{
-    "appService.preDeployTask": "publish-release",
-    "appService.deploySubpath": "bin/Release/net5.0/publish",
-    "appService.defaultWebAppToDeploy": "/subscriptions/326be7c4-faea-45c4-a107-e3bb119b033d/resourceGroups/music-theory-cheat-sheet/providers/Microsoft.Web/sites/music-theory-cheat-sheet"
-}

@@ -1,8 +1,8 @@
 import { Interval } from '../interval/Interval';
 import { Note } from '../note/Note';
-import { getNotesByIntervals } from '../helpers/getNotesByIntervals';
+import { getNotesByIntervals } from '../utils/getNotesByIntervals';
 
-export abstract class Scale {
+export abstract class Chord {
     constructor(public tonic: Note = new Note()) {}
 
     protected _name: string = '';
@@ -21,23 +21,23 @@ export abstract class Scale {
         return this._intervals;
     }
 
-    getNotes() {
-        return getNotesByIntervals(this.tonic, this._intervals);
-    }
-
     format(kind: 'short' | 'long' = 'short') {
         if (kind === 'short') {
-            return this.tonic.format() + this._shortName;
+            return this.tonic.format() + this.shortName;
         } else {
-            return this.tonic.format() + ' ' + this._name;
+            return this.tonic.format() + ' ' + this.name;
         }
     }
 
-    equals(scale: Scale) {
+    getNotes() {
+        return getNotesByIntervals(this.tonic, this.intervals);
+    }
+
+    equals(chord: Chord) {
         return (
-            scale.constructor.name === this.constructor.name &&
-            scale.tonic.letter === this.tonic.letter &&
-            scale.tonic.symbol === this.tonic.symbol
+            chord.constructor.name === this.constructor.name &&
+            chord.tonic.letter === this.tonic.letter &&
+            chord.tonic.symbol === this.tonic.symbol
         );
     }
 }

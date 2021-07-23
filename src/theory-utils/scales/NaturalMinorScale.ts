@@ -11,7 +11,6 @@ class NaturalMinorScale extends Scale {
         new Interval('Fourth', 'Perfect'),
         new Interval('Fifth', 'Perfect'),
         new Interval('Sixth', 'Minor'),
-        new Interval('Sixth', 'Minor'),
         new Interval('Seventh', 'Minor'),
         new Interval('Octave', 'Perfect'),
     ];
