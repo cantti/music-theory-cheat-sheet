@@ -1,16 +1,17 @@
+/* eslint-disable import/no-webpack-loader-syntax */
+import AboutText from '!babel-loader!@mdx-js/loader!./AboutText.mdx';
 import _ from 'lodash';
 import React from 'react';
 import { Button, Col, Form, Row, Table } from 'react-bootstrap';
-import Markdown from 'react-markdown';
-import { getChordsByScale } from '../../theory-utils/utils/getChordsByScale';
-import { getLetterIndices } from '../../theory-utils/utils/getLetterIndices';
 import { Note } from '../../theory-utils/note/Note';
 import { MajorScale } from '../../theory-utils/scales/MajorScale';
 import { NaturalMinorScale } from '../../theory-utils/scales/NaturalMinorScale';
 import { Scale } from '../../theory-utils/scales/Scale';
+import { getChordsByScale } from '../../theory-utils/utils/getChordsByScale';
+import { getLetterIndices } from '../../theory-utils/utils/getLetterIndices';
 import Piano from '../Piano';
-import { aboutText } from './aboutText';
 import styles from './KeysInfo.module.scss';
+
 
 const allKeys: Scale[] = [
     new MajorScale(Note.fromString('C')),
@@ -109,7 +110,7 @@ export const KeysInfo = () => {
             <Row>
                 <Col xs={12} md={6}>
                     <h3>О чем это все</h3>
-                    <Markdown>{aboutText}</Markdown>
+                    <AboutText />
                 </Col>
                 <Col xs={12} md={6}>
                     <h3>Кварто-квинтовый круг</h3>
