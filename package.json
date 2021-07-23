@@ -62,5 +62,5 @@
     "devDependencies": {
         "gh-pages": "^3.2.3"
     },
-    "homepage": "http://cantti.github.io/music-theory-cheat-sheet"
+    "homepage": "."
 }
