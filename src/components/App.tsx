@@ -16,10 +16,10 @@ import { DetectScaleByNotes } from './DetectScaleByNotes';
 const App = () => {
     return (
         <Router>
-            <Navbar bg="light" expand="lg">
+            <Navbar bg="dark" expand="lg" variant="dark">
                 <Container>
                     <Navbar.Brand href="/">
-                        <GiMusicalNotes className="mr-3" />
+                        <GiMusicalNotes className="mr-3" size="2rem" />
                         Шпаргалка по теории музыки
                     </Navbar.Brand>
                     <Navbar.Toggle />
