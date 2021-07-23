@@ -2,5 +2,5 @@
 
 My web app for musicians.
 
-You can view it here https://music-theory-cheat-sheet.azurewebsites.net/ now.
+You can view it here https://cantti.github.io/music-theory-cheat-sheet/
 
