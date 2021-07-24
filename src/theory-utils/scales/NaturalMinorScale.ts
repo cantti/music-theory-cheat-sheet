@@ -2,9 +2,9 @@ import { Interval } from '../interval/Interval';
 import { Scale } from './Scale';
 
 class NaturalMinorScale extends Scale {
-    _name: string = 'Natural Minor';
-    _shortName: string = 'm';
-    _intervals: Interval[] = [
+    getName = () => 'Natural Minor';
+    getShortName = () => 'm';
+    getIntervals = () => [
         new Interval('Unison', 'Perfect'),
         new Interval('Second', 'Major'),
         new Interval('Third', 'Minor'),

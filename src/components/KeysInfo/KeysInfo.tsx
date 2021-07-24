@@ -207,7 +207,7 @@ export const KeysInfo = () => {
                                                     {notesInKey[
                                                         colIdx
                                                     ].format()}
-                                                    {chord.shortName}
+                                                    {chord.getShortName()}
                                                 </div>
                                             ))}
                                         </td>

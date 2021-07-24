@@ -5,31 +5,21 @@ import { getNotesByIntervals } from '../utils/getNotesByIntervals';
 export abstract class Scale {
     constructor(public tonic: Note = new Note()) {}
 
-    protected _name: string = '';
-    protected _shortName: string = '';
-    protected _intervals: Interval[] = [];
+    abstract getName(): string;
 
-    get name() {
-        return this._name;
-    }
+    abstract getShortName(): string;
 
-    get shortName(): string {
-        return this._shortName;
-    }
-
-    get intervals(): Interval[] {
-        return this._intervals;
-    }
+    abstract getIntervals(): Interval[];
 
     getNotes() {
-        return getNotesByIntervals(this.tonic, this._intervals);
+        return getNotesByIntervals(this.tonic, this.getIntervals());
     }
 
     format(kind: 'short' | 'long' = 'short') {
         if (kind === 'short') {
-            return this.tonic.format() + this._shortName;
+            return this.tonic.format() + this.getShortName();
         } else {
-            return this.tonic.format() + ' ' + this._name;
+            return this.tonic.format() + ' ' + this.getName();
         }
     }
 
