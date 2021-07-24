@@ -25,7 +25,7 @@ export abstract class Chord {
 
     equals(chord: Chord) {
         return (
-            chord.constructor.name === this.constructor.name &&
+            chord.getName() === this.getName() &&
             chord.tonic.letter === this.tonic.letter &&
             chord.tonic.symbol === this.tonic.symbol
         );

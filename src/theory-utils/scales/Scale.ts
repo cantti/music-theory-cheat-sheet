@@ -25,7 +25,7 @@ export abstract class Scale {
 
     equals(scale: Scale) {
         return (
-            scale.constructor.name === this.constructor.name &&
+            scale.getName() === this.getName() &&
             scale.tonic.letter === this.tonic.letter &&
             scale.tonic.symbol === this.tonic.symbol
         );
