@@ -3,6 +3,7 @@ import { Container, Nav, Navbar } from 'react-bootstrap';
 import { GiMusicalNotes } from 'react-icons/gi';
 import {
     HashRouter as Router,
+    Link,
     NavLink,
     Redirect,
     Route,
@@ -19,7 +20,7 @@ const App = () => {
             <Suspense fallback={<div>Loading...</div>}>
                 <Navbar bg="dark" expand="lg" variant="dark">
                     <Container>
-                        <Navbar.Brand href="/">
+                        <Navbar.Brand as={Link} to="/">
                             <GiMusicalNotes className="mr-3" size="2rem" />
                             Шпаргалка по теории музыки
                         </Navbar.Brand>
