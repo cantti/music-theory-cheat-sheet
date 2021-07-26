@@ -4,7 +4,7 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import { Button, Col, Form, Modal, Row, Table } from 'react-bootstrap';
 import { BsQuestionCircle } from 'react-icons/bs';
-import { useHistory, useParams } from 'react-router-dom';
+import { Redirect, useHistory, useParams } from 'react-router-dom';
 import { Note } from '../../theory-utils/note/Note';
 import { MajorScale } from '../../theory-utils/scales/MajorScale';
 import { NaturalMinorScale } from '../../theory-utils/scales/NaturalMinorScale';
@@ -82,7 +82,11 @@ const allKeysForSelect = _.orderBy(allKeys, [
     (x) => (x.tonic.symbol === 'None' ? 0 : x.tonic.symbol === 'Flat' ? 1 : 2),
 ]);
 
-function getActiveKeyFromUrlParams(params: { tonic: string; scale?: string }) {
+function getActiveKeyFromUrlParams(params: { tonic?: string; scale?: string }) {
+    if (!params.tonic) {
+        return null;
+    }
+
     const tonicLetter = params.tonic[0];
 
     if (!isLetter(tonicLetter)) {
@@ -113,7 +117,7 @@ export const KeysInfo = () => {
 
     //get key from url
     const activeKeyFromUrl = getActiveKeyFromUrlParams(
-        useParams<{ tonic: string; scale?: string }>()
+        useParams<{ tonic?: string; scale?: string }>()
     );
 
     //find key in keys list
@@ -123,8 +127,7 @@ export const KeysInfo = () => {
 
     //redirect to c major if key is not supported
     if (!activeKey) {
-        history.replace(getKeysUrl(allKeys[0]));
-        return null;
+        return <Redirect to={getKeysUrl(allKeys[0])} />;
     }
 
     const formatKeys = (keys: Scale[]) => {
