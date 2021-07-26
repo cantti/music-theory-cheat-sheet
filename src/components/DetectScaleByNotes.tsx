@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Note } from '../theory-utils/note/Note';
 import { getScalesByNotes } from '../theory-utils/utils/getScalesByNotes';
 import { getKeysUrl } from '../utils/url';
+import { AiOutlineClear } from 'react-icons/all';
 
 const optionsForInput: { note?: Note; display: string }[] = [
     { display: 'Не выбрана' },
@@ -100,7 +101,7 @@ export const DetectScaleByNotes = () => {
                         )
                     }
                 >
-                    Очистить
+                    <AiOutlineClear /> Очистить
                 </Button>
             </div>
             {inputsValues.filter((x) => x.value.note == null).length !==
