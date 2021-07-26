@@ -27,7 +27,7 @@ const App = () => {
                         <Navbar.Toggle />
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav>
-                                <Nav.Link as={NavLink} to="/keys">
+                                <Nav.Link as={NavLink} to="/keys/C">
                                     Тональности
                                 </Nav.Link>
                                 <Nav.Link
@@ -46,7 +46,7 @@ const App = () => {
                 <Container>
                     <Switch>
                         <Route exact path="/">
-                            <Redirect to="/keys" />
+                            <Redirect to="/keys/C" />
                         </Route>
                         <Route path="/detect-scale-by-notes">
                             <DetectScaleByNotes />
@@ -54,7 +54,7 @@ const App = () => {
                         <Route path="/discography">
                             <AboutMe />
                         </Route>
-                        <Route path="/keys">
+                        <Route path="/keys/:tonic/:scale?">
                             <KeysInfo />
                         </Route>
                     </Switch>

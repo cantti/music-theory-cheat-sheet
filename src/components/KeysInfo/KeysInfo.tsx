@@ -4,12 +4,16 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import { Button, Col, Form, Modal, Row, Table } from 'react-bootstrap';
 import { BsQuestionCircle } from 'react-icons/bs';
+import { useHistory, useParams } from 'react-router-dom';
 import { Note } from '../../theory-utils/note/Note';
 import { MajorScale } from '../../theory-utils/scales/MajorScale';
 import { NaturalMinorScale } from '../../theory-utils/scales/NaturalMinorScale';
 import { Scale } from '../../theory-utils/scales/Scale';
 import { getChordsByScale } from '../../theory-utils/utils/getChordsByScale';
 import { getLetterIndices } from '../../theory-utils/utils/getLetterIndices';
+import { isLetter } from '../../theory-utils/utils/isLetter';
+import { isSymbol } from '../../theory-utils/utils/isSymbol';
+import { getKeysUrl } from '../../utils/url';
 import Piano from '../Piano';
 import styles from './KeysInfo.module.scss';
 
@@ -78,9 +82,50 @@ const allKeysForSelect = _.orderBy(allKeys, [
     (x) => (x.tonic.symbol === 'None' ? 0 : x.tonic.symbol === 'Flat' ? 1 : 2),
 ]);
 
+function getActiveKeyFromUrlParams(params: { tonic: string; scale?: string }) {
+    const tonicLetter = params.tonic[0];
+
+    if (!isLetter(tonicLetter)) {
+        return null;
+    }
+
+    const tonicSymbol =
+        params.tonic.length > 1 ? params.tonic.substring(2) : 'None';
+
+    if (!isSymbol(tonicSymbol)) {
+        return null;
+    }
+
+    const tonicNote = new Note(tonicLetter, tonicSymbol);
+
+    const activeKeyFromUrl =
+        params.scale === 'm'
+            ? new NaturalMinorScale(tonicNote)
+            : new MajorScale(tonicNote);
+
+    return activeKeyFromUrl;
+}
+
 export const KeysInfo = () => {
-    const [activeKey, setActiveKey] = useState<Scale>(allKeys[0]);
     const [showHelp, setShowHelp] = useState(false);
+
+    const history = useHistory();
+
+    //get key from url
+    const activeKeyFromUrl = getActiveKeyFromUrlParams(
+        useParams<{ tonic: string; scale?: string }>()
+    );
+
+    //find key in keys list
+    const activeKey = activeKeyFromUrl
+        ? allKeysForSelect.find((x) => x.equals(activeKeyFromUrl))
+        : null;
+
+    //redirect to c major if key is not supported
+    if (!activeKey) {
+        history.replace(getKeysUrl(allKeys[0]));
+        return null;
+    }
 
     const formatKeys = (keys: Scale[]) => {
         return keys.map((key, idx) => (
@@ -89,7 +134,8 @@ export const KeysInfo = () => {
                 key={idx}
                 size="sm"
                 variant="info"
-                onClick={() => setActiveKey(key)}
+                // onClick={() => setActiveKey(key)}
+                onClick={() => history.push(getKeysUrl(key))}
                 active={key === activeKey}
             >
                 {!!getTopKeyForButton(key) && (
@@ -128,8 +174,12 @@ export const KeysInfo = () => {
                                 .indexOf(activeKey)
                                 .toString()}
                             onChange={(e) => {
-                                setActiveKey(
-                                    allKeysForSelect[parseInt(e.target.value)]
+                                history.push(
+                                    getKeysUrl(
+                                        allKeysForSelect[
+                                            parseInt(e.target.value)
+                                        ]
+                                    )
                                 );
                             }}
                         >

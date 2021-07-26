@@ -1,7 +1,9 @@
 import React from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { Note } from '../theory-utils/note/Note';
 import { getScalesByNotes } from '../theory-utils/utils/getScalesByNotes';
+import { getKeysUrl } from '../utils/url';
 
 const optionsForInput: { note?: Note; display: string }[] = [
     { display: 'Не выбрана' },
@@ -106,8 +108,12 @@ export const DetectScaleByNotes = () => {
                 <>
                     <p>Тональности с такими нотами:</p>
                     <ul>
-                        {possibleScales.map((x) => (
-                            <li>{x.format('long')}</li>
+                        {possibleScales.map((key, index) => (
+                            <li key={index}>
+                                <Link to={getKeysUrl(key)}>
+                                    {key.format('long')}
+                                </Link>
+                            </li>
                         ))}
                     </ul>
                 </>
