@@ -1,8 +1,9 @@
 /* eslint-disable import/no-webpack-loader-syntax */
 import AboutText from '!babel-loader!@mdx-js/loader!./AboutText.mdx';
 import _ from 'lodash';
-import React from 'react';
-import { Button, Col, Form, Row, Table } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Button, Col, Form, Modal, Row, Table } from 'react-bootstrap';
+import { BsQuestionCircle } from 'react-icons/bs';
 import { Note } from '../../theory-utils/note/Note';
 import { MajorScale } from '../../theory-utils/scales/MajorScale';
 import { NaturalMinorScale } from '../../theory-utils/scales/NaturalMinorScale';
@@ -11,7 +12,6 @@ import { getChordsByScale } from '../../theory-utils/utils/getChordsByScale';
 import { getLetterIndices } from '../../theory-utils/utils/getLetterIndices';
 import Piano from '../Piano';
 import styles from './KeysInfo.module.scss';
-
 
 const allKeys: Scale[] = [
     new MajorScale(Note.fromString('C')),
@@ -79,7 +79,8 @@ const allKeysForSelect = _.orderBy(allKeys, [
 ]);
 
 export const KeysInfo = () => {
-    const [activeKey, setActiveKey] = React.useState<Scale>(allKeys[0]);
+    const [activeKey, setActiveKey] = useState<Scale>(allKeys[0]);
+    const [showHelp, setShowHelp] = useState(false);
 
     const formatKeys = (keys: Scale[]) => {
         return keys.map((key, idx) => (
@@ -106,12 +107,13 @@ export const KeysInfo = () => {
 
     return (
         <>
-            <h1 className="display-4">Тональности</h1>
+            <div className="d-flex align-items-center">
+                <h1 className="display-4">Тональности</h1>
+                <Button variant="link" onClick={() => setShowHelp(true)}>
+                    <BsQuestionCircle size="1.5rem" />
+                </Button>
+            </div>
             <Row>
-                <Col xs={12} md={6}>
-                    <h3>О чем это все</h3>
-                    <AboutText />
-                </Col>
                 <Col xs={12} md={6}>
                     <h3>Кварто-квинтовый круг</h3>
                     <div className="mb-2">
@@ -155,15 +157,16 @@ export const KeysInfo = () => {
                 </Col>
                 <Col xs={12} md={6}>
                     <h3>Ноты на клавиатуре</h3>
+                    <p>Ноты выбранной тональности на клавиатуре.</p>
                     <Piano
                         highlightedNotes={notesInKey}
                         startOctave={activeKey == null ? 0 : undefined}
                         endOctave={activeKey == null ? 1 : undefined}
                         className="mb-4"
                     />
-                </Col>
-                <Col xs={12} md={6}>
+
                     <h3>Ноты</h3>
+                    <p>Ноты выбранной тональности, начиная с тоники.</p>
                     <Table bordered responsive>
                         <thead>
                             <tr className="bg-light text-center">
@@ -180,9 +183,9 @@ export const KeysInfo = () => {
                             </tr>
                         </tbody>
                     </Table>
-                </Col>
-                <Col xs={12} md={6}>
+
                     <h3>Аккорды</h3>
+                    <p>Основные аккорды выбранной тональности.</p>
                     <Table bordered responsive>
                         <thead>
                             <tr className="bg-light text-center">
@@ -218,6 +221,14 @@ export const KeysInfo = () => {
                     </Table>
                 </Col>
             </Row>
+            <Modal show={showHelp} onHide={() => setShowHelp(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Справка о тональностях</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <AboutText />
+                </Modal.Body>
+            </Modal>
         </>
     );
 };
