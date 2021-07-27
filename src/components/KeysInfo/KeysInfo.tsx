@@ -156,12 +156,16 @@ export const KeysInfo = () => {
 
     return (
         <>
-            <div className="d-flex align-items-center">
-                <h1 className="display-4">Тональности</h1>
-                <Button variant="link" onClick={() => setShowHelp(true)}>
+            <h1 className="d-flex flex-wrap align-items-center display-4">
+                <div className="mr-2">Тональности</div>
+                <Button
+                    variant="link"
+                    className="p-0"
+                    onClick={() => setShowHelp(true)}
+                >
                     <BsQuestionCircle size="1.5rem" />
                 </Button>
-            </div>
+            </h1>
             <Row>
                 <Col xs={12} md={6}>
                     <h3>Кварто-квинтовый круг</h3>
