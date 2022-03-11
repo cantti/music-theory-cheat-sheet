@@ -3,23 +3,23 @@ import { Button, Col, Form, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Note } from '../theory-utils/note/Note';
 import { getScalesByNotes } from '../theory-utils/utils/getScalesByNotes';
-import { getKeysUrl } from '../utils/url';
-import { AiOutlineClear } from 'react-icons/all';
+import { getScaleUrl } from '../utils/url';
+import { AiOutlineClear } from 'react-icons/ai';
 
 const optionsForInput: { note?: Note; display: string }[] = [
     { display: 'Не выбрана' },
-    { note: Note.fromString('C'), display: 'C' },
-    { note: Note.fromString('C#'), display: 'C#/Eb' },
-    { note: Note.fromString('D'), display: 'D' },
-    { note: Note.fromString('D#'), display: 'D#/Eb' },
-    { note: Note.fromString('E'), display: 'E' },
-    { note: Note.fromString('F'), display: 'F' },
-    { note: Note.fromString('F#'), display: 'F#/Gb' },
-    { note: Note.fromString('G'), display: 'G' },
-    { note: Note.fromString('G#'), display: 'G#/Ab' },
-    { note: Note.fromString('A'), display: 'A' },
-    { note: Note.fromString('A#'), display: 'A#/Bb' },
-    { note: Note.fromString('B'), display: 'B' },
+    { note: new Note('C'), display: 'C' },
+    { note: new Note('C', 'Sharp'), display: 'C#/Eb' },
+    { note: new Note('D'), display: 'D' },
+    { note: new Note('D', 'Sharp'), display: 'D#/Eb' },
+    { note: new Note('E'), display: 'E' },
+    { note: new Note('F'), display: 'F' },
+    { note: new Note('F', 'Sharp'), display: 'F#/Gb' },
+    { note: new Note('G'), display: 'G' },
+    { note: new Note('G', 'Sharp'), display: 'G#/Ab' },
+    { note: new Note('A'), display: 'A' },
+    { note: new Note('A', 'Sharp'), display: 'A#/Bb' },
+    { note: new Note('B'), display: 'B' },
 ];
 
 const noteInputCount = 7;
@@ -111,7 +111,7 @@ export const DetectScaleByNotes = () => {
                     <ul>
                         {possibleScales.map((key, index) => (
                             <li key={index}>
-                                <Link to={getKeysUrl(key)}>
+                                <Link to={getScaleUrl(key)}>
                                     {key.format('long')}
                                 </Link>
                             </li>

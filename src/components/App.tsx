@@ -10,7 +10,7 @@ import {
     Switch,
 } from 'react-router-dom';
 import './App.scss';
-import { KeysInfo } from './KeysInfo';
+import { ScaleInfo } from './ScaleInfo';
 import { AboutMe } from './AboutMe';
 import { DetectScaleByNotes } from './DetectScaleByNotes';
 
@@ -46,7 +46,7 @@ const App = () => {
                 <Container>
                     <Switch>
                         <Route exact path="/">
-                            <Redirect to="/keys" />
+                            <Redirect to="/scales" />
                         </Route>
                         <Route path="/detect-scale-by-notes">
                             <DetectScaleByNotes />
@@ -54,8 +54,8 @@ const App = () => {
                         <Route path="/discography">
                             <AboutMe />
                         </Route>
-                        <Route path="/keys/:tonic?/:scale?">
-                            <KeysInfo />
+                        <Route path="/scales/:tonic?/:scale?">
+                            <ScaleInfo />
                         </Route>
                     </Switch>
                 </Container>

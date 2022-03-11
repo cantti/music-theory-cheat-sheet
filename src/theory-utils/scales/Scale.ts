@@ -22,12 +22,4 @@ export abstract class Scale {
             return this.tonic.format() + ' ' + this.getName();
         }
     }
-
-    equals(scale: Scale) {
-        return (
-            scale.getName() === this.getName() &&
-            scale.tonic.letter === this.tonic.letter &&
-            scale.tonic.symbol === this.tonic.symbol
-        );
-    }
 }
