@@ -1,26 +1,19 @@
 {
   "files": {
-    "main.css": "./static/css/main.8bef2b5c.chunk.css",
-    "main.js": "./static/js/main.776d9f85.chunk.js",
-    "main.js.map": "./static/js/main.776d9f85.chunk.js.map",
-    "runtime-main.js": "./static/js/runtime-main.b2c9feee.js",
-    "runtime-main.js.map": "./static/js/runtime-main.b2c9feee.js.map",
-    "static/js/2.c8494aa9.chunk.js": "./static/js/2.c8494aa9.chunk.js",
-    "static/js/2.c8494aa9.chunk.js.map": "./static/js/2.c8494aa9.chunk.js.map",
+    "main.css": "./static/css/main.138e82ca.css",
+    "main.js": "./static/js/main.a102e9d0.js",
+    "static/media/dub-selection.jpg": "./static/media/dub-selection.f52b95d691f8551013e0.jpg",
+    "static/media/young-warriors.jpg": "./static/media/young-warriors.f173998384e3daa10eb5.jpg",
+    "static/media/steppers-story.jpg": "./static/media/steppers-story.2159cf3daa3edd4741f7.jpg",
+    "static/media/final-lap.jpg": "./static/media/final-lap.1ac94bda041be7e38f6c.jpg",
+    "static/media/korobochka.jpg": "./static/media/korobochka.e4e78f32bf1f8c8eaa97.jpg",
+    "static/media/space-travel.jpg": "./static/media/space-travel.bcbcab1479e523d5a32a.jpg",
     "index.html": "./index.html",
-    "static/css/main.8bef2b5c.chunk.css.map": "./static/css/main.8bef2b5c.chunk.css.map",
-    "static/js/2.c8494aa9.chunk.js.LICENSE.txt": "./static/js/2.c8494aa9.chunk.js.LICENSE.txt",
-    "static/media/dub-selection.f52b95d6.jpg": "./static/media/dub-selection.f52b95d6.jpg",
-    "static/media/final-lap.1ac94bda.jpg": "./static/media/final-lap.1ac94bda.jpg",
-    "static/media/korobochka.e4e78f32.jpg": "./static/media/korobochka.e4e78f32.jpg",
-    "static/media/space-travel.bcbcab14.jpg": "./static/media/space-travel.bcbcab14.jpg",
-    "static/media/steppers-story.2159cf3d.jpg": "./static/media/steppers-story.2159cf3d.jpg",
-    "static/media/young-warriors.f1739983.jpg": "./static/media/young-warriors.f1739983.jpg"
+    "main.138e82ca.css.map": "./static/css/main.138e82ca.css.map",
+    "main.a102e9d0.js.map": "./static/js/main.a102e9d0.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.b2c9feee.js",
-    "static/js/2.c8494aa9.chunk.js",
-    "static/css/main.8bef2b5c.chunk.css",
-    "static/js/main.776d9f85.chunk.js"
+    "static/css/main.138e82ca.css",
+    "static/js/main.a102e9d0.js"
   ]
 }
