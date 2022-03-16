@@ -7,7 +7,7 @@ export class Note {
     constructor(
         public letter: Letter = 'C',
         public symbol: Symbol = 'None',
-        public octave: number = 0
+        public octave: number = 4
     ) {}
 
     getIndex() {
@@ -18,7 +18,7 @@ export class Note {
         );
     }
 
-    format() {
+    format(showOctave: boolean = true) {
         let result: string = this.letter;
         switch (this.symbol) {
             case 'Sharp':
@@ -35,6 +35,9 @@ export class Note {
                 break;
             default:
                 break;
+        }
+        if (showOctave) {
+            result += this.octave;
         }
         return result;
     }

@@ -11,11 +11,11 @@ export abstract class Chord {
 
     abstract getIntervals(): Interval[];
 
-    format(kind: 'short' | 'long' = 'short') {
+    format(kind: 'short' | 'long' = 'short', showOctave = false) {
         if (kind === 'short') {
-            return this.tonic.format() + this.getShortName();
+            return this.tonic.format(showOctave) + this.getShortName();
         } else {
-            return this.tonic.format() + ' ' + this.getName();
+            return this.tonic.format(showOctave) + ' ' + this.getName();
         }
     }
 

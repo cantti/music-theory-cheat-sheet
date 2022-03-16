@@ -13,19 +13,10 @@ import { getLetterIndices } from '../../theory-utils/utils/getLetterIndices';
 import { getScaleFormUrlParams, getScaleUrl } from '../../utils/url';
 import Piano from '../Piano';
 import styles from './ScaleInfo.module.scss';
-import * as Tone from 'tone';
 import { Chord } from '../../theory-utils/chords/Chord';
+import { createPianoSynth } from '../../piano-synth';
 
-const synth = new Tone.PolySynth(Tone.Synth, {
-    // envelope: {
-    //     attack: 0.0001,
-    //     decay: 0.3,
-    // },
-});
-
-const filter = new Tone.Filter(1000, 'lowpass');
-
-synth.chain(filter, Tone.Destination);
+const pianoSynth = createPianoSynth();
 
 const scalesInCircle: { scale: Scale; clickable: boolean }[][] = [
     [{ scale: new MajorScale(new Note('C')), clickable: true }],
@@ -145,11 +136,22 @@ export const ScaleInfo = () => {
 
     const notesInScale = activeScale.getNotes();
 
-    const play = (chord: Chord) => {
-        synth.triggerAttackRelease(
-            chord.getNotes().map((x) => x.format() + (x.octave + 4)),
-            '16n'
-        );
+    const handleChordPlayMouseDown = (chord: Chord) => {
+        chord
+            .getNotes()
+            .map((x) => x.format())
+            .forEach((x) => {
+                pianoSynth.triggerAttack(x);
+            });
+    };
+
+    const handleChordPlayMouseUp = (chord: Chord) => {
+        chord
+            .getNotes()
+            .map((x) => x.format())
+            .forEach((x) => {
+                pianoSynth.triggerRelease(x);
+            });
     };
 
     return (
@@ -235,7 +237,7 @@ export const ScaleInfo = () => {
                         <tbody>
                             <tr className="text-center">
                                 {notesInScale.map((note, idx) => (
-                                    <td key={idx}>{note.format()}</td>
+                                    <td key={idx}>{note.format(false)}</td>
                                 ))}
                             </tr>
                         </tbody>
@@ -268,13 +270,25 @@ export const ScaleInfo = () => {
                                     .map((x) => x[0])
                                     .map((chord, colIdx) => (
                                         <td key={colIdx}>
-                                            <div>{chord.format()}</div>
-                                            <div>
-                                                <BsPlayCircle
-                                                    onClick={() => play(chord)}
-                                                    role="button"
-                                                />
-                                            </div>
+                                            <Button
+                                                variant="outline-primary"
+                                                size="sm"
+                                                className="w-100"
+                                                onMouseDown={() =>
+                                                    handleChordPlayMouseDown(
+                                                        chord
+                                                    )
+                                                }
+                                                onMouseUp={() =>
+                                                    handleChordPlayMouseUp(
+                                                        chord
+                                                    )
+                                                }
+                                            >
+                                                {chord.format()}
+                                                <br />
+                                                <BsPlayCircle />
+                                            </Button>
                                         </td>
                                     ))}
                             </tr>

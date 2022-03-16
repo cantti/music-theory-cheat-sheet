@@ -1,6 +1,10 @@
 import React from 'react';
 import { Note } from '../theory-utils/note/Note';
 import styles from './Piano.module.css';
+import { createPianoSynth } from '../piano-synth';
+import { useState } from 'react';
+
+const pianoSynth = createPianoSynth();
 
 type PianoProps = {
     highlightedNotes?: Note[];
@@ -15,6 +19,8 @@ const Piano = ({
     endOctave = undefined,
     className = '',
 }: PianoProps) => {
+    const [activeNotes, setActiveNotes] = useState<Note[]>([]);
+
     let octaves: number[] = [];
 
     if (startOctave === undefined || endOctave === undefined) {
@@ -35,74 +41,128 @@ const Piano = ({
     }
 
     const isHighlightNecessary = (note: Note) =>
-        highlightedNotes
-            .map((x) => x.getIndex())
-            .includes(note.getIndex());
+        highlightedNotes.map((x) => x.getIndex()).includes(note.getIndex());
+
+    const handleKeyMouseDown = (
+        note: Note,
+        e: React.MouseEvent<HTMLDivElement, MouseEvent>
+    ) => {
+        e.stopPropagation();
+        pianoSynth.triggerAttack(note.format());
+        // setActiveNotes((activeNotes) => {
+        //     if (!activeNotes.includes(note)) {
+        //         return [...activeNotes, note];
+        //     } else {
+        //         return activeNotes;
+        //     }
+        // });
+    };
+
+    const handleKeyMouseUp = (
+        note: Note,
+        e: React.MouseEvent<HTMLDivElement, MouseEvent>
+    ) => {
+        pianoSynth.triggerRelease(note.format());
+        // setActiveNotes((activeNotes) => activeNotes.filter((x) => x !== note));
+    };
+
+    const handleMouseOver = (
+        note: Note,
+        e: React.MouseEvent<HTMLDivElement, MouseEvent>
+    ) => {
+        if (e.buttons === 1) {
+            e.stopPropagation();
+            pianoSynth.triggerAttack(note.format());
+            // setActiveNotes((activeNotes) => {
+            //     if (!activeNotes.includes(note)) {
+            //         return [...activeNotes, note];
+            //     } else {
+            //         return activeNotes;
+            //     }
+            // });
+        }
+    };
+
+    const handleMouseLeave = (
+        note: Note,
+        e: React.MouseEvent<HTMLDivElement, MouseEvent>
+    ) => {
+        if (e.buttons === 1) {
+            pianoSynth.triggerRelease(note.format());
+            // setActiveNotes((activeNotes) =>
+            //     activeNotes.filter((x) => x !== note)
+            // );
+        }
+    };
+
+    const WhiteAndBlackKey = ({
+        whiteKey,
+        blackKey,
+    }: {
+        whiteKey: Note;
+        blackKey?: Note;
+    }) => (
+        <div
+            className={
+                styles.whiteKey +
+                (activeNotes.includes(whiteKey) ? ' active' : '')
+            }
+            onMouseDown={(e) => handleKeyMouseDown(whiteKey, e)}
+            onMouseOver={(e) => handleMouseOver(whiteKey, e)}
+            onMouseLeave={(e) => handleMouseLeave(whiteKey, e)}
+            onMouseUp={(e) => handleKeyMouseUp(whiteKey, e)}
+            role="button"
+        >
+            {blackKey != null && (
+                <div
+                    className={styles.blackKey}
+                    onMouseDown={(e) => handleKeyMouseDown(blackKey, e)}
+                    onMouseOver={(e) => handleMouseOver(blackKey, e)}
+                    onMouseLeave={(e) => handleMouseLeave(blackKey, e)}
+                    onMouseUp={(e) => handleKeyMouseUp(blackKey, e)}
+                    role="button"
+                >
+                    {isHighlightNecessary(blackKey) && (
+                        <div className={styles.keyHighlighter} />
+                    )}
+                </div>
+            )}
+            {isHighlightNecessary(whiteKey) && (
+                <div className={styles.keyHighlighter} />
+            )}
+        </div>
+    );
 
     return (
         <div className={styles.piano + ' ' + className}>
             {octaves.map((octave) => (
                 <div className={styles.octave} key={octave}>
-                    <div className={styles.whiteKey}>
-                        <div className={styles.blackKey}>
-                            {isHighlightNecessary(
-                                new Note('C', 'Sharp', octave)
-                            ) && <div className={styles.keyHighlighter} />}
-                        </div>
-                        {isHighlightNecessary(
-                            new Note('C', 'None', octave)
-                        ) && <div className={styles.keyHighlighter} />}
-                    </div>
-                    <div className={styles.whiteKey}>
-                        <div className={styles.blackKey}>
-                            {isHighlightNecessary(
-                                new Note('D', 'Sharp', octave)
-                            ) && <div className={styles.keyHighlighter} />}
-                        </div>
-                        {isHighlightNecessary(
-                            new Note('D', 'None', octave)
-                        ) && <div className={styles.keyHighlighter} />}
-                    </div>
-                    <div className={styles.whiteKey}>
-                        {isHighlightNecessary(
-                            new Note('E', 'None', octave)
-                        ) && <div className={styles.keyHighlighter} />}
-                    </div>
-                    <div className={styles.whiteKey}>
-                        <div className={styles.blackKey}>
-                            {isHighlightNecessary(
-                                new Note('F', 'Sharp', octave)
-                            ) && <div className={styles.keyHighlighter} />}
-                        </div>
-                        {isHighlightNecessary(
-                            new Note('F', 'None', octave)
-                        ) && <div className={styles.keyHighlighter} />}
-                    </div>
-                    <div className={styles.whiteKey}>
-                        <div className={styles.blackKey}>
-                            {isHighlightNecessary(
-                                new Note('G', 'Sharp', octave)
-                            ) && <div className={styles.keyHighlighter} />}
-                        </div>
-                        {isHighlightNecessary(
-                            new Note('G', 'None', octave)
-                        ) && <div className={styles.keyHighlighter} />}
-                    </div>
-                    <div className={styles.whiteKey}>
-                        <div className={styles.blackKey}>
-                            {isHighlightNecessary(
-                                new Note('A', 'Sharp', octave)
-                            ) && <div className={styles.keyHighlighter} />}
-                        </div>
-                        {isHighlightNecessary(
-                            new Note('A', 'None', octave)
-                        ) && <div className={styles.keyHighlighter} />}
-                    </div>
-                    <div className={styles.whiteKey}>
-                        {isHighlightNecessary(
-                            new Note('B', 'None', octave)
-                        ) && <div className={styles.keyHighlighter} />}
-                    </div>
+                    <WhiteAndBlackKey
+                        whiteKey={new Note('C', 'None', octave)}
+                        blackKey={new Note('C', 'Sharp', octave)}
+                    />
+                    <WhiteAndBlackKey
+                        whiteKey={new Note('D', 'None', octave)}
+                        blackKey={new Note('D', 'Sharp', octave)}
+                    />
+                    <WhiteAndBlackKey
+                        whiteKey={new Note('E', 'None', octave)}
+                    />
+                    <WhiteAndBlackKey
+                        whiteKey={new Note('F', 'None', octave)}
+                        blackKey={new Note('F', 'Sharp', octave)}
+                    />
+                    <WhiteAndBlackKey
+                        whiteKey={new Note('G', 'None', octave)}
+                        blackKey={new Note('G', 'Sharp', octave)}
+                    />
+                    <WhiteAndBlackKey
+                        whiteKey={new Note('A', 'None', octave)}
+                        blackKey={new Note('A', 'Sharp', octave)}
+                    />
+                    <WhiteAndBlackKey
+                        whiteKey={new Note('B', 'None', octave)}
+                    />
                 </div>
             ))}
         </div>

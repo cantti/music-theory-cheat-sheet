@@ -17,9 +17,9 @@ export abstract class Scale {
 
     format(kind: 'short' | 'long' = 'short') {
         if (kind === 'short') {
-            return this.tonic.format() + this.getShortName();
+            return this.tonic.format(false) + this.getShortName();
         } else {
-            return this.tonic.format() + ' ' + this.getName();
+            return this.tonic.format(false) + ' ' + this.getName();
         }
     }
 }
