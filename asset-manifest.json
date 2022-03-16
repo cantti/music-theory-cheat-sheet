@@ -1,19 +1,13 @@
 {
   "files": {
-    "main.css": "./static/css/main.138e82ca.css",
-    "main.js": "./static/js/main.b3d872d8.js",
-    "static/media/dub-selection.jpg": "./static/media/dub-selection.f52b95d691f8551013e0.jpg",
-    "static/media/young-warriors.jpg": "./static/media/young-warriors.f173998384e3daa10eb5.jpg",
-    "static/media/steppers-story.jpg": "./static/media/steppers-story.2159cf3daa3edd4741f7.jpg",
-    "static/media/final-lap.jpg": "./static/media/final-lap.1ac94bda041be7e38f6c.jpg",
-    "static/media/korobochka.jpg": "./static/media/korobochka.e4e78f32bf1f8c8eaa97.jpg",
-    "static/media/space-travel.jpg": "./static/media/space-travel.bcbcab1479e523d5a32a.jpg",
+    "main.css": "./static/css/main.b9385d5a.css",
+    "main.js": "./static/js/main.2cfbaa2a.js",
     "index.html": "./index.html",
-    "main.138e82ca.css.map": "./static/css/main.138e82ca.css.map",
-    "main.b3d872d8.js.map": "./static/js/main.b3d872d8.js.map"
+    "main.b9385d5a.css.map": "./static/css/main.b9385d5a.css.map",
+    "main.2cfbaa2a.js.map": "./static/js/main.2cfbaa2a.js.map"
   },
   "entrypoints": [
-    "static/css/main.138e82ca.css",
-    "static/js/main.b3d872d8.js"
+    "static/css/main.b9385d5a.css",
+    "static/js/main.2cfbaa2a.js"
   ]
 }
