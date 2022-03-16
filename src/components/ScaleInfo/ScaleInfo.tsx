@@ -157,7 +157,7 @@ export const ScaleInfo = () => {
     return (
         <>
             <h1 className="d-flex flex-wrap align-items-center display-4">
-                <div className="mr-2">Тональности</div>
+                <div className="mr-2">Keys</div>
                 <Button
                     variant="link"
                     className="p-0"
@@ -168,11 +168,11 @@ export const ScaleInfo = () => {
             </h1>
             <Row>
                 <Col xs={12} md={6}>
-                    <h3>Кварто-квинтовый круг</h3>
+                    <h3>Circle of fifths</h3>
                     <div className="mb-2">
                         <p>
-                            Вы можете выбрать тональность из списка ниже или
-                            нажав на соответствующую кнопку в круге.
+                            You can choose a key from the list below or
+                            clicking on the corresponding button in the circle.
                         </p>
                         <Form.Control
                             as="select"
@@ -215,8 +215,8 @@ export const ScaleInfo = () => {
                     </div>
                 </Col>
                 <Col xs={12} md={6}>
-                    <h3>Ноты на клавиатуре</h3>
-                    <p>Ноты выбранной тональности на клавиатуре.</p>
+                    <h3>Keyboard notes</h3>
+                    <p>Notes of the selected key on the keyboard.</p>
                     <Piano
                         highlightedNotes={notesInScale}
                         startOctave={activeScale == null ? 0 : undefined}
@@ -224,8 +224,8 @@ export const ScaleInfo = () => {
                         className="mb-4"
                     />
 
-                    <h3>Ноты</h3>
-                    <p>Ноты выбранной тональности, начиная с тоники.</p>
+                    <h3>Notes</h3>
+                    <p>Notes of the selected key, starting with the tonic.</p>
                     <Table bordered responsive>
                         <thead>
                             <tr className="bg-light text-center">
@@ -243,8 +243,8 @@ export const ScaleInfo = () => {
                         </tbody>
                     </Table>
 
-                    <h3>Аккорды</h3>
-                    <p>Основные аккорды выбранной тональности.</p>
+                    <h3>Chord</h3>
+                    <p>The main chords of the selected key.</p>
                     <Table bordered responsive>
                         <thead>
                             <tr className="bg-light text-center">
@@ -298,17 +298,17 @@ export const ScaleInfo = () => {
             </Row>
             <Modal show={showHelp} onHide={() => setShowHelp(false)}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Справка о тональностях</Modal.Title>
+                    <Modal.Title>Help</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    На этой странице вы можете получить подробную информацию о
-                    любой тональности. Для удобства все тональности указаны на
-                    интерактивном кварто-квинтовом круге. Кварто-квинтовый круг
-                    — это способ изображения мажорных и минорных тональностей.
-                    На внешней стороне круга — мажорные тональности, на
-                    внутренней — параллельные минорные. Следующая за тоникой по
-                    часовой стрелке нота на круге — доминанта. А субдоминанта —
-                    следующая нота на круге против часовой стрелки.
+                    On this page you can get detailed information about any key.
+                    For convenience, all keys are indicated on the interactive
+                    quarto-quint circle. The circle of fifths is a way of
+                    depicting major and minor keys. On the outer side of the
+                    circle are major keys, on the inner side are parallel minor
+                    ones. The note following the tonic clockwise on the circle
+                    is the dominant. And the subdominant is the next note on the
+                    circle counterclockwise.
                 </Modal.Body>
             </Modal>
         </>

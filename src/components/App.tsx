@@ -22,22 +22,22 @@ const App = () => {
                     <Container>
                         <Navbar.Brand as={Link} to="/">
                             <GiMusicalNotes className="mr-3" size="2rem" />
-                            Шпаргалка по теории музыки
+                            Music Theory Cheat Sheet
                         </Navbar.Brand>
                         <Navbar.Toggle />
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav>
                                 <Nav.Link as={NavLink} to="/keys">
-                                    Тональности
+                                    Circle of fifths
                                 </Nav.Link>
                                 <Nav.Link
                                     as={NavLink}
                                     to="/detect-scale-by-notes"
                                 >
-                                    Определить тональность
+                                    Detect scale
                                 </Nav.Link>
                                 <Nav.Link as={NavLink} to="/discography">
-                                    Обо мне
+                                    About me
                                 </Nav.Link>
                             </Nav>
                         </Navbar.Collapse>
@@ -46,7 +46,7 @@ const App = () => {
                 <Container>
                     <Switch>
                         <Route exact path="/">
-                            <Redirect to="/scales" />
+                            <Redirect to="/keys" />
                         </Route>
                         <Route path="/detect-scale-by-notes">
                             <DetectScaleByNotes />
@@ -54,7 +54,7 @@ const App = () => {
                         <Route path="/discography">
                             <AboutMe />
                         </Route>
-                        <Route path="/scales/:tonic?/:scale?">
+                        <Route path="/keys/:tonic?/:scale?">
                             <ScaleInfo />
                         </Route>
                     </Switch>

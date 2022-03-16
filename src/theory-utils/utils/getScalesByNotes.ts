@@ -33,10 +33,10 @@ const allScales: Scale[] = [
 
 export const getScalesByNotes = (notes: Note[]) => {
     const notesIndexes = _(notes)
-        .map((x) => x.getIndex())
+        .map((x) => x.getIndex() % 12)
         .uniq()
         .value();
-
+    
     return allScales.filter(
         (scale) =>
             _.intersection(

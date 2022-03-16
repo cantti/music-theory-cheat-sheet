@@ -1,10 +1,3 @@
-import SteppersStoryImg from './album-covers/steppers-story.jpg';
-import DubSelection from './album-covers/dub-selection.jpg';
-import YoungWarriors from './album-covers/young-warriors.jpg';
-import SpaceTravel from './album-covers/space-travel.jpg';
-import FinalLap from './album-covers/final-lap.jpg';
-import Korobochka from './album-covers/korobochka.jpg'
-
 interface Album {
     artist: string;
     title: string;
@@ -12,16 +5,16 @@ interface Album {
     description: string;
     image: string;
     link: string;
-    hyperFollow: string | undefined;
+    hyperFollow: string;
 }
 
-const discography: Album[] = [
+const discography: Partial<Album>[] = [
     {
         artist: 'Cantti',
         title: 'Steppers Story',
         description: ``,
         date: new Date('2014-10-12'),
-        image: SteppersStoryImg,
+        image: 'steppers-story.jpg',
         link: 'https://cantti.bandcamp.com/album/steppers-story',
         hyperFollow: 'https://distrokid.com/hyperfollow/cantti/dy4s',
     },
@@ -30,7 +23,7 @@ const discography: Album[] = [
         title: 'Young Warriors',
         description: ``,
         date: new Date('2016-03-04'),
-        image: YoungWarriors,
+        image: 'young-warriors.jpg',
         link: 'https://cantti.bandcamp.com/album/young-warriors',
         hyperFollow: undefined,
     },
@@ -39,7 +32,7 @@ const discography: Album[] = [
         title: 'Space Travel',
         description: ``,
         date: new Date('2018-01-14'),
-        image: SpaceTravel,
+        image: 'space-travel.jpg',
         link: 'https://cantti.bandcamp.com/album/space-travel',
         hyperFollow: 'https://distrokid.com/hyperfollow/cantti/dy5d',
     },
@@ -48,7 +41,7 @@ const discography: Album[] = [
         title: 'Dub Selection 1',
         description: ``,
         date: new Date('2019-12-17'),
-        image: DubSelection,
+        image: 'dub-selection.jpg',
         link: 'https://cantti.bandcamp.com/album/dub-selection-1',
         hyperFollow:
             'https://distrokid.com/hyperfollow/cantti/dub-selection-1-2',
@@ -58,7 +51,7 @@ const discography: Album[] = [
         title: 'Коробочка коробка',
         description: ``,
         date: new Date('2020-06-2'),
-        image: Korobochka,
+        image: 'korobochka.jpg',
         link: 'https://cantti.bandcamp.com/album/korobochka-korobka',
         hyperFollow: 'https://vk.com/wall-20788333_22228',
     },
@@ -67,9 +60,17 @@ const discography: Album[] = [
         title: 'Final Lap',
         description: ``,
         date: new Date('2018-10-25'),
-        image: FinalLap,
+        image: 'final-lap.jpg',
         link: 'https://imminentstate.bandcamp.com/album/final-lap',
         hyperFollow: 'https://distrokid.com/hyperfollow/imminentstate/fa6R',
+    },
+    {
+        artist: 'Cantti / Skald',
+        title: 'Получать счастьем',
+        description: ``,
+        date: new Date('2022-01-01'),
+        image: 'poluchat-schastem.jpg',
+        hyperFollow: 'https://hyperfollow.com/skaldcanttipoluchatschastem',
     },
 ];
 

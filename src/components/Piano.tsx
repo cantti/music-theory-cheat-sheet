@@ -2,7 +2,6 @@ import React from 'react';
 import { Note } from '../theory-utils/note/Note';
 import styles from './Piano.module.css';
 import { createPianoSynth } from '../piano-synth';
-import { useState } from 'react';
 
 const pianoSynth = createPianoSynth();
 

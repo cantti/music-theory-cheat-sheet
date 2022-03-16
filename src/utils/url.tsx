@@ -7,9 +7,9 @@ import { isSymbol } from '../theory-utils/utils/isSymbol';
 
 export function getScaleUrl(key: Scale) {
     return (
-        '/scales/' +
+        '/keys/' +
         key.tonic.letter +
-        (key.tonic.symbol !== '' ? '-' + key.tonic.symbol : '') +
+        (key.tonic.symbol !== '' ? key.tonic.symbol : '') +
         '/' +
         key.getShortName()
     );
@@ -29,7 +29,7 @@ export function getScaleFormUrlParams(
         return null;
     }
 
-    const tonicSymbol = tonic.length > 1 ? tonic.substring(2) : '';
+    const tonicSymbol = tonic.length > 1 ? tonic.substring(1) : '';
 
     if (!isSymbol(tonicSymbol)) {
         return null;

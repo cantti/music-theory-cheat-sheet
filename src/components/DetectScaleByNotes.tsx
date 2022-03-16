@@ -59,9 +59,9 @@ export const DetectScaleByNotes = () => {
 
     return (
         <div>
-            <h1 className="display-4">Определить тональность</h1>
-            <p>Здесь вы можете определить тональность по нотам.</p>
-            <p>Выберите ноты.</p>
+            <h1 className="display-4">Determine the key by the notes.</h1>
+            <p>Here you can determine the key by the notes..</p>
+            <p>Select notes.</p>
 
             <Row>
                 {inputsValues.map((_inputValue, inputIndex) => (
