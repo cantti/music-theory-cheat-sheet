@@ -19,8 +19,6 @@ const Piano = ({
     endOctave = undefined,
     className = '',
 }: PianoProps) => {
-    const [activeNotes, setActiveNotes] = useState<Note[]>([]);
-
     let octaves: number[] = [];
 
     if (startOctave === undefined || endOctave === undefined) {
@@ -49,13 +47,6 @@ const Piano = ({
     ) => {
         e.stopPropagation();
         pianoSynth.triggerAttack(note.format());
-        // setActiveNotes((activeNotes) => {
-        //     if (!activeNotes.includes(note)) {
-        //         return [...activeNotes, note];
-        //     } else {
-        //         return activeNotes;
-        //     }
-        // });
     };
 
     const handleKeyMouseUp = (
@@ -63,7 +54,6 @@ const Piano = ({
         e: React.MouseEvent<HTMLDivElement, MouseEvent>
     ) => {
         pianoSynth.triggerRelease(note.format());
-        // setActiveNotes((activeNotes) => activeNotes.filter((x) => x !== note));
     };
 
     const handleMouseOver = (
@@ -73,13 +63,6 @@ const Piano = ({
         if (e.buttons === 1) {
             e.stopPropagation();
             pianoSynth.triggerAttack(note.format());
-            // setActiveNotes((activeNotes) => {
-            //     if (!activeNotes.includes(note)) {
-            //         return [...activeNotes, note];
-            //     } else {
-            //         return activeNotes;
-            //     }
-            // });
         }
     };
 
@@ -89,9 +72,6 @@ const Piano = ({
     ) => {
         if (e.buttons === 1) {
             pianoSynth.triggerRelease(note.format());
-            // setActiveNotes((activeNotes) =>
-            //     activeNotes.filter((x) => x !== note)
-            // );
         }
     };
 
@@ -103,10 +83,7 @@ const Piano = ({
         blackKey?: Note;
     }) => (
         <div
-            className={
-                styles.whiteKey +
-                (activeNotes.includes(whiteKey) ? ' active' : '')
-            }
+            className={styles.whiteKey}
             onMouseDown={(e) => handleKeyMouseDown(whiteKey, e)}
             onMouseOver={(e) => handleMouseOver(whiteKey, e)}
             onMouseLeave={(e) => handleMouseLeave(whiteKey, e)}
