@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "./static/css/main.138e82ca.css",
-    "main.js": "./static/js/main.a102e9d0.js",
+    "main.js": "./static/js/main.b3d872d8.js",
     "static/media/dub-selection.jpg": "./static/media/dub-selection.f52b95d691f8551013e0.jpg",
     "static/media/young-warriors.jpg": "./static/media/young-warriors.f173998384e3daa10eb5.jpg",
     "static/media/steppers-story.jpg": "./static/media/steppers-story.2159cf3daa3edd4741f7.jpg",
@@ -10,10 +10,10 @@
     "static/media/space-travel.jpg": "./static/media/space-travel.bcbcab1479e523d5a32a.jpg",
     "index.html": "./index.html",
     "main.138e82ca.css.map": "./static/css/main.138e82ca.css.map",
-    "main.a102e9d0.js.map": "./static/js/main.a102e9d0.js.map"
+    "main.b3d872d8.js.map": "./static/js/main.b3d872d8.js.map"
   },
   "entrypoints": [
     "static/css/main.138e82ca.css",
-    "static/js/main.a102e9d0.js"
+    "static/js/main.b3d872d8.js"
   ]
 }
