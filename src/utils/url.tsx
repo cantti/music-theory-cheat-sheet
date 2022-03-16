@@ -5,7 +5,7 @@ import { Scale } from '../theory-utils/scales/Scale';
 import { isLetter } from '../theory-utils/utils/isLetter';
 import { isSymbol } from '../theory-utils/utils/isSymbol';
 
-export function getScaleUrl(key: Scale): string {
+export function getScaleUrl(key: Scale) {
     return (
         '/scales/' +
         key.tonic.letter +
@@ -15,22 +15,19 @@ export function getScaleUrl(key: Scale): string {
     );
 }
 
-export function getScaleFormUrlParams(params: {
-    tonic?: string;
-    scale?: string;
-}): Scale | null {
-    if (!params.tonic) {
+export function getScaleFormUrlParams(tonic?: string, scale?: string): Scale | null {
+    if (!tonic) {
         return null;
     }
 
-    const tonicLetter = params.tonic[0];
+    const tonicLetter = tonic[0];
 
     if (!isLetter(tonicLetter)) {
         return null;
     }
 
     const tonicSymbol =
-        params.tonic.length > 1 ? params.tonic.substring(2) : 'None';
+        tonic.length > 1 ? tonic.substring(2) : 'None';
 
     if (!isSymbol(tonicSymbol)) {
         return null;
@@ -39,7 +36,7 @@ export function getScaleFormUrlParams(params: {
     const tonicNote = new Note(tonicLetter, tonicSymbol);
 
     const activeScaleFromUrl =
-        params.scale === 'm'
+        scale === 'm'
             ? new NaturalMinorScale(tonicNote)
             : new MajorScale(tonicNote);
 
