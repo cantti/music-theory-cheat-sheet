@@ -26,52 +26,52 @@ const scalesInCircle: { scale: Scale; clickable: boolean }[][] = [
     [{ scale: new MajorScale(new Note('E')), clickable: true }],
     [
         { scale: new MajorScale(new Note('B')), clickable: true },
-        { scale: new MajorScale(new Note('C', 'Flat')), clickable: false },
+        { scale: new MajorScale(new Note('C', 'b')), clickable: false },
     ],
     [
-        { scale: new MajorScale(new Note('F', 'Sharp')), clickable: false },
-        { scale: new MajorScale(new Note('G', 'Flat')), clickable: true },
+        { scale: new MajorScale(new Note('F', '#')), clickable: false },
+        { scale: new MajorScale(new Note('G', 'b')), clickable: true },
     ],
     [
-        { scale: new MajorScale(new Note('C', 'Sharp')), clickable: false },
-        { scale: new MajorScale(new Note('D', 'Flat')), clickable: true },
+        { scale: new MajorScale(new Note('C', '#')), clickable: false },
+        { scale: new MajorScale(new Note('D', 'b')), clickable: true },
     ],
-    [{ scale: new MajorScale(new Note('A', 'Flat')), clickable: true }],
-    [{ scale: new MajorScale(new Note('E', 'Flat')), clickable: true }],
-    [{ scale: new MajorScale(new Note('B', 'Flat')), clickable: true }],
+    [{ scale: new MajorScale(new Note('A', 'b')), clickable: true }],
+    [{ scale: new MajorScale(new Note('E', 'b')), clickable: true }],
+    [{ scale: new MajorScale(new Note('B', 'b')), clickable: true }],
     [{ scale: new MajorScale(new Note('F')), clickable: true }],
     [{ scale: new NaturalMinorScale(new Note('A')), clickable: true }],
     [{ scale: new NaturalMinorScale(new Note('E')), clickable: true }],
     [{ scale: new NaturalMinorScale(new Note('B')), clickable: true }],
-    [{ scale: new NaturalMinorScale(new Note('F', 'Sharp')), clickable: true }],
-    [{ scale: new NaturalMinorScale(new Note('C', 'Sharp')), clickable: true }],
+    [{ scale: new NaturalMinorScale(new Note('F', '#')), clickable: true }],
+    [{ scale: new NaturalMinorScale(new Note('C', '#')), clickable: true }],
     [
         {
-            scale: new NaturalMinorScale(new Note('G', 'Sharp')),
+            scale: new NaturalMinorScale(new Note('G', '#')),
             clickable: true,
         },
         {
-            scale: new NaturalMinorScale(new Note('A', 'Flat')),
+            scale: new NaturalMinorScale(new Note('A', 'b')),
             clickable: false,
         },
     ],
     [
         {
-            scale: new NaturalMinorScale(new Note('D', 'Sharp')),
+            scale: new NaturalMinorScale(new Note('D', '#')),
             clickable: false,
         },
         {
-            scale: new NaturalMinorScale(new Note('E', 'Flat')),
+            scale: new NaturalMinorScale(new Note('E', 'b')),
             clickable: true,
         },
     ],
     [
         {
-            scale: new NaturalMinorScale(new Note('A', 'Sharp')),
+            scale: new NaturalMinorScale(new Note('A', '#')),
             clickable: false,
         },
         {
-            scale: new NaturalMinorScale(new Note('B', 'Flat')),
+            scale: new NaturalMinorScale(new Note('B', 'b')),
             clickable: true,
         },
     ],
@@ -88,7 +88,7 @@ const clickableScales = scalesInCircle.map(
 // clickableScales ordered by letter like c, d, e, ... , b and then by symbol (none, flat, sharp) for select
 const clickableScalesSorted = _.orderBy(clickableScales, [
     (x) => getLetterIndices().find((li) => li.letter === x.tonic.letter)!.index,
-    (x) => (x.tonic.symbol === 'None' ? 0 : x.tonic.symbol === 'Flat' ? 1 : 2),
+    (x) => (x.tonic.symbol === '' ? 0 : x.tonic.symbol === 'b' ? 1 : 2),
 ]);
 
 export const ScaleInfo = () => {

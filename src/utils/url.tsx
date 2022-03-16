@@ -9,13 +9,16 @@ export function getScaleUrl(key: Scale) {
     return (
         '/scales/' +
         key.tonic.letter +
-        (key.tonic.symbol !== 'None' ? '-' + key.tonic.symbol : '') +
+        (key.tonic.symbol !== '' ? '-' + key.tonic.symbol : '') +
         '/' +
         key.getShortName()
     );
 }
 
-export function getScaleFormUrlParams(tonic?: string, scale?: string): Scale | null {
+export function getScaleFormUrlParams(
+    tonic?: string,
+    scale?: string
+): Scale | null {
     if (!tonic) {
         return null;
     }
@@ -26,8 +29,7 @@ export function getScaleFormUrlParams(tonic?: string, scale?: string): Scale | n
         return null;
     }
 
-    const tonicSymbol =
-        tonic.length > 1 ? tonic.substring(2) : 'None';
+    const tonicSymbol = tonic.length > 1 ? tonic.substring(2) : '';
 
     if (!isSymbol(tonicSymbol)) {
         return null;

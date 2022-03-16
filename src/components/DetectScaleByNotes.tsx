@@ -9,16 +9,16 @@ import { AiOutlineClear } from 'react-icons/ai';
 const optionsForInput: { note?: Note; display: string }[] = [
     { display: 'Не выбрана' },
     { note: new Note('C'), display: 'C' },
-    { note: new Note('C', 'Sharp'), display: 'C#/Eb' },
+    { note: new Note('C', '#'), display: 'C#/Eb' },
     { note: new Note('D'), display: 'D' },
-    { note: new Note('D', 'Sharp'), display: 'D#/Eb' },
+    { note: new Note('D', '#'), display: 'D#/Eb' },
     { note: new Note('E'), display: 'E' },
     { note: new Note('F'), display: 'F' },
-    { note: new Note('F', 'Sharp'), display: 'F#/Gb' },
+    { note: new Note('F', '#'), display: 'F#/Gb' },
     { note: new Note('G'), display: 'G' },
-    { note: new Note('G', 'Sharp'), display: 'G#/Ab' },
+    { note: new Note('G', '#'), display: 'G#/Ab' },
     { note: new Note('A'), display: 'A' },
-    { note: new Note('A', 'Sharp'), display: 'A#/Bb' },
+    { note: new Note('A', '#'), display: 'A#/Bb' },
     { note: new Note('B'), display: 'B' },
 ];
 

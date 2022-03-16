@@ -115,30 +115,30 @@ const Piano = ({
             {octaves.map((octave) => (
                 <div className={styles.octave} key={octave}>
                     <WhiteAndBlackKey
-                        whiteKey={new Note('C', 'None', octave)}
-                        blackKey={new Note('C', 'Sharp', octave)}
+                        whiteKey={new Note('C', '', octave)}
+                        blackKey={new Note('C', '#', octave)}
                     />
                     <WhiteAndBlackKey
-                        whiteKey={new Note('D', 'None', octave)}
-                        blackKey={new Note('D', 'Sharp', octave)}
+                        whiteKey={new Note('D', '', octave)}
+                        blackKey={new Note('D', '#', octave)}
                     />
                     <WhiteAndBlackKey
-                        whiteKey={new Note('E', 'None', octave)}
+                        whiteKey={new Note('E', '', octave)}
                     />
                     <WhiteAndBlackKey
-                        whiteKey={new Note('F', 'None', octave)}
-                        blackKey={new Note('F', 'Sharp', octave)}
+                        whiteKey={new Note('F', '', octave)}
+                        blackKey={new Note('F', '#', octave)}
                     />
                     <WhiteAndBlackKey
-                        whiteKey={new Note('G', 'None', octave)}
-                        blackKey={new Note('G', 'Sharp', octave)}
+                        whiteKey={new Note('G', '', octave)}
+                        blackKey={new Note('G', '#', octave)}
                     />
                     <WhiteAndBlackKey
-                        whiteKey={new Note('A', 'None', octave)}
-                        blackKey={new Note('A', 'Sharp', octave)}
+                        whiteKey={new Note('A', '', octave)}
+                        blackKey={new Note('A', '#', octave)}
                     />
                     <WhiteAndBlackKey
-                        whiteKey={new Note('B', 'None', octave)}
+                        whiteKey={new Note('B', '', octave)}
                     />
                 </div>
             ))}

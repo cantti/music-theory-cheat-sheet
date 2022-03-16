@@ -6,7 +6,7 @@ import { Symbol } from './Symbol';
 export class Note {
     constructor(
         public letter: Letter = 'C',
-        public symbol: Symbol = 'None',
+        public symbol: Symbol = '',
         public octave: number = 4
     ) {}
 
@@ -19,23 +19,7 @@ export class Note {
     }
 
     format(showOctave: boolean = true) {
-        let result: string = this.letter;
-        switch (this.symbol) {
-            case 'Sharp':
-                result += '#';
-                break;
-            case 'DoubleSharp':
-                result += '##';
-                break;
-            case 'Flat':
-                result += 'b';
-                break;
-            case 'DoubleFlat':
-                result += 'bb';
-                break;
-            default:
-                break;
-        }
+        let result: string = this.letter + this.symbol;
         if (showOctave) {
             result += this.octave;
         }
