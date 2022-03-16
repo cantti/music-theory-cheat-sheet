@@ -43,7 +43,7 @@ const App = () => {
                         </Navbar.Collapse>
                     </Container>
                 </Navbar>
-                <Container>
+                <Container className="pb-2">
                     <Switch>
                         <Route exact path="/">
                             <Redirect to="/keys" />

@@ -94,6 +94,8 @@ const clickableScalesSorted = _.orderBy(clickableScales, [
 export const ScaleInfo = () => {
     const [showHelp, setShowHelp] = useState(false);
 
+    const [playingChord, setPlayingChord] = useState<Chord | null>(null);
+
     const history = useHistory();
 
     const urlParams = useParams<{ tonic?: string; scale?: string }>();
@@ -137,6 +139,7 @@ export const ScaleInfo = () => {
     const notesInScale = activeScale.getNotes();
 
     const handleChordPlayMouseDown = (chord: Chord) => {
+        setPlayingChord(chord);
         chord
             .getNotes()
             .map((x) => x.format())
@@ -146,6 +149,7 @@ export const ScaleInfo = () => {
     };
 
     const handleChordPlayMouseUp = (chord: Chord) => {
+        setPlayingChord(null);
         chord
             .getNotes()
             .map((x) => x.format())
@@ -171,8 +175,8 @@ export const ScaleInfo = () => {
                     <h3>Circle of fifths</h3>
                     <div className="mb-2">
                         <p>
-                            You can choose a key from the list below or
-                            clicking on the corresponding button in the circle.
+                            You can choose a key from the list below or clicking
+                            on the corresponding button in the circle.
                         </p>
                         <Form.Control
                             as="select"
@@ -243,7 +247,7 @@ export const ScaleInfo = () => {
                         </tbody>
                     </Table>
 
-                    <h3>Chord</h3>
+                    <h3>Chords</h3>
                     <p>The main chords of the selected key.</p>
                     <Table bordered responsive>
                         <thead>
@@ -294,6 +298,14 @@ export const ScaleInfo = () => {
                             </tr>
                         </tbody>
                     </Table>
+                    <p>Notes of the playing chord.</p>
+                    <Piano
+                        highlightedNotes={
+                            playingChord != null ? playingChord.getNotes() : []
+                        }
+                        startOctave={4}
+                        endOctave={5}
+                    />
                 </Col>
             </Row>
             <Modal show={showHelp} onHide={() => setShowHelp(false)}>
