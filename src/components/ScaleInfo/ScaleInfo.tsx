@@ -15,6 +15,7 @@ import Piano from '../Piano';
 import styles from './ScaleInfo.module.scss';
 import { Chord } from '../../theory-utils/chords/Chord';
 import { createPianoSynth } from '../../piano-synth';
+import { isTouchDevice } from '../../utils/isTouchDevice';
 
 const pianoSynth = createPianoSynth();
 
@@ -138,7 +139,7 @@ export const ScaleInfo = () => {
 
     const notesInScale = activeScale.getNotes();
 
-    const handleChordPlayMouseDown = (chord: Chord) => {
+    const playChord = (chord: Chord) => {
         setPlayingChord(chord);
         chord
             .getNotes()
@@ -148,7 +149,7 @@ export const ScaleInfo = () => {
             });
     };
 
-    const handleChordPlayMouseUp = (chord: Chord) => {
+    const stopChord = (chord: Chord) => {
         setPlayingChord(null);
         chord
             .getNotes()
@@ -278,16 +279,31 @@ export const ScaleInfo = () => {
                                                 variant="outline-primary"
                                                 size="sm"
                                                 className="w-100"
-                                                onMouseDown={() =>
-                                                    handleChordPlayMouseDown(
-                                                        chord
-                                                    )
-                                                }
-                                                onMouseUp={() =>
-                                                    handleChordPlayMouseUp(
-                                                        chord
-                                                    )
-                                                }
+                                                onMouseDown={(e) => {
+                                                    e.stopPropagation();
+                                                    if (isTouchDevice()) return;
+                                                    playChord(chord);
+                                                }}
+                                                onMouseUp={(e) => {
+                                                    e.stopPropagation();
+                                                    if (isTouchDevice()) return;
+                                                    stopChord(chord);
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.stopPropagation();
+                                                    if (isTouchDevice()) return;
+                                                    if (e.buttons === 1) {
+                                                        stopChord(chord);
+                                                    }
+                                                }}
+                                                onTouchStart={(e) => {
+                                                    e.stopPropagation();
+                                                    playChord(chord);
+                                                }}
+                                                onTouchEnd={(e) => {
+                                                    e.stopPropagation();
+                                                    stopChord(chord);
+                                                }}
                                             >
                                                 {chord.format()}
                                                 <br />
