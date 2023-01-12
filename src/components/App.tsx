@@ -2,9 +2,8 @@ import { Suspense } from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { GiMusicalNotes } from 'react-icons/gi';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
-import './App.scss';
 
-const App = () => {
+function App() {
     const location = useLocation();
     return (
         <Suspense fallback={<div>Loading...</div>}>
@@ -39,6 +38,6 @@ const App = () => {
             </Container>
         </Suspense>
     );
-};
+}
 
 export default App;

@@ -10,6 +10,7 @@ import App from './components/App';
 import { DetectScaleByNotes } from './components/DetectScaleByNotes';
 import { ScaleInfo } from './components/ScaleInfo';
 import { createRoot } from 'react-dom/client';
+import './index.scss';
 
 const router = createBrowserRouter(
     createRoutesFromElements(

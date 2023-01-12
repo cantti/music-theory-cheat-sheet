@@ -24,7 +24,7 @@ const optionsForInput: { note?: Note; display: string }[] = [
 
 const noteInputCount = 7;
 
-export const DetectScaleByNotes = () => {
+export function DetectScaleByNotes() {
     const [inputsValues, setInputsValues] = React.useState(
         Array(noteInputCount)
             .fill(undefined)
@@ -72,9 +72,7 @@ export const DetectScaleByNotes = () => {
                                     (x) => x.inputIndex === inputIndex
                                 )!.value
                             )}
-                            onChange={(e) =>
-                                handleInputsValueChange(inputIndex, e)
-                            }
+                            onChange={(e) => handleInputsValueChange(inputIndex, e)}
                             className="mb-3"
                         >
                             {optionsForInput.map((option, idx) => (
@@ -89,34 +87,32 @@ export const DetectScaleByNotes = () => {
             <div className="mb-3">
                 <Button
                     variant="outline-secondary"
-                    onClick={() =>
-                        setInputsValues(
-                            inputsValues.map((x) => {
-                                const newInputValue = { ...x };
-                                newInputValue.value = optionsForInput[0];
-                                return newInputValue;
-                            })
-                        )
-                    }
+                    onClick={() => setInputsValues(
+                        inputsValues.map((x) => {
+                            const newInputValue = { ...x };
+                            newInputValue.value = optionsForInput[0];
+                            return newInputValue;
+                        })
+                    )}
                 >
                     <AiOutlineClear /> Очистить
                 </Button>
             </div>
             {inputsValues.filter((x) => x.value.note == null).length !==
                 noteInputCount && (
-                <>
-                    <p>Тональности с такими нотами:</p>
-                    <ul>
-                        {possibleScales.map((key, index) => (
-                            <li key={index}>
-                                <Link to={getScaleUrl(key)}>
-                                    {key.format('long')}
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                </>
-            )}
+                    <>
+                        <p>Тональности с такими нотами:</p>
+                        <ul>
+                            {possibleScales.map((key, index) => (
+                                <li key={index}>
+                                    <Link to={getScaleUrl(key)}>
+                                        {key.format('long')}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </>
+                )}
         </div>
     );
-};
+}

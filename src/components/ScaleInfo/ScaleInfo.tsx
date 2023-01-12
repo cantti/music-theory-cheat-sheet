@@ -107,7 +107,7 @@ export const ScaleInfo = () => {
     ) => {
         return scalesInCircleButtons.map((circleItem, idx) => (
             <Button
-                className={styles.key + ' rounded-circle border border-2 p-0'}
+                className={styles.key}
                 key={idx}
                 variant="light"
                 onClick={() =>

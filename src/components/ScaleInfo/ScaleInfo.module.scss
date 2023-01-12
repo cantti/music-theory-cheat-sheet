@@ -1,14 +1,18 @@
 @use 'sass:math';
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
 
 $fontSize: 2rem;
 
-$keySize: $fontSize * 1.5;
+$keySize: $fontSize * 1.6;
 
 .circleOfFifths {
     //compensate key size
     padding-top: $keySize * 0.5;
     padding-bottom: $keySize * 0.5;
-    @media (min-width: 768px) {
+
+    @include media-breakpoint-up(md) {
         width: 70%;
         margin-left: auto;
         margin-right: auto;
@@ -39,8 +43,8 @@ $keySize: $fontSize * 1.5;
     $size: 60%;
 
     position: absolute;
-    left: (100% - $size) / 2;
-    top: (100% - $size) / 2;
+    left: calc((100% - $size) / 2);
+    top: calc((100% - $size) / 2);
     width: $size;
 
     //to make height same as width
@@ -52,7 +56,10 @@ $keySize: $fontSize * 1.5;
     position: absolute;
     width: $keySize;
     height: $keySize;
-    line-height: 1;
+    line-height: 1 !important;
+    padding: 0 !important;
+    border: 2px var(--bs-border-style) var(--bs-border-color) !important;
+    border-radius: 50% !important;
 
     //to make key in the middle of circle board (based on width and height property
     margin-left: -$keySize * 0.5;
