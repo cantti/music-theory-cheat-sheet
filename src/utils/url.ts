@@ -2,45 +2,18 @@ import { Note } from '../theory-utils/note/Note';
 import { MajorScale } from '../theory-utils/scales/MajorScale';
 import { NaturalMinorScale } from '../theory-utils/scales/NaturalMinorScale';
 import { Scale } from '../theory-utils/scales/Scale';
-import { isLetter } from '../theory-utils/utils/isLetter';
-import { isSymbol } from '../theory-utils/utils/isSymbol';
 
 export function getScaleUrl(key: Scale) {
-    return (
-        '/keys/' +
-        key.tonic.letter +
-        (key.tonic.symbol !== '' ? key.tonic.symbol : '') +
-        '/' +
-        key.getShortName()
-    );
+    const scale = `${key.tonic.letter}${key.tonic.symbol}${key.getShortName()}`;
+    return `/keys/${encodeURIComponent(scale)}`;
 }
 
-export function getScaleFormUrlParams(
-    tonic?: string,
-    scale?: string
-): Scale | null {
-    if (!tonic) {
-        return null;
-    }
-
-    const tonicLetter = tonic[0];
-
-    if (!isLetter(tonicLetter)) {
-        return null;
-    }
-
-    const tonicSymbol = tonic.length > 1 ? tonic.substring(1) : '';
-
-    if (!isSymbol(tonicSymbol)) {
-        return null;
-    }
-
-    const tonicNote = new Note(tonicLetter, tonicSymbol);
-
-    const activeScaleFromUrl =
-        scale === 'm'
-            ? new NaturalMinorScale(tonicNote)
-            : new MajorScale(tonicNote);
-
+export function getScaleFormUrlParams(scale: string) {
+    const pattern = /^(?<tonic>[cdefgab][#b]?)(?<minor>m?)$/i;
+    const match = scale.match(pattern);
+    const tonic = Note.fromString(`${match?.groups?.tonic}`);
+    const activeScaleFromUrl = match?.groups?.minor
+        ? new NaturalMinorScale(tonic)
+        : new MajorScale(tonic);
     return activeScaleFromUrl;
 }

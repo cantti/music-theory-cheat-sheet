@@ -3,7 +3,6 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import { Button, Col, Form, Modal, Row, Table } from 'react-bootstrap';
 import { BsQuestionCircle, BsPlayCircle } from 'react-icons/bs';
-import { Redirect, useHistory, useParams } from 'react-router-dom';
 import { Note } from '../../theory-utils/note/Note';
 import { MajorScale } from '../../theory-utils/scales/MajorScale';
 import { NaturalMinorScale } from '../../theory-utils/scales/NaturalMinorScale';
@@ -16,6 +15,7 @@ import styles from './ScaleInfo.module.scss';
 import { Chord } from '../../theory-utils/chords/Chord';
 import { createPianoSynth } from '../../piano-synth';
 import { isTouchDevice } from '../../utils/isTouchDevice';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const pianoSynth = createPianoSynth();
 
@@ -97,16 +97,17 @@ export const ScaleInfo = () => {
 
     const [playingChord, setPlayingChord] = useState<Chord | null>(null);
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
-    const urlParams = useParams<{ tonic?: string; scale?: string }>();
+    const urlParams = useParams<{ scale: string }>();
 
     //get scale from url
-    const activeScale = getScaleFormUrlParams(urlParams.tonic, urlParams.scale);
+    const activeScale = getScaleFormUrlParams(urlParams.scale!);
 
     //redirect to c major if scale is not supported
     if (!activeScale) {
-        return <Redirect to={getScaleUrl(clickableScales[0])} />;
+        navigate(getScaleUrl(clickableScales[0]));
+        return null;
     }
 
     const formatCircleButtons = (
@@ -119,7 +120,7 @@ export const ScaleInfo = () => {
                 size="sm"
                 variant="info"
                 onClick={() =>
-                    history.push(
+                    navigate(
                         getScaleUrl(
                             circleItem.filter((x) => x.clickable)[0].scale
                         )
@@ -186,7 +187,7 @@ export const ScaleInfo = () => {
                                 (x) => x.format() === activeScale.format()
                             )}
                             onChange={(e) => {
-                                history.push(
+                                navigate(
                                     getScaleUrl(
                                         clickableScalesSorted[
                                             parseInt(e.target.value)

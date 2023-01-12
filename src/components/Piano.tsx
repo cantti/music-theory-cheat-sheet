@@ -1,9 +1,8 @@
-import React, { createRef } from 'react';
-import { Note } from '../theory-utils/note/Note';
-import styles from './Piano.module.css';
+import React, { useRef } from 'react';
 import { createPianoSynth } from '../piano-synth';
-import { useRef } from 'react';
+import { Note } from '../theory-utils/note/Note';
 import { isTouchDevice } from '../utils/isTouchDevice';
+import styles from './Piano.module.css';
 
 const pianoSynth = createPianoSynth();
 

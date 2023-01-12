@@ -1,5 +1,7 @@
 import { getLetterIndices } from '../utils/getLetterIndices';
 import { getSymbolShifts } from '../utils/getSymbolShifts';
+import { isLetter } from '../utils/isLetter';
+import { isSymbol } from '../utils/isSymbol';
 import { Letter } from './Letter';
 import { Symbol } from './Symbol';
 
@@ -9,6 +11,24 @@ export class Note {
         public symbol: Symbol = '',
         public octave: number = 4
     ) {}
+
+    static fromString(string: string) {
+        const pattern = /^(?<letter>[cdefgab])(?<symbol>[#b]?)(?<octave>\d?)$/i;
+        const match = string.match(pattern);
+        if (!match?.groups) {
+            throw new Error();
+        }
+        const letter = match.groups.letter.toUpperCase();
+        const symbol = match.groups.symbol;
+        const octave =
+            match.groups.octave !== ''
+                ? parseInt(match.groups.octave)
+                : undefined;
+        if (!isLetter(letter) || !isSymbol(symbol)) {
+            throw new Error();
+        }
+        return new Note(letter, symbol, octave);
+    }
 
     getIndex() {
         return (

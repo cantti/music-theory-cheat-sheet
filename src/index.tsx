@@ -1,5 +1,31 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import {
+    createBrowserRouter,
+    createRoutesFromElements,
+    Navigate,
+    Route,
+    RouterProvider,
+} from 'react-router-dom';
+import { AboutMe } from './components/AboutMe';
 import App from './components/App';
+import { DetectScaleByNotes } from './components/DetectScaleByNotes';
+import { ScaleInfo } from './components/ScaleInfo';
+import { createRoot } from 'react-dom/client';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const router = createBrowserRouter(
+    createRoutesFromElements(
+        <Route path="/" element={<App />}>
+            <Route path="/" element={<Navigate to="/keys/C" />} />
+            <Route
+                path="/detect-scale-by-notes"
+                element={<DetectScaleByNotes />}
+            />
+            <Route path="/discography" element={<AboutMe />} />
+            <Route path="/keys/:scale" element={<ScaleInfo />} />
+        </Route>
+    ),
+    { basename: process.env.PUBLIC_URL }
+);
+
+createRoot(document.getElementById('root')!).render(
+    <RouterProvider router={router} />
+);
