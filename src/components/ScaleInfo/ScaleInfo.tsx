@@ -1,21 +1,19 @@
 /* eslint-disable import/no-webpack-loader-syntax */
-import _ from 'lodash';
-import React, { useState } from 'react';
-import { Button, Col, Form, Modal, Row, Table } from 'react-bootstrap';
-import { BsQuestionCircle, BsPlayCircle } from 'react-icons/bs';
+import { useState } from 'react';
+import { Button, Col, Modal, Row, Table } from 'react-bootstrap';
+import { BsPlayCircle, BsQuestionCircle } from 'react-icons/bs';
+import { useNavigate, useParams } from 'react-router-dom';
+import { createPianoSynth } from '../../piano-synth';
+import { Chord } from '../../theory-utils/chords/Chord';
 import { Note } from '../../theory-utils/note/Note';
 import { MajorScale } from '../../theory-utils/scales/MajorScale';
 import { NaturalMinorScale } from '../../theory-utils/scales/NaturalMinorScale';
 import { Scale } from '../../theory-utils/scales/Scale';
 import { getChordsByScale } from '../../theory-utils/utils/getChordsByScale';
-import { getLetterIndices } from '../../theory-utils/utils/getLetterIndices';
+import { isTouchDevice } from '../../utils/isTouchDevice';
 import { getScaleFormUrlParams, getScaleUrl } from '../../utils/url';
 import Piano from '../Piano';
 import styles from './ScaleInfo.module.scss';
-import { Chord } from '../../theory-utils/chords/Chord';
-import { createPianoSynth } from '../../piano-synth';
-import { isTouchDevice } from '../../utils/isTouchDevice';
-import { useNavigate, useParams } from 'react-router-dom';
 
 const pianoSynth = createPianoSynth();
 
@@ -86,12 +84,6 @@ const clickableScales = scalesInCircle.map(
     (x) => x.filter((x) => x.clickable)[0].scale
 );
 
-// clickableScales ordered by letter like c, d, e, ... , b and then by symbol (none, flat, sharp) for select
-const clickableScalesSorted = _.orderBy(clickableScales, [
-    (x) => getLetterIndices().find((li) => li.letter === x.tonic.letter)!.index,
-    (x) => (x.tonic.symbol === '' ? 0 : x.tonic.symbol === 'b' ? 1 : 2),
-]);
-
 export const ScaleInfo = () => {
     const [showHelp, setShowHelp] = useState(false);
 
@@ -115,10 +107,9 @@ export const ScaleInfo = () => {
     ) => {
         return scalesInCircleButtons.map((circleItem, idx) => (
             <Button
-                className={styles.key + ' rounded-circle'}
+                className={styles.key + ' rounded-circle border border-2 p-0'}
                 key={idx}
-                size="sm"
-                variant="info"
+                variant="light"
                 onClick={() =>
                     navigate(
                         getScaleUrl(
@@ -162,46 +153,23 @@ export const ScaleInfo = () => {
 
     return (
         <>
-            <h1 className="d-flex flex-wrap align-items-center display-4">
-                <div className="mr-2">Keys</div>
-                <Button
-                    variant="link"
-                    className="p-0"
-                    onClick={() => setShowHelp(true)}
-                >
-                    <BsQuestionCircle size="1.5rem" />
-                </Button>
-            </h1>
             <Row>
                 <Col xs={12} md={6}>
-                    <h3>Circle of fifths</h3>
+                    <h3 className="d-flex align-items-center">
+                        Circle of fifths
+                        <Button
+                            variant="link"
+                            className="p-0 ms-2"
+                            onClick={() => setShowHelp(true)}
+                        >
+                            <BsQuestionCircle size="1.5rem" />
+                        </Button>
+                    </h3>
                     <div className="mb-2">
                         <p>
-                            You can choose a key from the list below or clicking
-                            on the corresponding button in the circle.
+                            You can choose a key by clicking on the
+                            corresponding button in the circle.
                         </p>
-                        <Form.Control
-                            as="select"
-                            custom
-                            value={clickableScalesSorted.findIndex(
-                                (x) => x.format() === activeScale.format()
-                            )}
-                            onChange={(e) => {
-                                navigate(
-                                    getScaleUrl(
-                                        clickableScalesSorted[
-                                            parseInt(e.target.value)
-                                        ]
-                                    )
-                                );
-                            }}
-                        >
-                            {clickableScalesSorted.map((scale, idx) => (
-                                <option key={idx} value={idx}>
-                                    {scale.format('long')}
-                                </option>
-                            ))}
-                        </Form.Control>
                     </div>
                     <div className={styles.circleOfFifths}>
                         <div

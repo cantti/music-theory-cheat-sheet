@@ -5,7 +5,7 @@ import { Scale } from '../theory-utils/scales/Scale';
 
 export function getScaleUrl(key: Scale) {
     const scale = `${key.tonic.letter}${key.tonic.symbol}${key.getShortName()}`;
-    return `/keys/${encodeURIComponent(scale)}`;
+    return `/circle/${encodeURIComponent(scale)}`;
 }
 
 export function getScaleFormUrlParams(scale: string) {

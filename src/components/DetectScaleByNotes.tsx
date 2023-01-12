@@ -66,9 +66,7 @@ export const DetectScaleByNotes = () => {
             <Row>
                 {inputsValues.map((_inputValue, inputIndex) => (
                     <Col xs={12} md={3} key={inputIndex}>
-                        <Form.Control
-                            as="select"
-                            custom
+                        <Form.Select
                             value={optionsForInput.indexOf(
                                 inputsValues.find(
                                     (x) => x.inputIndex === inputIndex
@@ -84,7 +82,7 @@ export const DetectScaleByNotes = () => {
                                     {option.display}
                                 </option>
                             ))}
-                        </Form.Control>
+                        </Form.Select>
                     </Col>
                 ))}
             </Row>

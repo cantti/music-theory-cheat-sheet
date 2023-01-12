@@ -8,6 +8,11 @@ $keySize: $fontSize * 1.5;
     //compensate key size
     padding-top: $keySize * 0.5;
     padding-bottom: $keySize * 0.5;
+    @media (min-width: 768px) {
+        width: 70%;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 .circle {
