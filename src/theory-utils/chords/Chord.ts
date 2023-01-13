@@ -1,5 +1,5 @@
-import { Interval } from '../interval/Interval';
-import { Note } from '../note/Note';
+import { Interval } from '../interval';
+import { Note } from '../notes';
 import { getNotesByIntervals } from '../utils/getNotesByIntervals';
 
 export abstract class Chord {
@@ -25,7 +25,7 @@ export abstract class Chord {
         return (
             chord.name === this.name &&
             chord.tonic.letter === this.tonic.letter &&
-            chord.tonic.symbol === this.tonic.symbol
+            chord.tonic.symbol.equals(this.tonic.symbol)
         );
     }
 }

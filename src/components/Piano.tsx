@@ -1,6 +1,8 @@
 import React, { useRef } from 'react';
 import { createPianoSynth } from '../piano-synth';
-import { Note } from '../theory-utils/note/Note';
+import { C, D, E, F, G, A, B } from '../theory-utils/letters';
+import { Note } from '../theory-utils/notes';
+import { None, Sharp } from '../theory-utils/symbols';
 import { isTouchDevice } from '../utils/isTouchDevice';
 import styles from './Piano.module.css';
 
@@ -46,13 +48,13 @@ const Piano = ({
         highlightedNotes.map((x) => x.getIndex()).includes(note.getIndex());
 
     const playNote = (note: Note) => {
-        pianoSynth.triggerAttack(note.format());
+        pianoSynth.triggerAttack(note.format(true));
         const ref = keyRefs.current[note.getIndex()];
         ref.current!.classList.add(styles.activeKey);
     };
 
     const stopNote = (note: Note) => {
-        pianoSynth.triggerRelease(note.format());
+        pianoSynth.triggerRelease(note.format(true));
         const ref = keyRefs.current[note.getIndex()];
         ref.current!.classList.remove(styles.activeKey);
     };
@@ -128,30 +130,30 @@ const Piano = ({
             {octaves.map((octave, octaveIdx) => (
                 <div className={styles.octave} key={octave}>
                     <WhiteAndBlackKey
-                        whiteKeyNote={new Note('C', '', octave)}
-                        blackKeyNote={new Note('C', '#', octave)}
+                        whiteKeyNote={new Note(new C(), new None(), octave)}
+                        blackKeyNote={new Note(new C(), new Sharp(), octave)}
                     />
                     <WhiteAndBlackKey
-                        whiteKeyNote={new Note('D', '', octave)}
-                        blackKeyNote={new Note('D', '#', octave)}
+                        whiteKeyNote={new Note(new D(), new None(), octave)}
+                        blackKeyNote={new Note(new D(), new Sharp(), octave)}
                     />
                     <WhiteAndBlackKey
-                        whiteKeyNote={new Note('E', '', octave)}
+                        whiteKeyNote={new Note(new E(), new None(), octave)}
                     />
                     <WhiteAndBlackKey
-                        whiteKeyNote={new Note('F', '', octave)}
-                        blackKeyNote={new Note('F', '#', octave)}
+                        whiteKeyNote={new Note(new F(), new None(), octave)}
+                        blackKeyNote={new Note(new F(), new Sharp(), octave)}
                     />
                     <WhiteAndBlackKey
-                        whiteKeyNote={new Note('G', '', octave)}
-                        blackKeyNote={new Note('G', '#', octave)}
+                        whiteKeyNote={new Note(new G(), new None(), octave)}
+                        blackKeyNote={new Note(new G(), new Sharp(), octave)}
                     />
                     <WhiteAndBlackKey
-                        whiteKeyNote={new Note('A', '', octave)}
-                        blackKeyNote={new Note('A', '#', octave)}
+                        whiteKeyNote={new Note(new A(), new None(), octave)}
+                        blackKeyNote={new Note(new A(), new Sharp(), octave)}
                     />
                     <WhiteAndBlackKey
-                        whiteKeyNote={new Note('B', '', octave)}
+                        whiteKeyNote={new Note(new B(), new None(), octave)}
                     />
                 </div>
             ))}
