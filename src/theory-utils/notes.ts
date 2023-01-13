@@ -15,7 +15,7 @@ export class Note {
             throw new Error();
         }
         const letter = match.groups.letter.toUpperCase();
-        const symbol = match.groups.symbol;
+        const symbol = match.groups.symbol.toLowerCase();
         const octave =
             match.groups.octave !== ''
                 ? parseInt(match.groups.octave)
