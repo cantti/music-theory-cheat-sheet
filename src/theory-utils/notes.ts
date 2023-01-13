@@ -38,4 +38,12 @@ export class Note {
         }
         return result;
     }
+
+    equals(other: Note) {
+        return (
+            this.letter.equals(other.letter) &&
+            this.octave === other.octave &&
+            this.symbol.equals(other.symbol)
+        );
+    }
 }

@@ -24,7 +24,7 @@ function App() {
                                 Circle of fifths
                             </Nav.Link>
                             <Nav.Link as={NavLink} to="/detect-scale-by-notes">
-                                Detect scale
+                                Determine scale
                             </Nav.Link>
                             <Nav.Link as={NavLink} to="/discography">
                                 About me

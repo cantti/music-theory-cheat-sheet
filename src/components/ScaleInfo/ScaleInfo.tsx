@@ -64,7 +64,7 @@ const clickableScales = scalesInCircle.map(
     (x) => x.filter((x) => x.clickable)[0].scale
 );
 
-export const ScaleInfo = () => {
+export function ScaleInfo() {
     const [showHelp, setShowHelp] = useState(false);
 
     const [playingChord, setPlayingChord] = useState<Chord | null>(null);
@@ -82,9 +82,9 @@ export const ScaleInfo = () => {
         return null;
     }
 
-    const formatCircleButtons = (
+    function formatCircleButtons(
         scalesInCircleButtons: { scale: Scale; clickable: boolean }[][]
-    ) => {
+    ) {
         return scalesInCircleButtons.map((circleItem, idx) => {
             return (
                 <Button
@@ -123,9 +123,9 @@ export const ScaleInfo = () => {
                 </Button>
             );
         });
-    };
+    }
 
-    const playChord = (chord: Chord) => {
+    function playChord(chord: Chord) {
         setPlayingChord(chord);
         chord
             .getNotes()
@@ -133,9 +133,9 @@ export const ScaleInfo = () => {
             .forEach((x) => {
                 pianoSynth.triggerAttack(x);
             });
-    };
+    }
 
-    const stopChord = (chord: Chord) => {
+    function stopChord(chord: Chord) {
         setPlayingChord(null);
         chord
             .getNotes()
@@ -143,150 +143,134 @@ export const ScaleInfo = () => {
             .forEach((x) => {
                 pianoSynth.triggerRelease(x);
             });
-    };
+    }
 
     return (
-        <>
-            <Row>
-                <Col xs={12} md={6}>
-                    <h3 className="d-flex align-items-center">
-                        Circle of fifths
-                        <Button
-                            variant="link"
-                            className="p-0 ms-2"
-                            onClick={() => setShowHelp(true)}
-                        >
-                            <BsQuestionCircle size="1.5rem" />
-                        </Button>
-                    </h3>
-                    <div className="mb-2">
-                        <p>
-                            You can choose a key by clicking on the
-                            corresponding button in the circle.
-                        </p>
-                    </div>
-                    <div className={styles.circleOfFifths}>
+        <Row>
+            <Col xs={12} md={6}>
+                <h3 className="d-flex align-items-center">
+                    Circle of fifths
+                    <Button
+                        variant="link"
+                        className="p-0 ms-2"
+                        onClick={() => setShowHelp(true)}
+                    >
+                        <BsQuestionCircle size="1.5rem" />
+                    </Button>
+                </h3>
+                <div className="mb-2">
+                    <p>
+                        You can choose a key by clicking on the corresponding
+                        button in the circle.
+                    </p>
+                </div>
+                <div className={styles.circleOfFifths}>
+                    <div className={styles.circle + ' ' + styles.majorCircle}>
+                        {formatCircleButtons(scalesInCircle.slice(0, 12))}
                         <div
-                            className={styles.circle + ' ' + styles.majorCircle}
+                            className={styles.circle + ' ' + styles.minorCircle}
                         >
-                            {formatCircleButtons(scalesInCircle.slice(0, 12))}
-                            <div
-                                className={
-                                    styles.circle + ' ' + styles.minorCircle
-                                }
-                            >
-                                {formatCircleButtons(
-                                    scalesInCircle.slice(12, 24)
-                                )}
-                            </div>
+                            {formatCircleButtons(scalesInCircle.slice(12, 24))}
                         </div>
                     </div>
-                </Col>
-                <Col xs={12} md={6}>
-                    <h3>Keyboard notes</h3>
-                    <p>Notes of the selected key on the keyboard.</p>
-                    <Piano
-                        highlightedNotes={activeScale.notes}
-                        startOctave={activeScale == null ? 0 : undefined}
-                        endOctave={activeScale == null ? 1 : undefined}
-                        className="mb-4"
-                    />
+                </div>
+            </Col>
+            <Col xs={12} md={6}>
+                <h3>Keyboard notes</h3>
+                <p>Notes of the selected key on the keyboard.</p>
+                <Piano
+                    highlightedNotes={activeScale.notes}
+                    startOctave={activeScale == null ? 0 : undefined}
+                    endOctave={activeScale == null ? 1 : undefined}
+                    className="mb-4"
+                />
 
-                    <h3>Notes</h3>
-                    <p>Notes of the selected key, starting with the tonic.</p>
-                    <Table bordered responsive>
-                        <thead>
-                            <tr className="bg-light text-center">
-                                {Array.from({ length: 8 }).map((_, idx) => (
-                                    <th key={idx}>{idx + 1}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr className="text-center">
-                                {activeScale.notes.map((note, idx) => (
-                                    <td key={idx}>{note.format(false)}</td>
-                                ))}
-                            </tr>
-                        </tbody>
-                    </Table>
+                <h3>Notes</h3>
+                <p>Notes of the selected key, starting with the tonic.</p>
+                <Table bordered responsive>
+                    <thead>
+                        <tr className="bg-light text-center">
+                            {Array.from({ length: 8 }).map((_, idx) => (
+                                <th key={idx}>{idx + 1}</th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr className="text-center">
+                            {activeScale.notes.map((note, idx) => (
+                                <td key={idx}>{note.format(false)}</td>
+                            ))}
+                        </tr>
+                    </tbody>
+                </Table>
 
-                    <h3>Chords</h3>
-                    <p>The main chords of the selected key.</p>
-                    <Table bordered responsive>
-                        <thead>
-                            <tr className="bg-light text-center">
-                                {(activeScale instanceof MajorScale
-                                    ? ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii']
-                                    : [
-                                          'i',
-                                          'iidim',
-                                          'III',
-                                          'iv',
-                                          'v',
-                                          'VI',
-                                          'VII',
-                                      ]
-                                ).map((x, idx) => (
-                                    <th key={idx}>{x}</th>
+                <h3>Chords</h3>
+                <p>The main chords of the selected key.</p>
+                <Table bordered responsive>
+                    <thead>
+                        <tr className="bg-light text-center">
+                            {(activeScale instanceof MajorScale
+                                ? ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii']
+                                : ['i', 'iidim', 'III', 'iv', 'v', 'VI', 'VII']
+                            ).map((x, idx) => (
+                                <th key={idx}>{x}</th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr className="text-center">
+                            {activeScale.chords
+                                .map((x) => x[0])
+                                .map((chord, colIdx) => (
+                                    <td key={colIdx}>
+                                        <Button
+                                            variant="outline-primary"
+                                            size="sm"
+                                            className="w-100"
+                                            onMouseDown={(e) => {
+                                                e.stopPropagation();
+                                                if (isTouchDevice()) return;
+                                                playChord(chord);
+                                            }}
+                                            onMouseUp={(e) => {
+                                                e.stopPropagation();
+                                                if (isTouchDevice()) return;
+                                                stopChord(chord);
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.stopPropagation();
+                                                if (isTouchDevice()) return;
+                                                if (e.buttons === 1) {
+                                                    stopChord(chord);
+                                                }
+                                            }}
+                                            onTouchStart={(e) => {
+                                                e.stopPropagation();
+                                                playChord(chord);
+                                            }}
+                                            onTouchEnd={(e) => {
+                                                e.stopPropagation();
+                                                stopChord(chord);
+                                            }}
+                                        >
+                                            {chord.format()}
+                                            <br />
+                                            <BsPlayCircle />
+                                        </Button>
+                                    </td>
                                 ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr className="text-center">
-                                {activeScale.chords
-                                    .map((x) => x[0])
-                                    .map((chord, colIdx) => (
-                                        <td key={colIdx}>
-                                            <Button
-                                                variant="outline-primary"
-                                                size="sm"
-                                                className="w-100"
-                                                onMouseDown={(e) => {
-                                                    e.stopPropagation();
-                                                    if (isTouchDevice()) return;
-                                                    playChord(chord);
-                                                }}
-                                                onMouseUp={(e) => {
-                                                    e.stopPropagation();
-                                                    if (isTouchDevice()) return;
-                                                    stopChord(chord);
-                                                }}
-                                                onMouseLeave={(e) => {
-                                                    e.stopPropagation();
-                                                    if (isTouchDevice()) return;
-                                                    if (e.buttons === 1) {
-                                                        stopChord(chord);
-                                                    }
-                                                }}
-                                                onTouchStart={(e) => {
-                                                    e.stopPropagation();
-                                                    playChord(chord);
-                                                }}
-                                                onTouchEnd={(e) => {
-                                                    e.stopPropagation();
-                                                    stopChord(chord);
-                                                }}
-                                            >
-                                                {chord.format()}
-                                                <br />
-                                                <BsPlayCircle />
-                                            </Button>
-                                        </td>
-                                    ))}
-                            </tr>
-                        </tbody>
-                    </Table>
-                    <p>Notes of the playing chord.</p>
-                    <Piano
-                        highlightedNotes={
-                            playingChord != null ? playingChord.getNotes() : []
-                        }
-                        startOctave={4}
-                        endOctave={5}
-                    />
-                </Col>
-            </Row>
+                        </tr>
+                    </tbody>
+                </Table>
+                <p>Notes of the playing chord.</p>
+                <Piano
+                    highlightedNotes={
+                        playingChord != null ? playingChord.getNotes() : []
+                    }
+                    startOctave={4}
+                    endOctave={5}
+                />
+            </Col>
             <Modal show={showHelp} onHide={() => setShowHelp(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Help</Modal.Title>
@@ -302,6 +286,6 @@ export const ScaleInfo = () => {
                     circle counterclockwise.
                 </Modal.Body>
             </Modal>
-        </>
+        </Row>
     );
-};
+}

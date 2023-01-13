@@ -1,122 +1,76 @@
-import React from 'react';
-import { Button, Col, Form, Row } from 'react-bootstrap';
-import { AiOutlineClear } from 'react-icons/ai';
+import { useState } from 'react';
+import { Button, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Note } from '../theory-utils/notes';
+import { Scale } from '../theory-utils/scales/Scale';
 import { getScalesByNotes } from '../theory-utils/utils/getScalesByNotes';
 import { getScaleUrl } from '../utils/url';
+import Piano from './Piano';
 
-const optionsForInput: { note?: Note; display: string }[] = [
-    { display: 'Not selected' },
-    { note: Note.create('C'), display: 'C' },
-    { note: Note.create('C#'), display: 'C#/Eb' },
-    { note: Note.create('D'), display: 'D' },
-    { note: Note.create('D#'), display: 'D#/Eb' },
-    { note: Note.create('E'), display: 'E' },
-    { note: Note.create('F'), display: 'F' },
-    { note: Note.create('F#'), display: 'F#/Gb' },
-    { note: Note.create('G'), display: 'G' },
-    { note: Note.create('G#'), display: 'G#/Ab' },
-    { note: Note.create('A'), display: 'A' },
-    { note: Note.create('A#'), display: 'A#/Bb' },
-    { note: Note.create('B'), display: 'B' },
-];
+interface ScaleButtonProps {
+    scale: Scale;
+}
 
-const noteInputCount = 7;
+function ScaleButton({ scale }: ScaleButtonProps) {
+    return (
+        <Link to={getScaleUrl(scale)}>
+            <Button
+                variant={scale.shortName === 'm' ? 'info' : 'warning'}
+                className="w-100 mb-2"
+                size="lg"
+            >
+                {scale.format('long')}
+            </Button>
+        </Link>
+    );
+}
 
 export function DetectScaleByNotes() {
-    const [inputsValues, setInputsValues] = React.useState(
-        Array(noteInputCount)
-            .fill(undefined)
-            .map((_, i) => ({
-                inputIndex: i,
-                value: optionsForInput[0],
-            }))
-    );
+    const [notes, setNotes] = useState<Note[]>([]);
 
-    const possibleScales = getScalesByNotes(
-        inputsValues
-            .map((x) => x.value?.note)
-            .filter((x): x is Note => x != null)
-    );
-
-    const handleInputsValueChange = (
-        inputIndex: number,
-        e: React.BaseSyntheticEvent
-    ) => {
-        setInputsValues(
-            inputsValues.map((x) => {
-                if (x.inputIndex === inputIndex) {
-                    const newInputValue = { ...x };
-                    newInputValue.value =
-                        optionsForInput[parseInt(e.target.value)];
-                    return newInputValue;
-                }
-                return x;
-            })
-        );
-    };
+    const possibleScales = getScalesByNotes(notes);
 
     return (
-        <div>
-            <h1 className="display-4">Determine the key by the notes.</h1>
-            <p>Here you can determine the key by the notes..</p>
-            <p>Select notes.</p>
-
-            <Row>
-                {inputsValues.map((_inputValue, inputIndex) => (
-                    <Col xs={12} md={3} key={inputIndex}>
-                        <Form.Select
-                            value={optionsForInput.indexOf(
-                                inputsValues.find(
-                                    (x) => x.inputIndex === inputIndex
-                                )!.value
-                            )}
-                            onChange={(e) =>
-                                handleInputsValueChange(inputIndex, e)
-                            }
-                            className="mb-3"
-                        >
-                            {optionsForInput.map((option, idx) => (
-                                <option key={idx} value={idx}>
-                                    {option.display}
-                                </option>
-                            ))}
-                        </Form.Select>
-                    </Col>
-                ))}
-            </Row>
-            <div className="mb-3">
-                <Button
-                    variant="outline-secondary"
-                    onClick={() =>
-                        setInputsValues(
-                            inputsValues.map((x) => {
-                                const newInputValue = { ...x };
-                                newInputValue.value = optionsForInput[0];
-                                return newInputValue;
-                            })
-                        )
+        <Row>
+            <Col md={6} className="mb-3">
+                <h3>Select notes</h3>
+                <p>
+                    Here you can determine the key by the notes. Press a key to
+                    select it.
+                </p>
+                <Piano
+                    startOctave={4}
+                    endOctave={5}
+                    highlightedNotes={notes}
+                    onNoteClick={(note) =>
+                        notes.some((n) => n.equals(note))
+                            ? setNotes(notes.filter((n) => !n.equals(note)))
+                            : setNotes([...notes, note])
                     }
-                >
-                    <AiOutlineClear /> Очистить
-                </Button>
-            </div>
-            {inputsValues.filter((x) => x.value.note == null).length !==
-                noteInputCount && (
-                <>
-                    <p>Тональности с такими нотами:</p>
-                    <ul>
-                        {possibleScales.map((key, index) => (
-                            <li key={index}>
-                                <Link to={getScaleUrl(key)}>
-                                    {key.format('long')}
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                </>
-            )}
-        </div>
+                />
+            </Col>
+            <Col md={6}>
+                <h3>Possible scales</h3>
+                <p>Here is a list of possible scales.</p>
+                <Row>
+                    <Col>
+                        <b>Major</b>
+                        {possibleScales
+                            .filter((x) => x.shortName !== 'm')
+                            .map((scale, index) => (
+                                <ScaleButton scale={scale} key={index} />
+                            ))}
+                    </Col>
+                    <Col>
+                        <b>Parallel minor</b>
+                        {possibleScales
+                            .filter((x) => x.shortName === 'm')
+                            .map((scale, index) => (
+                                <ScaleButton scale={scale} key={index} />
+                            ))}
+                    </Col>
+                </Row>
+            </Col>
+        </Row>
     );
 }

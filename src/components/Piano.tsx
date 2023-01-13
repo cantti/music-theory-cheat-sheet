@@ -8,19 +8,21 @@ import styles from './Piano.module.css';
 
 const pianoSynth = createPianoSynth();
 
-type PianoProps = {
+interface PianoProps {
     highlightedNotes?: Note[];
     startOctave?: number;
     endOctave?: number;
     className?: string;
-};
+    onNoteClick?: (note: Note) => void;
+}
 
-const Piano = ({
+function Piano({
     highlightedNotes = [],
     startOctave = undefined,
     endOctave = undefined,
     className = '',
-}: PianoProps) => {
+    onNoteClick = () => {},
+}: PianoProps) {
     if (startOctave == null || endOctave == null) {
         if (highlightedNotes.length > 0) {
             const sortedHighlightedNotes = highlightedNotes.sort(
@@ -44,35 +46,40 @@ const Piano = ({
         octaves.push(i);
     }
 
-    const isHighlightNecessary = (note: Note) =>
-        highlightedNotes.map((x) => x.getIndex()).includes(note.getIndex());
+    function isHighlightNecessary(note: Note) {
+        return highlightedNotes
+            .map((x) => x.getIndex())
+            .includes(note.getIndex());
+    }
 
-    const playNote = (note: Note) => {
+    function playNote(note: Note) {
         pianoSynth.triggerAttack(note.format(true));
         const ref = keyRefs.current[note.getIndex()];
         ref.current!.classList.add(styles.activeKey);
-    };
+    }
 
-    const stopNote = (note: Note) => {
+    function stopNote(note: Note) {
         pianoSynth.triggerRelease(note.format(true));
         const ref = keyRefs.current[note.getIndex()];
         ref.current!.classList.remove(styles.activeKey);
-    };
+    }
 
-    const Key = ({
-        note,
-        children,
-        className,
-    }: {
+    interface KeyProps {
         note: Note;
         children?: React.ReactNode;
         className: string;
-    }) => {
+    }
+
+    function Key({ note, children, className }: KeyProps) {
         const ref = useRef<HTMLDivElement>(null);
         keyRefs.current[note.getIndex()] = ref;
         return (
             <div
                 className={className}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onNoteClick(note);
+                }}
                 onMouseDown={(e) => {
                     e.stopPropagation();
                     if (isTouchDevice()) return;
@@ -107,15 +114,17 @@ const Piano = ({
                 )}
             </div>
         );
-    };
+    }
 
-    const WhiteAndBlackKey = ({
-        whiteKeyNote,
-        blackKeyNote,
-    }: {
+    interface WhiteAndBlackKeyProps {
         whiteKeyNote: Note;
         blackKeyNote?: Note;
-    }) => {
+    }
+
+    function WhiteAndBlackKey({
+        whiteKeyNote,
+        blackKeyNote,
+    }: WhiteAndBlackKeyProps) {
         return (
             <Key className={styles.whiteKey} note={whiteKeyNote}>
                 {blackKeyNote != null && (
@@ -123,7 +132,7 @@ const Piano = ({
                 )}
             </Key>
         );
-    };
+    }
 
     return (
         <div className={styles.piano + ' ' + className}>
@@ -159,6 +168,6 @@ const Piano = ({
             ))}
         </div>
     );
-};
+}
 
 export default Piano;
