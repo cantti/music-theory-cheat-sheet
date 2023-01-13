@@ -11,7 +11,7 @@ export function getScaleUrl(key: Scale) {
 export function getScaleFormUrlParams(scale: string) {
     const pattern = /^(?<tonic>[cdefgab][#b]?)(?<minor>m?)$/i;
     const match = scale.match(pattern);
-    const tonic = Note.fromString(`${match?.groups?.tonic}`);
+    const tonic = Note.create(`${match?.groups?.tonic}`);
     const activeScaleFromUrl = match?.groups?.minor
         ? new NaturalMinorScale(tonic)
         : new MajorScale(tonic);

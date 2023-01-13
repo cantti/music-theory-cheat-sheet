@@ -1,27 +1,25 @@
 import React from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
+import { AiOutlineClear } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { Note } from '../theory-utils/notes';
 import { getScalesByNotes } from '../theory-utils/utils/getScalesByNotes';
 import { getScaleUrl } from '../utils/url';
-import { AiOutlineClear } from 'react-icons/ai';
-import { Sharp } from '../theory-utils/symbols';
-import { C, D, E, F, G, A, B } from '../theory-utils/letters';
 
 const optionsForInput: { note?: Note; display: string }[] = [
-    { display: 'Не выбрана' },
-    { note: new Note(new C()), display: 'C' },
-    { note: new Note(new C(), new Sharp()), display: 'C#/Eb' },
-    { note: new Note(new D()), display: 'D' },
-    { note: new Note(new D(), new Sharp()), display: 'D#/Eb' },
-    { note: new Note(new E()), display: 'E' },
-    { note: new Note(new F()), display: 'F' },
-    { note: new Note(new F(), new Sharp()), display: 'F#/Gb' },
-    { note: new Note(new G()), display: 'G' },
-    { note: new Note(new G(), new Sharp()), display: 'G#/Ab' },
-    { note: new Note(new A()), display: 'A' },
-    { note: new Note(new A(), new Sharp()), display: 'A#/Bb' },
-    { note: new Note(new B()), display: 'B' },
+    { display: 'Not selected' },
+    { note: Note.create('C'), display: 'C' },
+    { note: Note.create('C#'), display: 'C#/Eb' },
+    { note: Note.create('D'), display: 'D' },
+    { note: Note.create('D#'), display: 'D#/Eb' },
+    { note: Note.create('E'), display: 'E' },
+    { note: Note.create('F'), display: 'F' },
+    { note: Note.create('F#'), display: 'F#/Gb' },
+    { note: Note.create('G'), display: 'G' },
+    { note: Note.create('G#'), display: 'G#/Ab' },
+    { note: Note.create('A'), display: 'A' },
+    { note: Note.create('A#'), display: 'A#/Bb' },
+    { note: Note.create('B'), display: 'B' },
 ];
 
 const noteInputCount = 7;

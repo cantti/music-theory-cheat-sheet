@@ -1,36 +1,34 @@
 import _ from 'lodash';
-import { C, D, E, F, G, A, B } from '../letters';
 import { Note } from '../notes';
 import { MajorScale } from '../scales/MajorScale';
 import { NaturalMinorScale } from '../scales/NaturalMinorScale';
 import { Scale } from '../scales/Scale';
-import { Flat, Sharp } from '../symbols';
 
 const allScales: Scale[] = [
-    new MajorScale(new Note(new C())),
-    new MajorScale(new Note(new G())),
-    new MajorScale(new Note(new D())),
-    new MajorScale(new Note(new A())),
-    new MajorScale(new Note(new E())),
-    new MajorScale(new Note(new B())),
-    new MajorScale(new Note(new G(), new Flat())),
-    new MajorScale(new Note(new D(), new Flat())),
-    new MajorScale(new Note(new A(), new Flat())),
-    new MajorScale(new Note(new E(), new Flat())),
-    new MajorScale(new Note(new B(), new Flat())),
-    new MajorScale(new Note(new F())),
-    new NaturalMinorScale(new Note(new A())),
-    new NaturalMinorScale(new Note(new E())),
-    new NaturalMinorScale(new Note(new B())),
-    new NaturalMinorScale(new Note(new F(), new Sharp())),
-    new NaturalMinorScale(new Note(new C(), new Sharp())),
-    new NaturalMinorScale(new Note(new G(), new Sharp())),
-    new NaturalMinorScale(new Note(new E(), new Flat())),
-    new NaturalMinorScale(new Note(new B(), new Flat())),
-    new NaturalMinorScale(new Note(new F())),
-    new NaturalMinorScale(new Note(new C())),
-    new NaturalMinorScale(new Note(new G())),
-    new NaturalMinorScale(new Note(new D())),
+    MajorScale.create('C'),
+    MajorScale.create('G'),
+    MajorScale.create('D'),
+    MajorScale.create('A'),
+    MajorScale.create('E'),
+    MajorScale.create('B'),
+    MajorScale.create('Gb'),
+    MajorScale.create('Db'),
+    MajorScale.create('Ab'),
+    MajorScale.create('Eb'),
+    MajorScale.create('Bb'),
+    MajorScale.create('F'),
+    NaturalMinorScale.create('A'),
+    NaturalMinorScale.create('E'),
+    NaturalMinorScale.create('B'),
+    NaturalMinorScale.create('F#'),
+    NaturalMinorScale.create('C#'),
+    NaturalMinorScale.create('G#'),
+    NaturalMinorScale.create('Eb'),
+    NaturalMinorScale.create('Bb'),
+    NaturalMinorScale.create('F'),
+    NaturalMinorScale.create('C'),
+    NaturalMinorScale.create('G'),
+    NaturalMinorScale.create('D'),
 ];
 
 export const getScalesByNotes = (notes: Note[]) => {

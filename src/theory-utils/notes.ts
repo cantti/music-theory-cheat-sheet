@@ -8,7 +8,7 @@ export class Note {
         public octave: number = 4
     ) {}
 
-    static fromString(string: string) {
+    static create(string: string) {
         const pattern = /^(?<letter>[cdefgab])(?<symbol>[#b]?)(?<octave>\d?)$/i;
         const match = string.match(pattern);
         if (!match?.groups) {
@@ -31,7 +31,7 @@ export class Note {
         return this.octave * 12 + this.letter.index + this.symbol.shift;
     }
 
-    format(showOctave: boolean = true) {
+    format(showOctave: boolean = false) {
         let result: string = this.letter.toString() + this.symbol.toString();
         if (showOctave) {
             result += this.octave;
