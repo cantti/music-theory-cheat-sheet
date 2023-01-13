@@ -1,7 +1,7 @@
 import { Interval, IntervalNumber } from '../interval';
 import { allLetters, Letter } from '../letters';
 import { Note } from '../notes';
-import { allSymbols } from '../symbols';
+import { allAccidentals } from '../accidentals';
 
 const majorScaleSemitones: {
     interval: Interval;
@@ -107,16 +107,18 @@ export function getNotesByIntervals(
         );
 
         const rootIndex =
-            root.octave * 12 + root.letter.index + root.symbol.shift;
+            root.octave * 12 + root.letter.index + root.accidental.shift;
 
-        const symbolShift: number =
+        const accidentalShift: number =
             rootIndex +
             totalSemitonesByInterval(interval) -
             (newNoteOctave * 12 + newNoteLetter.index);
 
-        const newNoteSymbol = allSymbols.find((x) => x.shift === symbolShift);
+        const newNoteAccidental = allAccidentals.find(
+            (x) => x.shift === accidentalShift
+        );
 
-        result.push(new Note(newNoteLetter, newNoteSymbol, newNoteOctave));
+        result.push(new Note(newNoteLetter, newNoteAccidental, newNoteOctave));
     });
 
     return result;
