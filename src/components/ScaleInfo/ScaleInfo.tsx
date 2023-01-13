@@ -10,6 +10,7 @@ import { Note } from '../../theory-utils/note/Note';
 import { MajorScale } from '../../theory-utils/scales/MajorScale';
 import { NaturalMinorScale } from '../../theory-utils/scales/NaturalMinorScale';
 import { Scale } from '../../theory-utils/scales/Scale';
+import { Flat, Sharp } from '../../theory-utils/symbols';
 import { isTouchDevice } from '../../utils/isTouchDevice';
 import { getScaleFormUrlParams, getScaleUrl } from '../../utils/url';
 import Piano from '../Piano';
@@ -25,52 +26,68 @@ const scalesInCircle: { scale: Scale; clickable: boolean }[][] = [
     [{ scale: new MajorScale(new Note('E')), clickable: true }],
     [
         { scale: new MajorScale(new Note('B')), clickable: true },
-        { scale: new MajorScale(new Note('C', 'b')), clickable: false },
+        { scale: new MajorScale(new Note('C', new Flat())), clickable: false },
     ],
     [
-        { scale: new MajorScale(new Note('F', '#')), clickable: false },
-        { scale: new MajorScale(new Note('G', 'b')), clickable: true },
+        {
+            scale: new MajorScale(new Note('F', new Sharp())),
+            clickable: false,
+        },
+        { scale: new MajorScale(new Note('G', new Flat())), clickable: true },
     ],
     [
-        { scale: new MajorScale(new Note('C', '#')), clickable: false },
-        { scale: new MajorScale(new Note('D', 'b')), clickable: true },
+        {
+            scale: new MajorScale(new Note('C', new Sharp())),
+            clickable: false,
+        },
+        { scale: new MajorScale(new Note('D', new Flat())), clickable: true },
     ],
-    [{ scale: new MajorScale(new Note('A', 'b')), clickable: true }],
-    [{ scale: new MajorScale(new Note('E', 'b')), clickable: true }],
-    [{ scale: new MajorScale(new Note('B', 'b')), clickable: true }],
+    [{ scale: new MajorScale(new Note('A', new Flat())), clickable: true }],
+    [{ scale: new MajorScale(new Note('E', new Flat())), clickable: true }],
+    [{ scale: new MajorScale(new Note('B', new Flat())), clickable: true }],
     [{ scale: new MajorScale(new Note('F')), clickable: true }],
     [{ scale: new NaturalMinorScale(new Note('A')), clickable: true }],
     [{ scale: new NaturalMinorScale(new Note('E')), clickable: true }],
     [{ scale: new NaturalMinorScale(new Note('B')), clickable: true }],
-    [{ scale: new NaturalMinorScale(new Note('F', '#')), clickable: true }],
-    [{ scale: new NaturalMinorScale(new Note('C', '#')), clickable: true }],
     [
         {
-            scale: new NaturalMinorScale(new Note('G', '#')),
-            clickable: true,
-        },
-        {
-            scale: new NaturalMinorScale(new Note('A', 'b')),
-            clickable: false,
-        },
-    ],
-    [
-        {
-            scale: new NaturalMinorScale(new Note('D', '#')),
-            clickable: false,
-        },
-        {
-            scale: new NaturalMinorScale(new Note('E', 'b')),
+            scale: new NaturalMinorScale(new Note('F', new Sharp())),
             clickable: true,
         },
     ],
     [
         {
-            scale: new NaturalMinorScale(new Note('A', '#')),
+            scale: new NaturalMinorScale(new Note('C', new Sharp())),
+            clickable: true,
+        },
+    ],
+    [
+        {
+            scale: new NaturalMinorScale(new Note('G', new Sharp())),
+            clickable: true,
+        },
+        {
+            scale: new NaturalMinorScale(new Note('A', new Flat())),
+            clickable: false,
+        },
+    ],
+    [
+        {
+            scale: new NaturalMinorScale(new Note('D', new Sharp())),
             clickable: false,
         },
         {
-            scale: new NaturalMinorScale(new Note('B', 'b')),
+            scale: new NaturalMinorScale(new Note('E', new Flat())),
+            clickable: true,
+        },
+    ],
+    [
+        {
+            scale: new NaturalMinorScale(new Note('A', new Sharp())),
+            clickable: false,
+        },
+        {
+            scale: new NaturalMinorScale(new Note('B', new Flat())),
             clickable: true,
         },
     ],

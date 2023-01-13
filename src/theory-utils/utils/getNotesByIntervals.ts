@@ -1,9 +1,8 @@
 import { Interval } from '../interval/Interval';
-import { IntervalNumber } from "../interval/IntervalNumber";
+import { IntervalNumber } from '../interval/IntervalNumber';
 import { Letter } from '../note/Letter';
 import { Note } from '../note/Note';
-import { Symbol } from '../note/Symbol';
-import { getSymbolShifts } from './getSymbolShifts';
+import { allSymbols } from '../symbols';
 import { getLetterIndices } from './getLetterIndices';
 
 const majorScaleSemitones: {
@@ -112,17 +111,16 @@ export function getNotesByIntervals(
         const rootIndex =
             root.octave * 12 +
             getLetterIndices().find((x) => x.letter === root.letter)!.index +
-            getSymbolShifts().find((x) => x.symbol === root.symbol)!.shift;
+            root.symbol.shift;
 
         const symbolShift: number =
             rootIndex +
             totalSemitonesByInterval(interval) -
             (newNoteOctave * 12 +
-                getLetterIndices().find((x) => x.letter === newNoteLetter)!.index);
+                getLetterIndices().find((x) => x.letter === newNoteLetter)!
+                    .index);
 
-        const newNoteSymbol: Symbol = getSymbolShifts().find(
-            (x) => x.shift === symbolShift
-        )!.symbol;
+        const newNoteSymbol = allSymbols.find((x) => x.shift === symbolShift);
 
         result.push(new Note(newNoteLetter, newNoteSymbol, newNoteOctave));
     });

@@ -25,7 +25,7 @@ export abstract class Chord {
         return (
             chord.name === this.name &&
             chord.tonic.letter === this.tonic.letter &&
-            chord.tonic.symbol === this.tonic.symbol
+            chord.tonic.symbol.equals(this.tonic.symbol)
         );
     }
 }

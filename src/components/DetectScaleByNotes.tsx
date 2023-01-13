@@ -5,20 +5,21 @@ import { Note } from '../theory-utils/note/Note';
 import { getScalesByNotes } from '../theory-utils/utils/getScalesByNotes';
 import { getScaleUrl } from '../utils/url';
 import { AiOutlineClear } from 'react-icons/ai';
+import { Sharp } from '../theory-utils/symbols';
 
 const optionsForInput: { note?: Note; display: string }[] = [
     { display: 'Не выбрана' },
     { note: new Note('C'), display: 'C' },
-    { note: new Note('C', '#'), display: 'C#/Eb' },
+    { note: new Note('C', new Sharp()), display: 'C#/Eb' },
     { note: new Note('D'), display: 'D' },
-    { note: new Note('D', '#'), display: 'D#/Eb' },
+    { note: new Note('D', new Sharp()), display: 'D#/Eb' },
     { note: new Note('E'), display: 'E' },
     { note: new Note('F'), display: 'F' },
-    { note: new Note('F', '#'), display: 'F#/Gb' },
+    { note: new Note('F', new Sharp()), display: 'F#/Gb' },
     { note: new Note('G'), display: 'G' },
-    { note: new Note('G', '#'), display: 'G#/Ab' },
+    { note: new Note('G', new Sharp()), display: 'G#/Ab' },
     { note: new Note('A'), display: 'A' },
-    { note: new Note('A', '#'), display: 'A#/Bb' },
+    { note: new Note('A', new Sharp()), display: 'A#/Bb' },
     { note: new Note('B'), display: 'B' },
 ];
 
@@ -72,7 +73,9 @@ export function DetectScaleByNotes() {
                                     (x) => x.inputIndex === inputIndex
                                 )!.value
                             )}
-                            onChange={(e) => handleInputsValueChange(inputIndex, e)}
+                            onChange={(e) =>
+                                handleInputsValueChange(inputIndex, e)
+                            }
                             className="mb-3"
                         >
                             {optionsForInput.map((option, idx) => (
@@ -87,32 +90,34 @@ export function DetectScaleByNotes() {
             <div className="mb-3">
                 <Button
                     variant="outline-secondary"
-                    onClick={() => setInputsValues(
-                        inputsValues.map((x) => {
-                            const newInputValue = { ...x };
-                            newInputValue.value = optionsForInput[0];
-                            return newInputValue;
-                        })
-                    )}
+                    onClick={() =>
+                        setInputsValues(
+                            inputsValues.map((x) => {
+                                const newInputValue = { ...x };
+                                newInputValue.value = optionsForInput[0];
+                                return newInputValue;
+                            })
+                        )
+                    }
                 >
                     <AiOutlineClear /> Очистить
                 </Button>
             </div>
             {inputsValues.filter((x) => x.value.note == null).length !==
                 noteInputCount && (
-                    <>
-                        <p>Тональности с такими нотами:</p>
-                        <ul>
-                            {possibleScales.map((key, index) => (
-                                <li key={index}>
-                                    <Link to={getScaleUrl(key)}>
-                                        {key.format('long')}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </>
-                )}
+                <>
+                    <p>Тональности с такими нотами:</p>
+                    <ul>
+                        {possibleScales.map((key, index) => (
+                            <li key={index}>
+                                <Link to={getScaleUrl(key)}>
+                                    {key.format('long')}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </>
+            )}
         </div>
     );
 }
