@@ -1,4 +1,3 @@
-/* eslint-disable import/no-webpack-loader-syntax */
 import _ from 'lodash';
 import { useState } from 'react';
 import { Button, Col, Modal, Row, Table } from 'react-bootstrap';
@@ -6,7 +5,6 @@ import { BsPlayCircle, BsQuestionCircle } from 'react-icons/bs';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createPianoSynth } from '../../piano-synth';
 import { Chord } from '../../theory-utils/chords/Chord';
-import { Note } from '../../theory-utils/notes';
 import { MajorScale } from '../../theory-utils/scales/MajorScale';
 import { NaturalMinorScale } from '../../theory-utils/scales/NaturalMinorScale';
 import { Scale } from '../../theory-utils/scales/Scale';
@@ -25,30 +23,15 @@ const scalesInCircle: { scale: Scale; clickable: boolean }[][] = [
     [{ scale: MajorScale.create('E'), clickable: true }],
     [
         { scale: MajorScale.create('B'), clickable: true },
-        {
-            scale: MajorScale.create('Cb'),
-            clickable: false,
-        },
+        { scale: MajorScale.create('Cb'), clickable: false },
     ],
     [
-        {
-            scale: MajorScale.create('F#'),
-            clickable: false,
-        },
-        {
-            scale: MajorScale.create('Gb'),
-            clickable: true,
-        },
+        { scale: MajorScale.create('F#'), clickable: false },
+        { scale: MajorScale.create('Gb'), clickable: true },
     ],
     [
-        {
-            scale: MajorScale.create('C#'),
-            clickable: false,
-        },
-        {
-            scale: MajorScale.create('Db'),
-            clickable: true,
-        },
+        { scale: MajorScale.create('C#'), clickable: false },
+        { scale: MajorScale.create('Db'), clickable: true },
     ],
     [{ scale: MajorScale.create('Ab'), clickable: true }],
     [{ scale: MajorScale.create('Eb'), clickable: true }],
@@ -57,47 +40,19 @@ const scalesInCircle: { scale: Scale; clickable: boolean }[][] = [
     [{ scale: NaturalMinorScale.create('A'), clickable: true }],
     [{ scale: NaturalMinorScale.create('E'), clickable: true }],
     [{ scale: NaturalMinorScale.create('B'), clickable: true }],
+    [{ scale: NaturalMinorScale.create('F#'), clickable: true }],
+    [{ scale: NaturalMinorScale.create('C#'), clickable: true }],
     [
-        {
-            scale: NaturalMinorScale.create('F#'),
-            clickable: true,
-        },
+        { scale: NaturalMinorScale.create('G#'), clickable: true },
+        { scale: NaturalMinorScale.create('Ab'), clickable: false },
     ],
     [
-        {
-            scale: NaturalMinorScale.create('C#'),
-            clickable: true,
-        },
+        { scale: NaturalMinorScale.create('D#'), clickable: false },
+        { scale: NaturalMinorScale.create('Eb'), clickable: true },
     ],
     [
-        {
-            scale: NaturalMinorScale.create('G#'),
-            clickable: true,
-        },
-        {
-            scale: NaturalMinorScale.create('Ab'),
-            clickable: false,
-        },
-    ],
-    [
-        {
-            scale: NaturalMinorScale.create('D#'),
-            clickable: false,
-        },
-        {
-            scale: NaturalMinorScale.create('Eb'),
-            clickable: true,
-        },
-    ],
-    [
-        {
-            scale: NaturalMinorScale.create('A#'),
-            clickable: false,
-        },
-        {
-            scale: NaturalMinorScale.create('Bb'),
-            clickable: true,
-        },
+        { scale: NaturalMinorScale.create('A#'), clickable: false },
+        { scale: NaturalMinorScale.create('Bb'), clickable: true },
     ],
     [{ scale: NaturalMinorScale.create('F'), clickable: true }],
     [{ scale: NaturalMinorScale.create('C'), clickable: true }],
