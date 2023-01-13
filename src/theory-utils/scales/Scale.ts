@@ -1,3 +1,4 @@
+import { Chord } from '../chords/Chord';
 import { Interval } from '../interval/Interval';
 import { Note } from '../note/Note';
 import { getNotesByIntervals } from '../utils/getNotesByIntervals';
@@ -5,21 +6,23 @@ import { getNotesByIntervals } from '../utils/getNotesByIntervals';
 export abstract class Scale {
     constructor(public tonic: Note = new Note()) {}
 
-    abstract getName(): string;
+    abstract readonly name: string;
 
-    abstract getShortName(): string;
+    abstract readonly shortName: string;
 
-    abstract getIntervals(): Interval[];
+    abstract readonly intervals: Interval[];
 
     getNotes() {
-        return getNotesByIntervals(this.tonic, this.getIntervals());
+        return getNotesByIntervals(this.tonic, this.intervals);
     }
 
     format(kind: 'short' | 'long' = 'short') {
         if (kind === 'short') {
-            return this.tonic.format(false) + this.getShortName();
+            return this.tonic.format(false) + this.shortName;
         } else {
-            return this.tonic.format(false) + ' ' + this.getName();
+            return this.tonic.format(false) + ' ' + this.name;
         }
     }
+
+    getChords(){}
 }

@@ -5,27 +5,25 @@ import { getNotesByIntervals } from '../utils/getNotesByIntervals';
 export abstract class Chord {
     constructor(public tonic: Note = new Note()) {}
 
-    abstract getName(): string;
-
-    abstract getShortName(): string;
-
-    abstract getIntervals(): Interval[];
+    abstract readonly name: string;
+    abstract readonly shortName: string;
+    abstract readonly intervals: Interval[];
 
     format(kind: 'short' | 'long' = 'short', showOctave = false) {
         if (kind === 'short') {
-            return this.tonic.format(showOctave) + this.getShortName();
+            return this.tonic.format(showOctave) + this.shortName;
         } else {
-            return this.tonic.format(showOctave) + ' ' + this.getName();
+            return this.tonic.format(showOctave) + ' ' + this.name;
         }
     }
 
     getNotes() {
-        return getNotesByIntervals(this.tonic, this.getIntervals());
+        return getNotesByIntervals(this.tonic, this.intervals);
     }
 
     equals(chord: Chord) {
         return (
-            chord.getName() === this.getName() &&
+            chord.name === this.name &&
             chord.tonic.letter === this.tonic.letter &&
             chord.tonic.symbol === this.tonic.symbol
         );

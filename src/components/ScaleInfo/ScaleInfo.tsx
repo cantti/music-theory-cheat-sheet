@@ -102,31 +102,54 @@ export const ScaleInfo = () => {
         return null;
     }
 
+    const chords = getChordsByScale(activeScale);
+
     const formatCircleButtons = (
         scalesInCircleButtons: { scale: Scale; clickable: boolean }[][]
     ) => {
-        return scalesInCircleButtons.map((circleItem, idx) => (
-            <Button
-                className={styles.key}
-                key={idx}
-                variant="light"
-                onClick={() =>
-                    navigate(
-                        getScaleUrl(
-                            circleItem.filter((x) => x.clickable)[0].scale
+        return scalesInCircleButtons.map((circleItem, idx) => {
+            return (
+                <Button
+                    className={styles.key}
+                    key={idx}
+                    variant={
+                        circleItem
+                            .filter((x) => x.clickable)[0]
+                            .scale.format() === activeScale.format()
+                            ? 'danger'
+                            : chords
+                                  .reduce((acc, curr) => [...acc, ...curr], [])
+                                  .some((chord) =>
+                                      circleItem.some(
+                                          (ci) =>
+                                              ci.scale.tonic.format(false) ===
+                                                  chord.tonic.format(false) &&
+                                              ci.scale.shortName ===
+                                                  chord.shortName
+                                      )
+                                  )
+                            ? 'secondary'
+                            : 'light border border-2'
+                    }
+                    onClick={() =>
+                        navigate(
+                            getScaleUrl(
+                                circleItem.filter((x) => x.clickable)[0].scale
+                            )
                         )
-                    )
-                }
-                active={
-                    circleItem.filter((x) => x.clickable)[0].scale.format() ===
-                    activeScale.format()
-                }
-            >
-                {circleItem.map((x, idx) => (
-                    <div key={idx}>{x.scale.format()}</div>
-                ))}
-            </Button>
-        ));
+                    }
+                    active={
+                        circleItem
+                            .filter((x) => x.clickable)[0]
+                            .scale.format() === activeScale.format()
+                    }
+                >
+                    {circleItem.map((x, idx) => (
+                        <div key={idx}>{x.scale.format()}</div>
+                    ))}
+                </Button>
+            );
+        });
     };
 
     const notesInScale = activeScale.getNotes();

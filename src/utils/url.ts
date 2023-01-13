@@ -4,7 +4,7 @@ import { NaturalMinorScale } from '../theory-utils/scales/NaturalMinorScale';
 import { Scale } from '../theory-utils/scales/Scale';
 
 export function getScaleUrl(key: Scale) {
-    const scale = `${key.tonic.letter}${key.tonic.symbol}${key.getShortName()}`;
+    const scale = `${key.tonic.letter}${key.tonic.symbol}${key.shortName}`;
     return `/circle/${encodeURIComponent(scale)}`;
 }
 

@@ -1,11 +1,12 @@
-import { DiminishedChord } from "../chords/DiminishedChord";
-import { MajorChord } from "../chords/MajorChord";
-import { MinorChord } from "../chords/MinorChord";
-import { MajorScale } from "../scales/MajorScale";
-import { NaturalMinorScale } from "../scales/NaturalMinorScale";
-import { Scale } from "../scales/Scale";
+import { Chord } from '../chords/Chord';
+import { DiminishedChord } from '../chords/DiminishedChord';
+import { MajorChord } from '../chords/MajorChord';
+import { MinorChord } from '../chords/MinorChord';
+import { MajorScale } from '../scales/MajorScale';
+import { NaturalMinorScale } from '../scales/NaturalMinorScale';
+import { Scale } from '../scales/Scale';
 
-export const getChordsByScale = (scale: Scale) => {
+export function getChordsByScale(scale: Scale): Chord[][] {
     const notes = scale.getNotes();
     if (scale instanceof MajorScale) {
         return [
@@ -27,5 +28,7 @@ export const getChordsByScale = (scale: Scale) => {
             [new MajorChord(notes[5])],
             [new MajorChord(notes[6])],
         ];
+    } else {
+        throw new Error();
     }
-};
+}
