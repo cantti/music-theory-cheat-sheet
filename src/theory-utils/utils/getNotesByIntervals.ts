@@ -1,9 +1,7 @@
-import { Interval } from '../interval/Interval';
-import { IntervalNumber } from '../interval/IntervalNumber';
-import { Letter } from '../note/Letter';
-import { Note } from '../note/Note';
+import { Interval, IntervalNumber } from '../interval';
+import { allLetters, Letter } from '../letters';
+import { Note } from '../notes';
 import { allSymbols } from '../symbols';
-import { getLetterIndices } from './getLetterIndices';
 
 const majorScaleSemitones: {
     interval: Interval;
@@ -95,30 +93,26 @@ export function getNotesByIntervals(
 
     intervals.forEach((interval) => {
         const newNoteLetter: Letter =
-            getLetterIndices()[
-                (getLetterIndices().findIndex((x) => x.letter === root.letter) +
+            allLetters[
+                (allLetters.findIndex((x) => x.equals(root.letter)) +
                     sortedIntervals.indexOf(interval.name)) %
-                    getLetterIndices().length
-            ].letter;
+                    allLetters.length
+            ];
 
         const newNoteOctave: number = Math.trunc(
             root.octave +
-                (getLetterIndices().findIndex((x) => x.letter === root.letter) +
+                (allLetters.findIndex((x) => x.equals(root.letter)) +
                     sortedIntervals.indexOf(interval.name)) /
-                    getLetterIndices().length
+                    allLetters.length
         );
 
         const rootIndex =
-            root.octave * 12 +
-            getLetterIndices().find((x) => x.letter === root.letter)!.index +
-            root.symbol.shift;
+            root.octave * 12 + root.letter.index + root.symbol.shift;
 
         const symbolShift: number =
             rootIndex +
             totalSemitonesByInterval(interval) -
-            (newNoteOctave * 12 +
-                getLetterIndices().find((x) => x.letter === newNoteLetter)!
-                    .index);
+            (newNoteOctave * 12 + newNoteLetter.index);
 
         const newNoteSymbol = allSymbols.find((x) => x.shift === symbolShift);
 

@@ -1,6 +1,6 @@
 import { Chord } from '../chords/Chord';
-import { Interval } from '../interval/Interval';
-import { Note } from '../note/Note';
+import { Interval } from '../interval';
+import { Note } from '../notes';
 import { getNotesByIntervals } from '../utils/getNotesByIntervals';
 
 export abstract class Scale {

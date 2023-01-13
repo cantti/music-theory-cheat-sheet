@@ -1,4 +1,4 @@
-import { Note } from '../theory-utils/note/Note';
+import { Note } from '../theory-utils/notes';
 import { MajorScale } from '../theory-utils/scales/MajorScale';
 import { NaturalMinorScale } from '../theory-utils/scales/NaturalMinorScale';
 import { Scale } from '../theory-utils/scales/Scale';

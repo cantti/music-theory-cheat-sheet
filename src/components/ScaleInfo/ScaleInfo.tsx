@@ -6,7 +6,8 @@ import { BsPlayCircle, BsQuestionCircle } from 'react-icons/bs';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createPianoSynth } from '../../piano-synth';
 import { Chord } from '../../theory-utils/chords/Chord';
-import { Note } from '../../theory-utils/note/Note';
+import { C, D, E, F, G, A, B } from '../../theory-utils/letters';
+import { Note } from '../../theory-utils/notes';
 import { MajorScale } from '../../theory-utils/scales/MajorScale';
 import { NaturalMinorScale } from '../../theory-utils/scales/NaturalMinorScale';
 import { Scale } from '../../theory-utils/scales/Scale';
@@ -19,82 +20,91 @@ import styles from './ScaleInfo.module.scss';
 const pianoSynth = createPianoSynth();
 
 const scalesInCircle: { scale: Scale; clickable: boolean }[][] = [
-    [{ scale: new MajorScale(new Note('C')), clickable: true }],
-    [{ scale: new MajorScale(new Note('G')), clickable: true }],
-    [{ scale: new MajorScale(new Note('D')), clickable: true }],
-    [{ scale: new MajorScale(new Note('A')), clickable: true }],
-    [{ scale: new MajorScale(new Note('E')), clickable: true }],
+    [{ scale: new MajorScale(new Note(new C())), clickable: true }],
+    [{ scale: new MajorScale(new Note(new G())), clickable: true }],
+    [{ scale: new MajorScale(new Note(new D())), clickable: true }],
+    [{ scale: new MajorScale(new Note(new A())), clickable: true }],
+    [{ scale: new MajorScale(new Note(new E())), clickable: true }],
     [
-        { scale: new MajorScale(new Note('B')), clickable: true },
-        { scale: new MajorScale(new Note('C', new Flat())), clickable: false },
-    ],
-    [
+        { scale: new MajorScale(new Note(new B())), clickable: true },
         {
-            scale: new MajorScale(new Note('F', new Sharp())),
-            clickable: false,
-        },
-        { scale: new MajorScale(new Note('G', new Flat())), clickable: true },
-    ],
-    [
-        {
-            scale: new MajorScale(new Note('C', new Sharp())),
-            clickable: false,
-        },
-        { scale: new MajorScale(new Note('D', new Flat())), clickable: true },
-    ],
-    [{ scale: new MajorScale(new Note('A', new Flat())), clickable: true }],
-    [{ scale: new MajorScale(new Note('E', new Flat())), clickable: true }],
-    [{ scale: new MajorScale(new Note('B', new Flat())), clickable: true }],
-    [{ scale: new MajorScale(new Note('F')), clickable: true }],
-    [{ scale: new NaturalMinorScale(new Note('A')), clickable: true }],
-    [{ scale: new NaturalMinorScale(new Note('E')), clickable: true }],
-    [{ scale: new NaturalMinorScale(new Note('B')), clickable: true }],
-    [
-        {
-            scale: new NaturalMinorScale(new Note('F', new Sharp())),
-            clickable: true,
-        },
-    ],
-    [
-        {
-            scale: new NaturalMinorScale(new Note('C', new Sharp())),
-            clickable: true,
-        },
-    ],
-    [
-        {
-            scale: new NaturalMinorScale(new Note('G', new Sharp())),
-            clickable: true,
-        },
-        {
-            scale: new NaturalMinorScale(new Note('A', new Flat())),
+            scale: new MajorScale(new Note(new C(), new Flat())),
             clickable: false,
         },
     ],
     [
         {
-            scale: new NaturalMinorScale(new Note('D', new Sharp())),
+            scale: new MajorScale(new Note(new F(), new Sharp())),
             clickable: false,
         },
         {
-            scale: new NaturalMinorScale(new Note('E', new Flat())),
+            scale: new MajorScale(new Note(new G(), new Flat())),
             clickable: true,
         },
     ],
     [
         {
-            scale: new NaturalMinorScale(new Note('A', new Sharp())),
+            scale: new MajorScale(new Note(new C(), new Sharp())),
             clickable: false,
         },
         {
-            scale: new NaturalMinorScale(new Note('B', new Flat())),
+            scale: new MajorScale(new Note(new D(), new Flat())),
             clickable: true,
         },
     ],
-    [{ scale: new NaturalMinorScale(new Note('F')), clickable: true }],
-    [{ scale: new NaturalMinorScale(new Note('C')), clickable: true }],
-    [{ scale: new NaturalMinorScale(new Note('G')), clickable: true }],
-    [{ scale: new NaturalMinorScale(new Note('D')), clickable: true }],
+    [{ scale: new MajorScale(new Note(new A(), new Flat())), clickable: true }],
+    [{ scale: new MajorScale(new Note(new E(), new Flat())), clickable: true }],
+    [{ scale: new MajorScale(new Note(new B(), new Flat())), clickable: true }],
+    [{ scale: new MajorScale(new Note(new F())), clickable: true }],
+    [{ scale: new NaturalMinorScale(new Note(new A())), clickable: true }],
+    [{ scale: new NaturalMinorScale(new Note(new E())), clickable: true }],
+    [{ scale: new NaturalMinorScale(new Note(new B())), clickable: true }],
+    [
+        {
+            scale: new NaturalMinorScale(new Note(new F(), new Sharp())),
+            clickable: true,
+        },
+    ],
+    [
+        {
+            scale: new NaturalMinorScale(new Note(new C(), new Sharp())),
+            clickable: true,
+        },
+    ],
+    [
+        {
+            scale: new NaturalMinorScale(new Note(new G(), new Sharp())),
+            clickable: true,
+        },
+        {
+            scale: new NaturalMinorScale(new Note(new A(), new Flat())),
+            clickable: false,
+        },
+    ],
+    [
+        {
+            scale: new NaturalMinorScale(new Note(new D(), new Sharp())),
+            clickable: false,
+        },
+        {
+            scale: new NaturalMinorScale(new Note(new E(), new Flat())),
+            clickable: true,
+        },
+    ],
+    [
+        {
+            scale: new NaturalMinorScale(new Note(new A(), new Sharp())),
+            clickable: false,
+        },
+        {
+            scale: new NaturalMinorScale(new Note(new B(), new Flat())),
+            clickable: true,
+        },
+    ],
+    [{ scale: new NaturalMinorScale(new Note(new F())), clickable: true }],
+    [{ scale: new NaturalMinorScale(new Note(new C())), clickable: true }],
+    [{ scale: new NaturalMinorScale(new Note(new G())), clickable: true }],
+    [{ scale: new NaturalMinorScale(new Note(new D())), clickable: true }],
 ];
 
 const clickableScales = scalesInCircle.map(

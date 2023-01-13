@@ -1,7 +1,7 @@
 import { DiminishedChord } from '../chords/DiminishedChord';
 import { MajorChord } from '../chords/MajorChord';
 import { MinorChord } from '../chords/MinorChord';
-import { Interval } from '../interval/Interval';
+import { Interval } from '../interval';
 import { Scale } from './Scale';
 
 class MajorScale extends Scale {

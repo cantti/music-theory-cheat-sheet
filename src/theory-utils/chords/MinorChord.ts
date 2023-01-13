@@ -1,4 +1,4 @@
-import { Interval } from '../interval/Interval';
+import { Interval } from '../interval';
 import { Chord } from './Chord';
 
 export class MinorChord extends Chord {

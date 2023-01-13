@@ -1,11 +1,9 @@
-import { getLetterIndices } from '../utils/getLetterIndices';
-import { isLetter } from '../utils/isLetter';
-import { Letter } from './Letter';
-import { allSymbols, None, Symbol } from '../symbols';
+import { allSymbols, None, Symbol } from './symbols';
+import { allLetters, C, Letter } from './letters';
 
 export class Note {
     constructor(
-        public letter: Letter = 'C',
+        public letter: Letter = new C(),
         public symbol: Symbol = new None(),
         public octave: number = 4
     ) {}
@@ -22,26 +20,19 @@ export class Note {
             match.groups.octave !== ''
                 ? parseInt(match.groups.octave)
                 : undefined;
-        if (!isLetter(letter)) {
-            throw new Error();
-        }
         return new Note(
-            letter,
+            allLetters.find((x) => x.char === letter),
             allSymbols.find((x) => x.sign === symbol),
             octave
         );
     }
 
     getIndex() {
-        return (
-            this.octave * 12 +
-            getLetterIndices().find((x) => x.letter === this.letter)!.index +
-            this.symbol.shift
-        );
+        return this.octave * 12 + this.letter.index + this.symbol.shift;
     }
 
     format(showOctave: boolean = true) {
-        let result: string = this.letter + this.symbol;
+        let result: string = this.letter.toString() + this.symbol.toString();
         if (showOctave) {
             result += this.octave;
         }
