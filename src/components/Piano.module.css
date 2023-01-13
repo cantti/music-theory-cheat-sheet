@@ -2,7 +2,8 @@
 
 .piano {
     display: flex;
-    height: 20vh;
+    height: 12rem;
+    margin-bottom: 1rem;
 }
 
 .octave {

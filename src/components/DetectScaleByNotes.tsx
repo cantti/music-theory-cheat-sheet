@@ -32,7 +32,7 @@ export function DetectScaleByNotes() {
 
     return (
         <Row>
-            <Col md={6} className="mb-3">
+            <Col md={6}>
                 <h3>Select notes</h3>
                 <p>
                     Here you can determine the key by the notes. Press a key to
