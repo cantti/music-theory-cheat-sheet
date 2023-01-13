@@ -1,10 +1,10 @@
 export abstract class Symbol {
     abstract readonly sign: string;
     abstract readonly shift: number;
-    public toString() {
+    toString() {
         return this.sign;
     }
-    public equals(other: Symbol) {
+    equals(other: Symbol) {
         return this.sign === other.sign;
     }
 }

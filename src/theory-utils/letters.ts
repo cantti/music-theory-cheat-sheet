@@ -1,10 +1,10 @@
 export abstract class Letter {
     abstract readonly char: string;
     abstract readonly index: number;
-    public toString() {
+    toString() {
         return this.char;
     }
-    public equals(other: Letter) {
+    equals(other: Letter) {
         return this.char === other.char;
     }
 }
