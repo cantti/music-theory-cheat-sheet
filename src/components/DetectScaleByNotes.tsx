@@ -16,7 +16,7 @@ function ScaleButton({ scale }: ScaleButtonProps) {
         <Link to={getScaleUrl(scale)}>
             <Button
                 variant={scale.shortName === 'm' ? 'info' : 'warning'}
-                className="w-100 h-100 mb-2"
+                className="w-100 text-truncate mb-2"
                 size="lg"
             >
                 {scale.format('long')}
