@@ -36,11 +36,11 @@ export const getScalesByNotes = (notes: Note[]) => {
         .map((x) => x.getIndex() % 12)
         .uniq()
         .value();
-    
+
     return allScales.filter(
         (scale) =>
             _.intersection(
-                scale.getNotes().map((note) => note.getIndex() % 12),
+                scale.notes.map((note) => note.getIndex() % 12),
                 notesIndexes
             ).length === notesIndexes.length
     );

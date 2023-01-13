@@ -1,4 +1,3 @@
-import { Chord } from '../chords/Chord';
 import { DiminishedChord } from '../chords/DiminishedChord';
 import { MajorChord } from '../chords/MajorChord';
 import { MinorChord } from '../chords/MinorChord';
@@ -18,6 +17,17 @@ class NaturalMinorScale extends Scale {
         new Interval('Seventh', 'Minor'),
         new Interval('Octave', 'Perfect'),
     ];
+    get chords() {
+        return [
+            [new MinorChord(this.notes[0])],
+            [new DiminishedChord(this.notes[1])],
+            [new MajorChord(this.notes[2])],
+            [new MinorChord(this.notes[3])],
+            [new MinorChord(this.notes[4])],
+            [new MajorChord(this.notes[5])],
+            [new MajorChord(this.notes[6])],
+        ];
+    }
 }
 
 export { NaturalMinorScale };

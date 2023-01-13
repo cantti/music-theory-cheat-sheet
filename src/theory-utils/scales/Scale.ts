@@ -12,17 +12,17 @@ export abstract class Scale {
 
     abstract readonly intervals: Interval[];
 
-    getNotes() {
+    abstract get chords(): Chord[][];
+
+    get notes() {
         return getNotesByIntervals(this.tonic, this.intervals);
     }
 
-    format(kind: 'short' | 'long' = 'short') {
+    format(kind: 'short' | 'long' = 'short', showOctave: boolean = false) {
         if (kind === 'short') {
-            return this.tonic.format(false) + this.shortName;
+            return this.tonic.format(showOctave) + this.shortName;
         } else {
-            return this.tonic.format(false) + ' ' + this.name;
+            return this.tonic.format(showOctave) + ' ' + this.name;
         }
     }
-
-    getChords(){}
 }

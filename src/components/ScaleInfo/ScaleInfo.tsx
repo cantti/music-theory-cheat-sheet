@@ -1,4 +1,5 @@
 /* eslint-disable import/no-webpack-loader-syntax */
+import _ from 'lodash';
 import { useState } from 'react';
 import { Button, Col, Modal, Row, Table } from 'react-bootstrap';
 import { BsPlayCircle, BsQuestionCircle } from 'react-icons/bs';
@@ -9,7 +10,6 @@ import { Note } from '../../theory-utils/note/Note';
 import { MajorScale } from '../../theory-utils/scales/MajorScale';
 import { NaturalMinorScale } from '../../theory-utils/scales/NaturalMinorScale';
 import { Scale } from '../../theory-utils/scales/Scale';
-import { getChordsByScale } from '../../theory-utils/utils/getChordsByScale';
 import { isTouchDevice } from '../../utils/isTouchDevice';
 import { getScaleFormUrlParams, getScaleUrl } from '../../utils/url';
 import Piano from '../Piano';
@@ -102,8 +102,6 @@ export const ScaleInfo = () => {
         return null;
     }
 
-    const chords = getChordsByScale(activeScale);
-
     const formatCircleButtons = (
         scalesInCircleButtons: { scale: Scale; clickable: boolean }[][]
     ) => {
@@ -117,17 +115,12 @@ export const ScaleInfo = () => {
                             .filter((x) => x.clickable)[0]
                             .scale.format() === activeScale.format()
                             ? 'danger'
-                            : chords
-                                  .reduce((acc, curr) => [...acc, ...curr], [])
-                                  .some((chord) =>
-                                      circleItem.some(
-                                          (ci) =>
-                                              ci.scale.tonic.format(false) ===
-                                                  chord.tonic.format(false) &&
-                                              ci.scale.shortName ===
-                                                  chord.shortName
-                                      )
-                                  )
+                            : _.intersection(
+                                  _.flatten(activeScale.chords).map((x) =>
+                                      x.format('short')
+                                  ),
+                                  circleItem.map((x) => x.scale.format('short'))
+                              ).length > 0
                             ? 'secondary'
                             : 'light border border-2'
                     }
@@ -151,8 +144,6 @@ export const ScaleInfo = () => {
             );
         });
     };
-
-    const notesInScale = activeScale.getNotes();
 
     const playChord = (chord: Chord) => {
         setPlayingChord(chord);
@@ -215,7 +206,7 @@ export const ScaleInfo = () => {
                     <h3>Keyboard notes</h3>
                     <p>Notes of the selected key on the keyboard.</p>
                     <Piano
-                        highlightedNotes={notesInScale}
+                        highlightedNotes={activeScale.notes}
                         startOctave={activeScale == null ? 0 : undefined}
                         endOctave={activeScale == null ? 1 : undefined}
                         className="mb-4"
@@ -233,7 +224,7 @@ export const ScaleInfo = () => {
                         </thead>
                         <tbody>
                             <tr className="text-center">
-                                {notesInScale.map((note, idx) => (
+                                {activeScale.notes.map((note, idx) => (
                                     <td key={idx}>{note.format(false)}</td>
                                 ))}
                             </tr>
@@ -263,7 +254,7 @@ export const ScaleInfo = () => {
                         </thead>
                         <tbody>
                             <tr className="text-center">
-                                {getChordsByScale(activeScale)!
+                                {activeScale.chords
                                     .map((x) => x[0])
                                     .map((chord, colIdx) => (
                                         <td key={colIdx}>
