@@ -48,13 +48,13 @@ const Piano = ({
         highlightedNotes.map((x) => x.getIndex()).includes(note.getIndex());
 
     const playNote = (note: Note) => {
-        pianoSynth.triggerAttack(note.format());
+        pianoSynth.triggerAttack(note.format(true));
         const ref = keyRefs.current[note.getIndex()];
         ref.current!.classList.add(styles.activeKey);
     };
 
     const stopNote = (note: Note) => {
-        pianoSynth.triggerRelease(note.format());
+        pianoSynth.triggerRelease(note.format(true));
         const ref = keyRefs.current[note.getIndex()];
         ref.current!.classList.remove(styles.activeKey);
     };
