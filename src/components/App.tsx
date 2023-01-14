@@ -7,20 +7,27 @@ function App() {
     const location = useLocation();
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <Navbar bg="dark" expand="lg" variant="dark" className="mb-3">
-                <Container className="flex-nowrap">
+            <Navbar
+                bg="dark"
+                expand="lg"
+                sticky="top"
+                variant="dark"
+                className="py-1 mb-3"
+            >
+                <Container>
                     <Navbar.Brand
                         as={Link}
                         to="/"
-                        className="text-truncate me-auto"
+                        className="d-flex align-items-center"
                     >
                         <GiMusicalNotes className="me-3" size="2rem" />
-                        Music Theory Cheat Sheet
+                        <div className="lh-sm">
+                            <div>Music Theory</div>
+                            <div className="fs-6">Cheat Sheet</div>
+                        </div>
                     </Navbar.Brand>
                     <Navbar.Toggle />
-                </Container>
-                <Container>
-                    <Navbar.Collapse id="navbar">
+                    <Navbar.Collapse id="basic-navbar-nav">
                         <Nav>
                             <Nav.Link
                                 as={NavLink}
