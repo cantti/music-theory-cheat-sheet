@@ -1,21 +1,21 @@
+import { motion } from 'framer-motion';
 import _ from 'lodash';
 import { useState } from 'react';
-import { Button, Col, Modal, Row, Table } from 'react-bootstrap';
-import { BsPlayCircle, BsQuestionCircle } from 'react-icons/bs';
+import {
+    Button,
+    Card, Col,
+    Modal,
+    Row
+} from 'react-bootstrap';
+import { BsQuestionCircle } from 'react-icons/bs';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createPianoSynth } from '../../piano-synth';
-import { Chord } from '../../theory-utils/chords/Chord';
-import { MajorScale } from '../../theory-utils/scales/MajorScale';
-import { NaturalMinorScale } from '../../theory-utils/scales/NaturalMinorScale';
-import { Scale } from '../../theory-utils/scales/Scale';
-import { isTouchDevice } from '../../utils/isTouchDevice';
-import { getScaleFormUrlParams, getScaleUrl } from '../../utils/url';
-import Piano from '../Piano';
+import { MajorScale } from '../theory-utils/scales/MajorScale';
+import { NaturalMinorScale } from '../theory-utils/scales/NaturalMinorScale';
+import { Scale } from '../theory-utils/scales/Scale';
+import { getScaleFormUrlParams, getScaleUrl } from '../utils/url';
+import Piano from './Piano';
 import styles from './ScaleInfo.module.scss';
-import { motion } from 'framer-motion';
 const MotionButton = motion(Button);
-
-const pianoSynth = createPianoSynth();
 
 const scalesInCircle: { scale: Scale; clickable: boolean }[][] = [
     [{ scale: MajorScale.create('C'), clickable: true }],
@@ -62,27 +62,14 @@ const scalesInCircle: { scale: Scale; clickable: boolean }[][] = [
     [{ scale: NaturalMinorScale.create('D'), clickable: true }],
 ];
 
-const clickableScales = scalesInCircle.map(
-    (x) => x.filter((x) => x.clickable)[0].scale
-);
-
 export function ScaleInfo() {
     const [showHelp, setShowHelp] = useState(false);
-
-    const [playingChord, setPlayingChord] = useState<Chord | null>(null);
 
     const navigate = useNavigate();
 
     const urlParams = useParams<{ scale: string }>();
 
-    //get scale from url
     const activeScale = getScaleFormUrlParams(urlParams.scale!);
-
-    //redirect to c major if scale is not supported
-    if (!activeScale) {
-        navigate(getScaleUrl(clickableScales[0]));
-        return null;
-    }
 
     function formatCircleButtons(
         scalesInCircleButtons: { scale: Scale; clickable: boolean }[][]
@@ -92,7 +79,7 @@ export function ScaleInfo() {
                 <MotionButton
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.3 }}
                     className={styles.key}
                     key={idx}
                     variant={
@@ -130,26 +117,6 @@ export function ScaleInfo() {
         });
     }
 
-    function playChord(chord: Chord) {
-        setPlayingChord(chord);
-        chord
-            .getNotes()
-            .map((x) => x.format())
-            .forEach((x) => {
-                pianoSynth.triggerAttack(x);
-            });
-    }
-
-    function stopChord(chord: Chord) {
-        setPlayingChord(null);
-        chord
-            .getNotes()
-            .map((x) => x.format())
-            .forEach((x) => {
-                pianoSynth.triggerRelease(x);
-            });
-    }
-
     return (
         <Row>
             <Col xs={12} md={6}>
@@ -183,98 +150,77 @@ export function ScaleInfo() {
             <Col xs={12} md={6}>
                 <h3>Keyboard notes</h3>
                 <p>Notes of the selected key on the keyboard.</p>
-                <Piano
-                    highlightedNotes={activeScale.notes}
-                    startOctave={activeScale == null ? 0 : undefined}
-                    endOctave={activeScale == null ? 1 : undefined}
-                    className="mb-4"
-                />
+                <motion.div
+                    key={activeScale.format() + 'piano'}
+                    initial={{ rotateY: 180 }}
+                    animate={{ rotateY: 0 }}
+                    transition={{
+                        duration: 0.5,
+                    }}
+                    className="mb-3"
+                >
+                    <Piano
+                        highlightedNotes={activeScale.notes}
+                        startOctave={activeScale == null ? 0 : undefined}
+                        endOctave={activeScale == null ? 1 : undefined}
+                    />
+                </motion.div>
 
                 <h3>Notes</h3>
                 <p>Notes of the selected key, starting with the tonic.</p>
-                <Table bordered responsive>
-                    <thead>
-                        <tr className="bg-light text-center">
-                            {Array.from({ length: 8 }).map((_, idx) => (
-                                <th key={idx}>{idx + 1}</th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr className="text-center">
-                            {activeScale.notes.map((note, idx) => (
-                                <td key={idx}>{note.format(false)}</td>
-                            ))}
-                        </tr>
-                    </tbody>
-                </Table>
+                <motion.div
+                    key={activeScale.format() + 'notes'}
+                    initial={{ rotateY: 180 }}
+                    animate={{ rotateY: 0 }}
+                    transition={{
+                        duration: 0.5,
+                    }}
+                    className="d-flex mb-3"
+                >
+                    {activeScale.notes.map((note, index) => {
+                        return (
+                            <Card
+                                key={activeScale.format() + note.format(true)}
+                                className="flex-even"
+                            >
+                                <Card.Header className="text-center">
+                                    {index + 1}
+                                </Card.Header>
+                                <Card.Body className="text-center fw-bold text-truncate px-0">
+                                    {note.format(false)}
+                                </Card.Body>
+                            </Card>
+                        );
+                    })}
+                </motion.div>
 
                 <h3>Chords</h3>
                 <p>The main chords of the selected key.</p>
-                <Table bordered responsive>
-                    <thead>
-                        <tr className="bg-light text-center">
-                            {(activeScale instanceof MajorScale
-                                ? ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii']
-                                : ['i', 'iidim', 'III', 'iv', 'v', 'VI', 'VII']
-                            ).map((x, idx) => (
-                                <th key={idx}>{x}</th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr className="text-center">
-                            {activeScale.chords
-                                .map((x) => x[0])
-                                .map((chord, colIdx) => (
-                                    <td key={colIdx}>
-                                        <Button
-                                            variant="outline-primary"
-                                            size="sm"
-                                            className="w-100"
-                                            onMouseDown={(e) => {
-                                                e.stopPropagation();
-                                                if (isTouchDevice()) return;
-                                                playChord(chord);
-                                            }}
-                                            onMouseUp={(e) => {
-                                                e.stopPropagation();
-                                                if (isTouchDevice()) return;
-                                                stopChord(chord);
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                e.stopPropagation();
-                                                if (isTouchDevice()) return;
-                                                if (e.buttons === 1) {
-                                                    stopChord(chord);
-                                                }
-                                            }}
-                                            onTouchStart={(e) => {
-                                                e.stopPropagation();
-                                                playChord(chord);
-                                            }}
-                                            onTouchEnd={(e) => {
-                                                e.stopPropagation();
-                                                stopChord(chord);
-                                            }}
-                                        >
-                                            {chord.format()}
-                                            <br />
-                                            <BsPlayCircle />
-                                        </Button>
-                                    </td>
-                                ))}
-                        </tr>
-                    </tbody>
-                </Table>
-                <p>Notes of the playing chord.</p>
-                <Piano
-                    highlightedNotes={
-                        playingChord != null ? playingChord.getNotes() : []
-                    }
-                    startOctave={4}
-                    endOctave={5}
-                />
+                <motion.div
+                    key={activeScale.format() + 'chords'}
+                    initial={{ rotateY: '180deg' }}
+                    animate={{ rotateY: '0' }}
+                    transition={{
+                        duration: 0.5,
+                    }}
+                    className="d-flex mb-3"
+                >
+                    {(activeScale instanceof MajorScale
+                        ? ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii']
+                        : ['i', 'iidim', 'III', 'iv', 'v', 'VI', 'VII']
+                    ).map((romanNum, idx) => (
+                        <Card key={idx} className="flex-even">
+                            <Card.Header className="text-center text-truncate">
+                                {romanNum}
+                            </Card.Header>
+                            <Card.Body className="text-center fw-bold text-truncate px-0">
+                                {activeScale.chords
+                                    .map((x) => x[0])
+                                    [idx].format()}
+                            </Card.Body>
+                        </Card>
+                    ))}
+                </motion.div>
             </Col>
             <Modal show={showHelp} onHide={() => setShowHelp(false)}>
                 <Modal.Header closeButton>

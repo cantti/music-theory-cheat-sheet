@@ -79,13 +79,7 @@ function Piano({
                 }}
             >
                 {isHighlightNecessary(props.note) && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.5 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.5 }}
-                        exit={{ x: -300, opacity: 0 }}
-                        className={styles.dot}
-                    />
+                    <div className={styles.dot} />
                 )}
             </motion.div>
         );
