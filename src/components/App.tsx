@@ -9,12 +9,18 @@ function App() {
         <Suspense fallback={<div>Loading...</div>}>
             <Navbar bg="dark" expand="lg" variant="dark" className="mb-3">
                 <Container className="flex-nowrap">
-                    <Navbar.Brand as={Link} to="/" className="text-truncate">
+                    <Navbar.Brand
+                        as={Link}
+                        to="/"
+                        className="text-truncate me-auto"
+                    >
                         <GiMusicalNotes className="me-3" size="2rem" />
                         Music Theory Cheat Sheet
                     </Navbar.Brand>
                     <Navbar.Toggle />
-                    <Navbar.Collapse id="basic-navbar-nav">
+                </Container>
+                <Container>
+                    <Navbar.Collapse id="navbar">
                         <Nav>
                             <Nav.Link
                                 as={NavLink}
