@@ -1,10 +1,7 @@
-import React, { useRef } from 'react';
+import { motion } from 'framer-motion';
 import { createPianoSynth } from '../piano-synth';
-import { C, D, E, F, G, A, B } from '../theory-utils/letters';
 import { Note } from '../theory-utils/notes';
-import { Natural, Sharp } from '../theory-utils/accidentals';
-import { isTouchDevice } from '../utils/isTouchDevice';
-import styles from './Piano.module.css';
+import styles from './Piano.module.scss';
 
 const pianoSynth = createPianoSynth();
 
@@ -36,10 +33,6 @@ function Piano({
         }
     }
 
-    const keyRefs = useRef<{
-        [noteIndex: number]: React.RefObject<HTMLDivElement>;
-    }>({});
-
     let octaves: number[] = [];
 
     for (let i = startOctave; i <= endOctave; i++) {
@@ -54,116 +47,78 @@ function Piano({
 
     function playNote(note: Note) {
         pianoSynth.triggerAttack(note.format(true));
-        const ref = keyRefs.current[note.getIndex()];
-        ref.current!.classList.add(styles.activeKey);
     }
 
     function stopNote(note: Note) {
         pianoSynth.triggerRelease(note.format(true));
-        const ref = keyRefs.current[note.getIndex()];
-        ref.current!.classList.remove(styles.activeKey);
     }
 
-    interface KeyProps {
-        note: Note;
-        children?: React.ReactNode;
-        className: string;
-    }
-
-    function Key({ note, children, className }: KeyProps) {
-        const ref = useRef<HTMLDivElement>(null);
-        keyRefs.current[note.getIndex()] = ref;
+    function Key(props: { note: Note }) {
         return (
-            <div
-                className={className}
-                onClick={(e) => {
-                    e.stopPropagation();
-                    onNoteClick(note);
+            <motion.div
+                whileTap={{ scale: 0.95 }}
+                className={
+                    props.note.accidental.sign
+                        ? styles.blackKey
+                        : styles.whiteKey
+                }
+                role="button"
+                onClick={() => {
+                    onNoteClick(props.note);
                 }}
                 onMouseDown={(e) => {
-                    e.stopPropagation();
-                    if (isTouchDevice()) return;
-                    playNote(note);
+                    playNote(props.note);
                 }}
                 onMouseUp={(e) => {
-                    e.stopPropagation();
-                    if (isTouchDevice()) return;
-                    stopNote(note);
+                    stopNote(props.note);
                 }}
                 onMouseLeave={(e) => {
-                    e.stopPropagation();
-                    if (isTouchDevice()) return;
                     if (e.buttons === 1) {
-                        stopNote(note);
+                        stopNote(props.note);
                     }
                 }}
-                onTouchStart={(e) => {
-                    e.stopPropagation();
-                    playNote(note);
-                }}
-                onTouchEnd={(e) => {
-                    e.stopPropagation();
-                    stopNote(note);
-                }}
-                role="button"
-                ref={ref}
             >
-                {children}
-                {isHighlightNecessary(note) && (
-                    <div className={styles.keyHighlighter} />
+                {isHighlightNecessary(props.note) && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                        exit={{ x: -300, opacity: 0 }}
+                        className={styles.dot}
+                    />
                 )}
-            </div>
-        );
-    }
-
-    interface WhiteAndBlackKeyProps {
-        whiteKeyNote: Note;
-        blackKeyNote?: Note;
-    }
-
-    function WhiteAndBlackKey({
-        whiteKeyNote,
-        blackKeyNote,
-    }: WhiteAndBlackKeyProps) {
-        return (
-            <Key className={styles.whiteKey} note={whiteKeyNote}>
-                {blackKeyNote != null && (
-                    <Key className={styles.blackKey} note={blackKeyNote} />
-                )}
-            </Key>
+            </motion.div>
         );
     }
 
     return (
         <div className={styles.piano + ' ' + className}>
-            {octaves.map((octave, octaveIdx) => (
+            {octaves.map((octave) => (
                 <div className={styles.octave} key={octave}>
-                    <WhiteAndBlackKey
-                        whiteKeyNote={new Note(new C(), new Natural(), octave)}
-                        blackKeyNote={new Note(new C(), new Sharp(), octave)}
-                    />
-                    <WhiteAndBlackKey
-                        whiteKeyNote={new Note(new D(), new Natural(), octave)}
-                        blackKeyNote={new Note(new D(), new Sharp(), octave)}
-                    />
-                    <WhiteAndBlackKey
-                        whiteKeyNote={new Note(new E(), new Natural(), octave)}
-                    />
-                    <WhiteAndBlackKey
-                        whiteKeyNote={new Note(new F(), new Natural(), octave)}
-                        blackKeyNote={new Note(new F(), new Sharp(), octave)}
-                    />
-                    <WhiteAndBlackKey
-                        whiteKeyNote={new Note(new G(), new Natural(), octave)}
-                        blackKeyNote={new Note(new G(), new Sharp(), octave)}
-                    />
-                    <WhiteAndBlackKey
-                        whiteKeyNote={new Note(new A(), new Natural(), octave)}
-                        blackKeyNote={new Note(new A(), new Sharp(), octave)}
-                    />
-                    <WhiteAndBlackKey
-                        whiteKeyNote={new Note(new B(), new Natural(), octave)}
-                    />
+                    <div className={styles.blackKeysWrapper}>
+                        {[
+                            Note.create('C#' + octave),
+                            Note.create('D#' + octave),
+                            Note.create('F#' + octave),
+                            Note.create('G#' + octave),
+                            Note.create('A#' + octave),
+                        ].map((note) => (
+                            <Key note={note} key={note.format(true)} />
+                        ))}
+                    </div>
+                    <div className={styles.whiteKeysWrapper}>
+                        {[
+                            Note.create('C' + octave),
+                            Note.create('D' + octave),
+                            Note.create('E' + octave),
+                            Note.create('F' + octave),
+                            Note.create('G' + octave),
+                            Note.create('A' + octave),
+                            Note.create('B' + octave),
+                        ].map((note) => (
+                            <Key note={note} key={note.format(true)} />
+                        ))}
+                    </div>
                 </div>
             ))}
         </div>
