@@ -8,8 +8,8 @@ function App() {
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <Navbar bg="dark" expand="lg" variant="dark" className="mb-3">
-                <Container>
-                    <Navbar.Brand as={Link} to="/">
+                <Container className="flex-nowrap">
+                    <Navbar.Brand as={Link} to="/" className="text-truncate">
                         <GiMusicalNotes className="me-3" size="2rem" />
                         Music Theory Cheat Sheet
                     </Navbar.Brand>
