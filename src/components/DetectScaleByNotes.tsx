@@ -6,22 +6,31 @@ import { Scale } from '../theory-utils/scales/Scale';
 import { getScalesByNotes } from '../theory-utils/utils/getScalesByNotes';
 import { getScaleUrl } from '../utils/url';
 import Piano from './Piano';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface ScaleButtonProps {
     scale: Scale;
+    index: number;
 }
 
-function ScaleButton({ scale }: ScaleButtonProps) {
+function ScaleButton({ scale, index }: ScaleButtonProps) {
     return (
-        <Link to={getScaleUrl(scale)}>
-            <Button
-                variant={scale.shortName === 'm' ? 'info' : 'warning'}
-                className="w-100 text-truncate mb-2"
-                size="lg"
-            >
-                {scale.format('long')}
-            </Button>
-        </Link>
+        <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: index * 0.2 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+        >
+            <Link to={getScaleUrl(scale)}>
+                <Button
+                    variant={scale.shortName === 'm' ? 'info' : 'warning'}
+                    className="w-100 text-truncate mb-2"
+                    size="lg"
+                >
+                    {scale.format('long')}
+                </Button>
+            </Link>
+        </motion.div>
     );
 }
 
@@ -55,19 +64,31 @@ export function DetectScaleByNotes() {
                 <Row>
                     <Col>
                         <b>Major</b>
-                        {possibleScales
-                            .filter((x) => x.shortName !== 'm')
-                            .map((scale, index) => (
-                                <ScaleButton scale={scale} key={index} />
-                            ))}
+                        <AnimatePresence>
+                            {possibleScales
+                                .filter((x) => x.shortName !== 'm')
+                                .map((scale, index) => (
+                                    <ScaleButton
+                                        scale={scale}
+                                        key={scale.format('short')}
+                                        index={index}
+                                    />
+                                ))}
+                        </AnimatePresence>
                     </Col>
                     <Col>
                         <b>Parallel minor</b>
-                        {possibleScales
-                            .filter((x) => x.shortName === 'm')
-                            .map((scale, index) => (
-                                <ScaleButton scale={scale} key={index} />
-                            ))}
+                        <AnimatePresence>
+                            {possibleScales
+                                .filter((x) => x.shortName === 'm')
+                                .map((scale, index) => (
+                                    <ScaleButton
+                                        scale={scale}
+                                        key={scale.format('short')}
+                                        index={index}
+                                    />
+                                ))}
+                        </AnimatePresence>
                     </Col>
                 </Row>
             </Col>

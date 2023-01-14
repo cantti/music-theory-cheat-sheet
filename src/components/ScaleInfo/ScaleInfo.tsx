@@ -12,6 +12,8 @@ import { isTouchDevice } from '../../utils/isTouchDevice';
 import { getScaleFormUrlParams, getScaleUrl } from '../../utils/url';
 import Piano from '../Piano';
 import styles from './ScaleInfo.module.scss';
+import { motion } from 'framer-motion';
+const MotionButton = motion(Button);
 
 const pianoSynth = createPianoSynth();
 
@@ -87,7 +89,10 @@ export function ScaleInfo() {
     ) {
         return scalesInCircleButtons.map((circleItem, idx) => {
             return (
-                <Button
+                <MotionButton
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
                     className={styles.key}
                     key={idx}
                     variant={
@@ -120,7 +125,7 @@ export function ScaleInfo() {
                     {circleItem.map((x, idx) => (
                         <div key={idx}>{x.scale.format()}</div>
                     ))}
-                </Button>
+                </MotionButton>
             );
         });
     }
