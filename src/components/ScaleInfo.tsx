@@ -1,12 +1,7 @@
 import { motion } from 'framer-motion';
 import _ from 'lodash';
 import { useState } from 'react';
-import {
-    Button,
-    Card, Col,
-    Modal,
-    Row
-} from 'react-bootstrap';
+import { Button, Card, Col, Modal, Row } from 'react-bootstrap';
 import { BsQuestionCircle } from 'react-icons/bs';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MajorScale } from '../theory-utils/scales/MajorScale';
@@ -119,17 +114,17 @@ export function ScaleInfo() {
 
     return (
         <Row>
+            <h3 className="d-flex align-items-center">
+                Circle of fifths
+                <Button
+                    variant="link"
+                    className="p-0 ms-2"
+                    onClick={() => setShowHelp(true)}
+                >
+                    <BsQuestionCircle size="1.5rem" />
+                </Button>
+            </h3>
             <Col xs={12} md={6}>
-                <h3 className="d-flex align-items-center">
-                    Circle of fifths
-                    <Button
-                        variant="link"
-                        className="p-0 ms-2"
-                        onClick={() => setShowHelp(true)}
-                    >
-                        <BsQuestionCircle size="1.5rem" />
-                    </Button>
-                </h3>
                 <div className="mb-2">
                     <p>
                         You can choose a key by clicking on the corresponding
@@ -148,78 +143,61 @@ export function ScaleInfo() {
                 </div>
             </Col>
             <Col xs={12} md={6}>
-                <h3>Keyboard notes</h3>
-                <p>Notes of the selected key on the keyboard.</p>
                 <motion.div
-                    key={activeScale.format() + 'piano'}
+                    key={activeScale.format()}
                     initial={{ rotateY: 180 }}
                     animate={{ rotateY: 0 }}
                     transition={{
-                        duration: 0.5,
+                        duration: 0.3,
                     }}
-                    className="mb-3"
                 >
-                    <Piano
-                        highlightedNotes={activeScale.notes}
-                        startOctave={activeScale == null ? 0 : undefined}
-                        endOctave={activeScale == null ? 1 : undefined}
-                    />
-                </motion.div>
+                    <p>Notes of the selected key on the keyboard.</p>
+                    <div className="mb-3">
+                        <Piano
+                            highlightedNotes={activeScale.notes}
+                            startOctave={activeScale == null ? 0 : undefined}
+                            endOctave={activeScale == null ? 1 : undefined}
+                        />
+                    </div>
 
-                <h3>Notes</h3>
-                <p>Notes of the selected key, starting with the tonic.</p>
-                <motion.div
-                    key={activeScale.format() + 'notes'}
-                    initial={{ rotateY: 180 }}
-                    animate={{ rotateY: 0 }}
-                    transition={{
-                        duration: 0.5,
-                    }}
-                    className="d-flex mb-3"
-                >
-                    {activeScale.notes.map((note, index) => {
-                        return (
-                            <Card
-                                key={activeScale.format() + note.format(true)}
-                                className="flex-even"
-                            >
-                                <Card.Header className="text-center">
-                                    {index + 1}
+                    <div className="d-flex mb-3">
+                        {activeScale.notes.map((note, index) => {
+                            return (
+                                <Card
+                                    key={
+                                        activeScale.format() + note.format(true)
+                                    }
+                                    className="flex-even"
+                                >
+                                    <Card.Header className="text-center">
+                                        {index + 1}
+                                    </Card.Header>
+                                    <Card.Body className="text-center fw-bold text-truncate px-0">
+                                        {note.format(false)}
+                                    </Card.Body>
+                                </Card>
+                            );
+                        })}
+                    </div>
+
+                    <p>The main chords of the selected key.</p>
+                    <div className="d-flex mb-3">
+                        {(activeScale instanceof MajorScale
+                            ? ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii']
+                            : ['i', 'iidim', 'III', 'iv', 'v', 'VI', 'VII']
+                        ).map((romanNum, idx) => (
+                            <Card key={idx} className="flex-even">
+                                <Card.Header className="text-center text-truncate">
+                                    {romanNum}
                                 </Card.Header>
                                 <Card.Body className="text-center fw-bold text-truncate px-0">
-                                    {note.format(false)}
+                                    {activeScale.chords
+                                        .map((x) => x[0])
+                                        [idx].format()}
                                 </Card.Body>
                             </Card>
-                        );
-                    })}
-                </motion.div>
-
-                <h3>Chords</h3>
-                <p>The main chords of the selected key.</p>
-                <motion.div
-                    key={activeScale.format() + 'chords'}
-                    initial={{ rotateY: '180deg' }}
-                    animate={{ rotateY: '0' }}
-                    transition={{
-                        duration: 0.5,
-                    }}
-                    className="d-flex mb-3"
-                >
-                    {(activeScale instanceof MajorScale
-                        ? ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii']
-                        : ['i', 'iidim', 'III', 'iv', 'v', 'VI', 'VII']
-                    ).map((romanNum, idx) => (
-                        <Card key={idx} className="flex-even">
-                            <Card.Header className="text-center text-truncate">
-                                {romanNum}
-                            </Card.Header>
-                            <Card.Body className="text-center fw-bold text-truncate px-0">
-                                {activeScale.chords
-                                    .map((x) => x[0])
-                                    [idx].format()}
-                            </Card.Body>
-                        </Card>
-                    ))}
+                        ))}
+                    </div>
                 </motion.div>
             </Col>
             <Modal show={showHelp} onHide={() => setShowHelp(false)}>
