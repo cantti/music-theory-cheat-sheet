@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 .piano {
     display: flex;
     gap: 0.25%;
@@ -33,7 +35,7 @@
 }
 
 $blackKeyWidth: 10%;
-$whiteKeyWidth: 100% / 7;
+$whiteKeyWidth: math.div(100%, 7);
 
 .blackKey {
     position: absolute;

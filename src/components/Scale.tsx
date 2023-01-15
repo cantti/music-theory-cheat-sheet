@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import { ChangeEvent, useState } from 'react';
 import { Alert, Button, Card, Col, Form, Row } from 'react-bootstrap';
-import { BsExclamationLg } from 'react-icons/bs';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AccidentalSign } from '../theory-utils/accidental';
 import { LetterChar } from '../theory-utils/letters';

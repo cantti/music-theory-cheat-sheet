@@ -1,4 +1,3 @@
-import { Interval } from '../interval';
 import { Note } from '../notes';
 import { getNotesByIntervals } from '../utils/getNotesByIntervals';
 import { ChordName } from './ChordName';
