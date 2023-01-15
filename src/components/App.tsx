@@ -44,7 +44,7 @@ function App() {
                                 Scales
                             </Nav.Link>
                             <Nav.Link as={NavLink} to="/detect-scale-by-notes">
-                                Scale by note
+                                Scale by notes
                             </Nav.Link>
                             <Nav.Link as={NavLink} to="/discography">
                                 About me
