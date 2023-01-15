@@ -1,13 +1,23 @@
 import { Interval } from '../interval';
 import { Note } from '../notes';
 import { getNotesByIntervals } from '../utils/getNotesByIntervals';
+import { ChordName } from './ChordName';
+import { chordSchemas } from './chordSchemas';
 
-export abstract class Chord {
-    constructor(public tonic: Note) {}
+export class Chord {
+    constructor(public tonic: Note, public name: ChordName) {}
 
-    abstract readonly name: string;
-    abstract readonly shortName: string;
-    abstract readonly intervals: Interval[];
+    get shortName() {
+        return chordSchemas[this.name].shortName;
+    }
+
+    get intervals() {
+        return chordSchemas[this.name].intervals;
+    }
+
+    get notes() {
+        return getNotesByIntervals(this.tonic, this.intervals);
+    }
 
     format(kind: 'short' | 'long' = 'long', showOctave = false) {
         if (kind === 'short') {
@@ -15,10 +25,6 @@ export abstract class Chord {
         } else {
             return this.tonic.format(showOctave) + ' ' + this.name;
         }
-    }
-
-    get notes() {
-        return getNotesByIntervals(this.tonic, this.intervals);
     }
 
     equals(chord: Chord) {

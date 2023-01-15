@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
 import { ChangeEvent, useState } from 'react';
-import { Button, Card, Col, Form, Row } from 'react-bootstrap';
+import { Alert, Button, Card, Col, Form, Row } from 'react-bootstrap';
+import { BsExclamationLg } from 'react-icons/bs';
 import { useNavigate, useParams } from 'react-router-dom';
+import { AccidentalSign } from '../theory-utils/accidental';
 import { LetterChar } from '../theory-utils/letters';
 import { Note } from '../theory-utils/notes';
 import { ScaleName } from '../theory-utils/scales';
@@ -119,7 +121,40 @@ export function Scale() {
                         }}
                     >
                         <p>Notes in scale</p>
+                        {activeScale.notes.some((x) =>
+                            (['##', 'bb'] as AccidentalSign[]).includes(
+                                x.accidental.sign
+                            )
+                        ) && (
+                            <Alert variant="danger">
+                                This is theoretical key because its key
+                                signature have at least one double-flat (bb) or
+                                double-sharp (##).
+                            </Alert>
+                        )}
+
                         <Piano highlightedNotes={activeScale.notes} />
+
+                        <div className="d-flex mb-3">
+                            {activeScale.notes.map((note, index) => {
+                                return (
+                                    <Card
+                                        key={
+                                            activeScale.format() +
+                                            note.format(true)
+                                        }
+                                        className="flex-even"
+                                    >
+                                        <Card.Header className="text-center">
+                                            {index + 1}
+                                        </Card.Header>
+                                        <Card.Body className="text-center fw-bold text-truncate px-0">
+                                            {note.format(false)}
+                                        </Card.Body>
+                                    </Card>
+                                );
+                            })}
+                        </div>
 
                         <p>The main chords of the selected key.</p>
                         <div className="d-flex mb-3">

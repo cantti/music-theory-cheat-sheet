@@ -1,11 +1,11 @@
-import { A, B, C, D, E, F, G } from '../letters';
+import { Letter } from '../letters';
 
 export const allLetters = [
-    new C(),
-    new D(),
-    new E(),
-    new F(),
-    new G(),
-    new A(),
-    new B(),
+    new Letter('C'),
+    new Letter('D'),
+    new Letter('E'),
+    new Letter('F'),
+    new Letter('G'),
+    new Letter('A'),
+    new Letter('B'),
 ];

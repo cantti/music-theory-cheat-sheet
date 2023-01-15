@@ -4,86 +4,84 @@ import { useState } from 'react';
 import { Button, Card, Col, Modal, Row } from 'react-bootstrap';
 import { BsQuestionCircle } from 'react-icons/bs';
 import { useNavigate, useParams } from 'react-router-dom';
-import { MajorScale } from '../theory-utils/scales/MajorScale';
 import { Scale } from '../theory-utils/scales/Scale';
 import { getScaleFormUrlParams } from '../utils/url';
 import Piano from './Piano';
 import styles from './Circle.module.scss';
 import { Note } from '../theory-utils/notes';
-import { createScale } from '../theory-utils/scales';
 const MotionButton = motion(Button);
 
 const scalesInCircle: { scale: Scale; clickable: boolean }[][] = [
-    [{ scale: createScale(new Note('C'), 'Major'), clickable: true }],
-    [{ scale: createScale(new Note('G'), 'Major'), clickable: true }],
-    [{ scale: createScale(new Note('D'), 'Major'), clickable: true }],
-    [{ scale: createScale(new Note('A'), 'Major'), clickable: true }],
-    [{ scale: createScale(new Note('E'), 'Major'), clickable: true }],
+    [{ scale: new Scale(new Note('C'), 'Major'), clickable: true }],
+    [{ scale: new Scale(new Note('G'), 'Major'), clickable: true }],
+    [{ scale: new Scale(new Note('D'), 'Major'), clickable: true }],
+    [{ scale: new Scale(new Note('A'), 'Major'), clickable: true }],
+    [{ scale: new Scale(new Note('E'), 'Major'), clickable: true }],
     [
-        { scale: createScale(new Note('B'), 'Major'), clickable: true },
-        { scale: createScale(new Note('C', 'b'), 'Major'), clickable: false },
+        { scale: new Scale(new Note('B'), 'Major'), clickable: true },
+        { scale: new Scale(new Note('C', 'b'), 'Major'), clickable: false },
     ],
     [
-        { scale: createScale(new Note('F', '#'), 'Major'), clickable: false },
-        { scale: createScale(new Note('G', 'b'), 'Major'), clickable: true },
+        { scale: new Scale(new Note('F', '#'), 'Major'), clickable: false },
+        { scale: new Scale(new Note('G', 'b'), 'Major'), clickable: true },
     ],
     [
-        { scale: createScale(new Note('C', '#'), 'Major'), clickable: false },
-        { scale: createScale(new Note('D', 'b'), 'Major'), clickable: true },
+        { scale: new Scale(new Note('C', '#'), 'Major'), clickable: false },
+        { scale: new Scale(new Note('D', 'b'), 'Major'), clickable: true },
     ],
-    [{ scale: createScale(new Note('A', 'b'), 'Major'), clickable: true }],
-    [{ scale: createScale(new Note('E', 'b'), 'Major'), clickable: true }],
-    [{ scale: createScale(new Note('B', 'b'), 'Major'), clickable: true }],
-    [{ scale: createScale(new Note('F'), 'Major'), clickable: true }],
-    [{ scale: createScale(new Note('A'), 'Natural Minor'), clickable: true }],
-    [{ scale: createScale(new Note('E'), 'Natural Minor'), clickable: true }],
-    [{ scale: createScale(new Note('B'), 'Natural Minor'), clickable: true }],
+    [{ scale: new Scale(new Note('A', 'b'), 'Major'), clickable: true }],
+    [{ scale: new Scale(new Note('E', 'b'), 'Major'), clickable: true }],
+    [{ scale: new Scale(new Note('B', 'b'), 'Major'), clickable: true }],
+    [{ scale: new Scale(new Note('F'), 'Major'), clickable: true }],
+    [{ scale: new Scale(new Note('A'), 'Natural Minor'), clickable: true }],
+    [{ scale: new Scale(new Note('E'), 'Natural Minor'), clickable: true }],
+    [{ scale: new Scale(new Note('B'), 'Natural Minor'), clickable: true }],
     [
         {
-            scale: createScale(new Note('F', '#'), 'Natural Minor'),
+            scale: new Scale(new Note('F', '#'), 'Natural Minor'),
             clickable: true,
         },
     ],
     [
         {
-            scale: createScale(new Note('C', '#'), 'Natural Minor'),
+            scale: new Scale(new Note('C', '#'), 'Natural Minor'),
             clickable: true,
         },
     ],
     [
         {
-            scale: createScale(new Note('G', '#'), 'Natural Minor'),
+            scale: new Scale(new Note('G', '#'), 'Natural Minor'),
             clickable: true,
         },
         {
-            scale: createScale(new Note('A', 'b'), 'Natural Minor'),
+            scale: new Scale(new Note('A', 'b'), 'Natural Minor'),
             clickable: false,
         },
     ],
     [
         {
-            scale: createScale(new Note('D', '#'), 'Natural Minor'),
+            scale: new Scale(new Note('D', '#'), 'Natural Minor'),
             clickable: false,
         },
         {
-            scale: createScale(new Note('E', 'b'), 'Natural Minor'),
+            scale: new Scale(new Note('E', 'b'), 'Natural Minor'),
             clickable: true,
         },
     ],
     [
         {
-            scale: createScale(new Note('A', '#'), 'Natural Minor'),
+            scale: new Scale(new Note('A', '#'), 'Natural Minor'),
             clickable: false,
         },
         {
-            scale: createScale(new Note('B', 'b'), 'Natural Minor'),
+            scale: new Scale(new Note('B', 'b'), 'Natural Minor'),
             clickable: true,
         },
     ],
-    [{ scale: createScale(new Note('F'), 'Natural Minor'), clickable: true }],
-    [{ scale: createScale(new Note('C'), 'Natural Minor'), clickable: true }],
-    [{ scale: createScale(new Note('G'), 'Natural Minor'), clickable: true }],
-    [{ scale: createScale(new Note('D'), 'Natural Minor'), clickable: true }],
+    [{ scale: new Scale(new Note('F'), 'Natural Minor'), clickable: true }],
+    [{ scale: new Scale(new Note('C'), 'Natural Minor'), clickable: true }],
+    [{ scale: new Scale(new Note('G'), 'Natural Minor'), clickable: true }],
+    [{ scale: new Scale(new Note('D'), 'Natural Minor'), clickable: true }],
 ];
 
 export function ScaleInfo() {
@@ -214,7 +212,7 @@ export function ScaleInfo() {
 
                     <p>The main chords of the selected key.</p>
                     <div className="d-flex mb-3">
-                        {(activeScale instanceof MajorScale
+                        {(activeScale.name === 'Major'
                             ? ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii']
                             : ['i', 'iidim', 'III', 'iv', 'v', 'VI', 'VII']
                         ).map((romanNum, idx) => (

@@ -4,7 +4,6 @@ import {
 import { AccidentalSign } from "../accidental/AccidentalSign";
 import { Letter } from '../letters/Letter';
 import { LetterChar } from "../letters/LetterChar";
-import { createLetter } from '../letters';
 import { createAccidental, Natural } from '../accidental';
 
 export class Note {
@@ -13,7 +12,7 @@ export class Note {
         accidental: Accidental | AccidentalSign = new Natural(),
         public octave: number = 4
     ) {
-        this.letter = letter instanceof Letter ? letter : createLetter(letter);
+        this.letter = letter instanceof Letter ? letter : new Letter(letter);
         this.accidental =
             accidental instanceof Accidental
                 ? accidental

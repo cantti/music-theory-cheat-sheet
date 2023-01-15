@@ -1,12 +1,12 @@
 import { AccidentalSign } from '../theory-utils/accidental/AccidentalSign';
 import { LetterChar } from '../theory-utils/letters/LetterChar';
 import { Note } from '../theory-utils/notes';
-import { createScale, ScaleName } from '../theory-utils/scales';
+import { Scale, ScaleName } from '../theory-utils/scales';
 
 export function getScaleFormUrlParams(scale: string) {
     const pattern = /^(?<tonic>[cdefgab])(?<accidental>[#b]?)[ ]?(?<name>.*)$/i;
     const match = scale.match(pattern);
-    return createScale(
+    return new Scale(
         new Note(
             match!.groups!.tonic.toLocaleUpperCase() as LetterChar,
             match!.groups!.accidental as AccidentalSign
