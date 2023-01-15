@@ -57,6 +57,7 @@ const naturalMinor: ScaleSchema = {
         ['Major'],
     ],
 };
+
 const harmonicMinor: ScaleSchema = {
     shortName: '',
     intervals: [
@@ -102,9 +103,38 @@ const melodicMinor: ScaleSchema = {
         ['Diminished'],
     ],
 };
+
+const majorPentatonic: ScaleSchema = {
+    shortName: '',
+    intervals: [
+        new Interval('Unison', 'Perfect'),
+        new Interval('Second', 'Major'),
+        new Interval('Third', 'Major'),
+        new Interval('Fifth', 'Perfect'),
+        new Interval('Sixth', 'Major'),
+        new Interval('Octave', 'Perfect'),
+    ],
+    chords: [],
+};
+
+const minorPentatonic: ScaleSchema = {
+    shortName: '',
+    intervals: [
+        new Interval('Unison', 'Perfect'),
+        new Interval('Third', 'Minor'),
+        new Interval('Fourth', 'Perfect'),
+        new Interval('Fifth', 'Perfect'),
+        new Interval('Seventh', 'Minor'),
+        new Interval('Octave', 'Perfect'),
+    ],
+    chords: [],
+};
+
 export const scaleSchemas: ScaleSchemas = {
     Major: major,
     'Natural Minor': naturalMinor,
     'Harmonic Minor': harmonicMinor,
     'Melodic Minor': melodicMinor,
+    'Major Pentatonic': majorPentatonic,
+    'Minor Pentatonic': minorPentatonic,
 };

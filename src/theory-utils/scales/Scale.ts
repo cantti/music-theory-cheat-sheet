@@ -20,13 +20,9 @@ export class Scale {
     }
 
     get chords() {
-        return this.notes
-            .slice(0, 7)
-            .map((note, index) =>
-                scaleSchemas[this.name].chords[index].map(
-                    (chordName) => new Chord(note, chordName)
-                )
-            );
+        return scaleSchemas[this.name].chords.map((chords, index) =>
+            chords.map((chord) => new Chord(this.notes[index], chord))
+        );
     }
 
     format(kind: 'short' | 'long' = 'long', showOctave: boolean = false) {

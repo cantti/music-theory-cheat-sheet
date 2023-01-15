@@ -14,6 +14,8 @@ const allScaleNames: ScaleName[] = [
     'Natural Minor',
     'Harmonic Minor',
     'Melodic Minor',
+    'Major Pentatonic',
+    'Minor Pentatonic',
 ];
 
 export function Scale() {
@@ -154,20 +156,23 @@ export function Scale() {
                                 );
                             })}
                         </div>
-
-                        <p>The main chords of the selected key.</p>
-                        <div className="d-flex mb-3">
-                            {activeScale.chords.map((chord, index) => (
-                                <Card key={index} className="flex-even">
-                                    <Card.Header className="text-center text-truncate">
-                                        {index + 1}
-                                    </Card.Header>
-                                    <Card.Body className="text-center fw-bold text-truncate px-0">
-                                        {chord[0].format('short')}
-                                    </Card.Body>
-                                </Card>
-                            ))}
-                        </div>
+                        {activeScale.chords.length > 0 && (
+                            <>
+                                <p>The main chords of the selected key.</p>
+                                <div className="d-flex mb-3">
+                                    {activeScale.chords.map((chord, index) => (
+                                        <Card key={index} className="flex-even">
+                                            <Card.Header className="text-center text-truncate">
+                                                {index + 1}
+                                            </Card.Header>
+                                            <Card.Body className="text-center fw-bold text-truncate px-0">
+                                                {chord[0].format('short')}
+                                            </Card.Body>
+                                        </Card>
+                                    ))}
+                                </div>
+                            </>
+                        )}
                     </motion.div>
                 </Col>
             </Row>
