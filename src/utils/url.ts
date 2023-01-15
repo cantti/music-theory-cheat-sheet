@@ -1,18 +1,16 @@
+import { AccidentalSign } from '../theory-utils/accidental/AccidentalSign';
+import { LetterChar } from '../theory-utils/letters/LetterChar';
 import { Note } from '../theory-utils/notes';
-import { MajorScale } from '../theory-utils/scales/MajorScale';
-import { NaturalMinorScale } from '../theory-utils/scales/NaturalMinorScale';
-import { Scale } from '../theory-utils/scales/Scale';
-
-export function getScaleUrl(scale: Scale) {
-    return `/circle/${encodeURIComponent(scale.format('short'))}`;
-}
+import { createScale, ScaleName } from '../theory-utils/scales';
 
 export function getScaleFormUrlParams(scale: string) {
-    const pattern = /^(?<tonic>[cdefgab][#b]?)(?<minor>m?)$/i;
+    const pattern = /^(?<tonic>[cdefgab])(?<accidental>[#b]?)[ ]?(?<name>.*)$/i;
     const match = scale.match(pattern);
-    const tonic = Note.create(`${match?.groups?.tonic}`);
-    const activeScaleFromUrl = match?.groups?.minor
-        ? new NaturalMinorScale(tonic)
-        : new MajorScale(tonic);
-    return activeScaleFromUrl;
+    return createScale(
+        new Note(
+            match!.groups!.tonic.toLocaleUpperCase() as LetterChar,
+            match!.groups!.accidental as AccidentalSign
+        ),
+        match?.groups?.name ? (match?.groups?.name as ScaleName) : 'Major'
+    );
 }

@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { Note } from '../theory-utils/notes';
 import { Scale } from '../theory-utils/scales/Scale';
 import { getScalesByNotes } from '../theory-utils/utils/getScalesByNotes';
-import { getScaleUrl } from '../utils/url';
 import Piano from './Piano';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -21,7 +20,7 @@ function ScaleButton({ scale, index }: ScaleButtonProps) {
             transition={{ duration: 0.3, delay: index * 0.025 }}
             exit={{ opacity: 0, scale: 0.5 }}
         >
-            <Link to={getScaleUrl(scale)}>
+            <Link to={'/circle/' + encodeURIComponent(scale.format())}>
                 <Button
                     variant={scale.shortName === 'm' ? 'info' : 'warning'}
                     className="w-100 text-truncate mb-2"

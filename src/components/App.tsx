@@ -31,13 +31,20 @@ function App() {
                         <Nav>
                             <Nav.Link
                                 as={NavLink}
-                                to="/circle/C"
+                                to="/circle/C Major"
                                 active={location.pathname.startsWith('/circle')}
                             >
                                 Circle of fifths
                             </Nav.Link>
+                            <Nav.Link
+                                as={NavLink}
+                                to="/scales/C Major"
+                                active={location.pathname.startsWith('/scales')}
+                            >
+                                Scales
+                            </Nav.Link>
                             <Nav.Link as={NavLink} to="/detect-scale-by-notes">
-                                Determine scale
+                                Scale by note
                             </Nav.Link>
                             <Nav.Link as={NavLink} to="/discography">
                                 About me

@@ -1,7 +1,8 @@
 import { Interval, IntervalNumber } from '../interval';
-import { allLetters, Letter } from '../letters';
+import { Letter } from '../letters/Letter';
 import { Note } from '../notes';
-import { allAccidentals } from '../accidentals';
+import { allAccidentals } from './allAccidentals';
+import { allLetters } from './allLetters';
 
 const majorScaleSemitones: {
     interval: Interval;

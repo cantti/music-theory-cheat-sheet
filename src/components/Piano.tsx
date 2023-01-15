@@ -40,9 +40,7 @@ function Piano({
     }
 
     function isHighlightNecessary(note: Note) {
-        return highlightedNotes
-            .map((x) => x.getIndex())
-            .includes(note.getIndex());
+        return highlightedNotes.map((x) => x.index).includes(note.index);
     }
 
     function playNote(note: Note) {
@@ -91,24 +89,24 @@ function Piano({
                 <div className={styles.octave} key={octave}>
                     <div className={styles.blackKeysWrapper}>
                         {[
-                            Note.create('C#' + octave),
-                            Note.create('D#' + octave),
-                            Note.create('F#' + octave),
-                            Note.create('G#' + octave),
-                            Note.create('A#' + octave),
+                            new Note('C', '#', octave),
+                            new Note('D', '#', octave),
+                            new Note('F', '#', octave),
+                            new Note('G', '#', octave),
+                            new Note('A', '#', octave),
                         ].map((note) => (
                             <Key note={note} key={note.format(true)} />
                         ))}
                     </div>
                     <div className={styles.whiteKeysWrapper}>
                         {[
-                            Note.create('C' + octave),
-                            Note.create('D' + octave),
-                            Note.create('E' + octave),
-                            Note.create('F' + octave),
-                            Note.create('G' + octave),
-                            Note.create('A' + octave),
-                            Note.create('B' + octave),
+                            new Note('C', '', octave),
+                            new Note('D', '', octave),
+                            new Note('E', '', octave),
+                            new Note('F', '', octave),
+                            new Note('G', '', octave),
+                            new Note('A', '', octave),
+                            new Note('B', '', octave),
                         ].map((note) => (
                             <Key note={note} key={note.format(true)} />
                         ))}

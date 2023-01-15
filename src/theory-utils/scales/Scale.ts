@@ -4,7 +4,7 @@ import { Note } from '../notes';
 import { getNotesByIntervals } from '../utils/getNotesByIntervals';
 
 export abstract class Scale {
-    constructor(public tonic: Note = new Note()) {}
+    constructor(public tonic: Note) {}
 
     abstract readonly name: string;
 
@@ -18,11 +18,7 @@ export abstract class Scale {
         return getNotesByIntervals(this.tonic, this.intervals);
     }
 
-    static create<T>(this: new (tonic: Note) => T, string: string): T {
-        return new this(Note.create(string));
-    }
-
-    format(kind: 'short' | 'long' = 'short', showOctave: boolean = false) {
+    format(kind: 'short' | 'long' = 'long', showOctave: boolean = false) {
         if (kind === 'short') {
             return this.tonic.format(showOctave) + this.shortName;
         } else {

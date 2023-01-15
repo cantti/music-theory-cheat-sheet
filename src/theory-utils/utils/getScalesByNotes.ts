@@ -1,46 +1,45 @@
 import _ from 'lodash';
 import { Note } from '../notes';
-import { MajorScale } from '../scales/MajorScale';
-import { NaturalMinorScale } from '../scales/NaturalMinorScale';
+import { createScale } from '../scales';
 import { Scale } from '../scales/Scale';
 
 const allScales: Scale[] = [
-    MajorScale.create('C'),
-    MajorScale.create('G'),
-    MajorScale.create('D'),
-    MajorScale.create('A'),
-    MajorScale.create('E'),
-    MajorScale.create('B'),
-    MajorScale.create('Gb'),
-    MajorScale.create('Db'),
-    MajorScale.create('Ab'),
-    MajorScale.create('Eb'),
-    MajorScale.create('Bb'),
-    MajorScale.create('F'),
-    NaturalMinorScale.create('A'),
-    NaturalMinorScale.create('E'),
-    NaturalMinorScale.create('B'),
-    NaturalMinorScale.create('F#'),
-    NaturalMinorScale.create('C#'),
-    NaturalMinorScale.create('G#'),
-    NaturalMinorScale.create('Eb'),
-    NaturalMinorScale.create('Bb'),
-    NaturalMinorScale.create('F'),
-    NaturalMinorScale.create('C'),
-    NaturalMinorScale.create('G'),
-    NaturalMinorScale.create('D'),
+    createScale(new Note('C'), 'Major'),
+    createScale(new Note('G'), 'Major'),
+    createScale(new Note('D'), 'Major'),
+    createScale(new Note('A'), 'Major'),
+    createScale(new Note('E'), 'Major'),
+    createScale(new Note('B'), 'Major'),
+    createScale(new Note('G', 'b'), 'Major'),
+    createScale(new Note('D', 'b'), 'Major'),
+    createScale(new Note('A', 'b'), 'Major'),
+    createScale(new Note('E', 'b'), 'Major'),
+    createScale(new Note('B', 'b'), 'Major'),
+    createScale(new Note('F'), 'Major'),
+    createScale(new Note('A'), 'Natural Minor'),
+    createScale(new Note('E'), 'Natural Minor'),
+    createScale(new Note('B'), 'Natural Minor'),
+    createScale(new Note('F', '#'), 'Natural Minor'),
+    createScale(new Note('C', '#'), 'Natural Minor'),
+    createScale(new Note('G', '#'), 'Natural Minor'),
+    createScale(new Note('E', 'b'), 'Natural Minor'),
+    createScale(new Note('B', 'b'), 'Natural Minor'),
+    createScale(new Note('F'), 'Natural Minor'),
+    createScale(new Note('C'), 'Natural Minor'),
+    createScale(new Note('G'), 'Natural Minor'),
+    createScale(new Note('D'), 'Natural Minor'),
 ];
 
 export const getScalesByNotes = (notes: Note[]) => {
     const notesIndexes = _(notes)
-        .map((x) => x.getIndex() % 12)
+        .map((x) => x.index % 12)
         .uniq()
         .value();
 
     return allScales.filter(
         (scale) =>
             _.intersection(
-                scale.notes.map((note) => note.getIndex() % 12),
+                scale.notes.map((note) => note.index % 12),
                 notesIndexes
             ).length === notesIndexes.length
     );

@@ -8,9 +8,10 @@ import {
 import { AboutMe } from './components/AboutMe';
 import App from './components/App';
 import { DetectScaleByNotes } from './components/DetectScaleByNotes';
-import { ScaleInfo } from './components/ScaleInfo';
+import { ScaleInfo } from './components/Circle';
 import { createRoot } from 'react-dom/client';
 import './index.scss';
+import { Scale } from './components/Scale';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -22,6 +23,7 @@ const router = createBrowserRouter(
             />
             <Route path="/discography" element={<AboutMe />} />
             <Route path="/circle/:scale" element={<ScaleInfo />} />
+            <Route path="/scales/:scale" element={<Scale />} />
         </Route>
     ),
     { basename: process.env.PUBLIC_URL }

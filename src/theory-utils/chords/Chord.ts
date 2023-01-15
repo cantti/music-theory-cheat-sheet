@@ -3,13 +3,13 @@ import { Note } from '../notes';
 import { getNotesByIntervals } from '../utils/getNotesByIntervals';
 
 export abstract class Chord {
-    constructor(public tonic: Note = new Note()) {}
+    constructor(public tonic: Note) {}
 
     abstract readonly name: string;
     abstract readonly shortName: string;
     abstract readonly intervals: Interval[];
 
-    format(kind: 'short' | 'long' = 'short', showOctave = false) {
+    format(kind: 'short' | 'long' = 'long', showOctave = false) {
         if (kind === 'short') {
             return this.tonic.format(showOctave) + this.shortName;
         } else {
@@ -17,7 +17,7 @@ export abstract class Chord {
         }
     }
 
-    getNotes() {
+    get notes() {
         return getNotesByIntervals(this.tonic, this.intervals);
     }
 
