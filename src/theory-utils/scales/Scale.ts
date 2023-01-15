@@ -2,11 +2,12 @@ import { Chord } from '../chords/Chord';
 import { Interval } from '../interval';
 import { Note } from '../notes';
 import { getNotesByIntervals } from '../utils/getNotesByIntervals';
+import { ScaleName } from './ScaleName';
 
 export abstract class Scale {
     constructor(public tonic: Note) {}
 
-    abstract readonly name: string;
+    abstract readonly name: ScaleName;
 
     abstract readonly shortName: string;
 

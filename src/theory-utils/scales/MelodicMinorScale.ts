@@ -1,9 +1,10 @@
 import { createChord } from '../chords';
 import { Interval } from '../interval';
 import { Scale } from './Scale';
+import { ScaleName } from './ScaleName';
 
 class MelodicMinorScale extends Scale {
-    name = 'Melodic Minor';
+    name: ScaleName = 'Melodic Minor';
     shortName = '';
     intervals = [
         new Interval('Unison', 'Perfect'),

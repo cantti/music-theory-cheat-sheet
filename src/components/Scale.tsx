@@ -1,6 +1,9 @@
 import { motion } from 'framer-motion';
-import { Button, Card, Col, Row } from 'react-bootstrap';
+import { ChangeEvent, useState } from 'react';
+import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
+import { LetterChar } from '../theory-utils/letters';
+import { Note } from '../theory-utils/notes';
 import { ScaleName } from '../theory-utils/scales';
 import { getScaleFormUrlParams } from '../utils/url';
 import Piano from './Piano';
@@ -15,7 +18,35 @@ const allScaleNames: ScaleName[] = [
 export function Scale() {
     const urlParams = useParams<{ scale: string }>();
     const activeScale = getScaleFormUrlParams(urlParams.scale!);
+    const [useFlat, setUseFlat] = useState(
+        activeScale.tonic.accidental.sign === 'b'
+    );
     const navigate = useNavigate();
+
+    function handleUseFlatChange(e: ChangeEvent<HTMLInputElement>) {
+        const checked = e.target.checked;
+        setUseFlat(checked);
+        if (activeScale.tonic.accidental.sign !== '') {
+            const letters: LetterChar[][] = [
+                ['C', 'D'],
+                ['D', 'E'],
+                ['F', 'G'],
+                ['G', 'A'],
+                ['A', 'B'],
+            ];
+            const newLetter = letters.filter(
+                (x) => x[checked ? 0 : 1] === activeScale.tonic.letter.char
+            )[0][checked ? 1 : 0];
+            navigate(
+                '/scales/' +
+                    encodeURIComponent(
+                        new Note(newLetter, checked ? 'b' : '#').format() +
+                            ' ' +
+                            activeScale.name
+                    )
+            );
+        }
+    }
 
     return (
         <>
@@ -27,6 +58,7 @@ export function Scale() {
                         <Col>
                             <Piano
                                 highlightedNotes={[activeScale.tonic]}
+                                useFlats={useFlat}
                                 onNoteClick={(note) =>
                                     navigate(
                                         '/scales/' +
@@ -66,6 +98,16 @@ export function Scale() {
                             ))}
                         </Col>
                     </Row>
+                    <div className="d-flex">
+                        <h6 className="me-3">{activeScale.format()}</h6>
+                        <Form.Check
+                            type="switch"
+                            label="Use flats (b)"
+                            className="mb-1"
+                            checked={useFlat}
+                            onChange={handleUseFlatChange}
+                        />
+                    </div>
                 </Col>
                 <Col md={6}>
                     <motion.div

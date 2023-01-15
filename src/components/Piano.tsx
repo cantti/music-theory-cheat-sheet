@@ -11,6 +11,7 @@ interface PianoProps {
     endOctave?: number;
     className?: string;
     onNoteClick?: (note: Note) => void;
+    useFlats?: boolean;
 }
 
 function Piano({
@@ -19,6 +20,7 @@ function Piano({
     endOctave = undefined,
     className = '',
     onNoteClick = () => {},
+    useFlats = false,
 }: PianoProps) {
     if (startOctave == null || endOctave == null) {
         if (highlightedNotes.length > 0) {
@@ -88,13 +90,22 @@ function Piano({
             {octaves.map((octave) => (
                 <div className={styles.octave} key={octave}>
                     <div className={styles.blackKeysWrapper}>
-                        {[
-                            new Note('C', '#', octave),
-                            new Note('D', '#', octave),
-                            new Note('F', '#', octave),
-                            new Note('G', '#', octave),
-                            new Note('A', '#', octave),
-                        ].map((note) => (
+                        {(useFlats
+                            ? [
+                                  new Note('D', 'b', octave),
+                                  new Note('E', 'b', octave),
+                                  new Note('G', 'b', octave),
+                                  new Note('A', 'b', octave),
+                                  new Note('B', 'b', octave),
+                              ]
+                            : [
+                                  new Note('C', '#', octave),
+                                  new Note('D', '#', octave),
+                                  new Note('F', '#', octave),
+                                  new Note('G', '#', octave),
+                                  new Note('A', '#', octave),
+                              ]
+                        ).map((note) => (
                             <Key note={note} key={note.format(true)} />
                         ))}
                     </div>

@@ -2,27 +2,27 @@ import { Accidental } from './Accidental';
 import { AccidentalSign } from './AccidentalSign';
 
 class Natural extends Accidental {
-    sign = '';
+    sign: AccidentalSign = '';
     shift = 0;
 }
 
 class Sharp extends Accidental {
-    sign = '#';
+    sign: AccidentalSign = '#';
     shift = 1;
 }
 
 class DoubleSharp extends Accidental {
-    sign = '##';
+    sign: AccidentalSign = '##';
     shift = 2;
 }
 
 class Flat extends Accidental {
-    sign = 'b';
+    sign: AccidentalSign = 'b';
     shift = -1;
 }
 
 class DoubleFlat extends Accidental {
-    sign = 'bb';
+    sign: AccidentalSign = 'bb';
     shift = -2;
 }
 
