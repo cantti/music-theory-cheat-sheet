@@ -1,9 +1,7 @@
 import { motion } from 'framer-motion';
-import { createPianoSynth } from '../piano-synth';
-import { Note } from '../theory-utils/notes';
+import { pianoSynth } from '../audio/pianoSynth';
+import { Note } from '../theory-utils/note';
 import styles from './Piano.module.scss';
-
-const pianoSynth = createPianoSynth();
 
 interface PianoProps {
     highlightedNotes?: Note[];

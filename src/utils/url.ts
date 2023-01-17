@@ -1,7 +1,7 @@
 import { AccidentalSign } from '../theory-utils/accidental/AccidentalSign';
-import { LetterChar } from '../theory-utils/letters/LetterChar';
-import { Note } from '../theory-utils/notes';
-import { Scale, ScaleName } from '../theory-utils/scales';
+import { LetterChar } from '../theory-utils/letter/LetterChar';
+import { Note } from '../theory-utils/note';
+import { Scale, ScaleName } from '../theory-utils/scale';
 
 export function getScaleFormUrlParams(scale: string) {
     const pattern = /^(?<tonic>[cdefgab])(?<accidental>[#b]?)[ ]?(?<name>.*)$/i;

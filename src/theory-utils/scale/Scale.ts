@@ -1,5 +1,5 @@
-import { Chord } from '../chords';
-import { Note } from '../notes';
+import { Chord } from '../chord';
+import { Note } from '../note';
 import { getNotesByIntervals } from '../utils/getNotesByIntervals';
 import { ScaleName } from './ScaleName';
 import { scaleSchemas } from './scaleSchemas';

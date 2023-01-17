@@ -2,8 +2,8 @@ import {
     Accidental,
 } from '../accidental/Accidental';
 import { AccidentalSign } from "../accidental/AccidentalSign";
-import { Letter } from '../letters/Letter';
-import { LetterChar } from "../letters/LetterChar";
+import { Letter } from '../letter/Letter';
+import { LetterChar } from "../letter/LetterChar";
 import { createAccidental, Natural } from '../accidental';
 
 export class Note {

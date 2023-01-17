@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion';
 import { ChangeEvent, useState } from 'react';
-import { Alert, Button, Card, Col, Form, Row } from 'react-bootstrap';
+import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AccidentalSign } from '../theory-utils/accidental';
-import { LetterChar } from '../theory-utils/letters';
-import { Note } from '../theory-utils/notes';
-import { ScaleName } from '../theory-utils/scales';
+import { LetterChar } from '../theory-utils/letter';
+import { Note } from '../theory-utils/note';
+import { ScaleName } from '../theory-utils/scale';
 import { getScaleFormUrlParams } from '../utils/url';
+import { NotesInScale } from './NotesInScale';
 import Piano from './Piano';
 
 const allScaleNames: ScaleName[] = [
@@ -121,41 +121,8 @@ export function Scale() {
                             duration: 0.3,
                         }}
                     >
-                        <p>Notes in scale</p>
-                        {activeScale.notes.some((x) =>
-                            (['##', 'bb'] as AccidentalSign[]).includes(
-                                x.accidental.sign
-                            )
-                        ) && (
-                            <Alert variant="danger">
-                                This is theoretical key because its key
-                                signature have at least one double-flat (bb) or
-                                double-sharp (##).
-                            </Alert>
-                        )}
+                        <NotesInScale scale={activeScale} />
 
-                        <Piano highlightedNotes={activeScale.notes} />
-
-                        <div className="d-flex mb-3">
-                            {activeScale.notes.map((note, index) => {
-                                return (
-                                    <Card
-                                        key={
-                                            activeScale.format() +
-                                            note.format(true)
-                                        }
-                                        className="flex-even"
-                                    >
-                                        <Card.Header className="text-center">
-                                            {index + 1}
-                                        </Card.Header>
-                                        <Card.Body className="text-center fw-bold text-truncate px-0">
-                                            {note.format(false)}
-                                        </Card.Body>
-                                    </Card>
-                                );
-                            })}
-                        </div>
                         {activeScale.chords.length > 0 && (
                             <>
                                 <p>The main chords of the selected key.</p>

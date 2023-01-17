@@ -1,4 +1,4 @@
-import { Letter } from '../letters';
+import { Letter } from '../letter';
 
 export const allLetters = [
     new Letter('C'),

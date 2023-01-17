@@ -1,6 +1,6 @@
 import { Interval, IntervalNumber } from '../interval';
-import { Letter } from '../letters/Letter';
-import { Note } from '../notes';
+import { Letter } from '../letter/Letter';
+import { Note } from '../note';
 import { allAccidentals } from './allAccidentals';
 import { allLetters } from './allLetters';
 

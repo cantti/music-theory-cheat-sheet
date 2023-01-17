@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { Button, Card, Col, Modal, Row } from 'react-bootstrap';
 import { BsQuestionCircle } from 'react-icons/bs';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Scale } from '../theory-utils/scales/Scale';
+import { Scale } from '../theory-utils/scale/Scale';
 import { getScaleFormUrlParams } from '../utils/url';
-import Piano from './Piano';
 import styles from './Circle.module.scss';
-import { Note } from '../theory-utils/notes';
+import { Note } from '../theory-utils/note';
+import { NotesInScale } from './NotesInScale';
 const MotionButton = motion(Button);
 
 const scalesInCircle: { scale: Scale; clickable: boolean }[][] = [
@@ -181,34 +181,7 @@ export function ScaleInfo() {
                         duration: 0.3,
                     }}
                 >
-                    <p>Notes of the selected key on the keyboard.</p>
-                    <div className="mb-3">
-                        <Piano
-                            highlightedNotes={activeScale.notes}
-                            startOctave={activeScale == null ? 0 : undefined}
-                            endOctave={activeScale == null ? 1 : undefined}
-                        />
-                    </div>
-
-                    <div className="d-flex mb-3">
-                        {activeScale.notes.map((note, index) => {
-                            return (
-                                <Card
-                                    key={
-                                        activeScale.format() + note.format(true)
-                                    }
-                                    className="flex-even"
-                                >
-                                    <Card.Header className="text-center">
-                                        {index + 1}
-                                    </Card.Header>
-                                    <Card.Body className="text-center fw-bold text-truncate px-0">
-                                        {note.format(false)}
-                                    </Card.Body>
-                                </Card>
-                            );
-                        })}
-                    </div>
+                    <NotesInScale scale={activeScale} />
 
                     <p>The main chords of the selected key.</p>
                     <div className="d-flex mb-3">

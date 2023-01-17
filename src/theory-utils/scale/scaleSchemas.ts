@@ -1,4 +1,4 @@
-import { ChordName } from '../chords';
+import { ChordName } from '../chord';
 import { Interval } from '../interval';
 import { ScaleName } from './ScaleName';
 
