@@ -1,19 +1,20 @@
 import { motion } from 'framer-motion';
 import _ from 'lodash';
 import { useState } from 'react';
-import { Button, Card, Col, Modal, Row } from 'react-bootstrap';
+import { Button, Col, Modal, Row } from 'react-bootstrap';
 import { BsQuestionCircle } from 'react-icons/bs';
 import {
     Navigate,
     useNavigate,
     useParams,
-    useRouteError,
+    useRouteError
 } from 'react-router-dom';
-import { Scale } from '../theory-utils/scale/Scale';
+import { Note } from '../theory-utils/note';
+import { Scale } from '../theory-utils/scale';
 import { getScaleFormUrlParams, ScaleParamError } from '../utils/url';
 import styles from './Circle.module.scss';
-import { Note } from '../theory-utils/note';
-import { NotesInScale } from './NotesInScale';
+import { ScaleInfo } from './ScaleInfo';
+
 const MotionButton = motion(Button);
 
 const scalesInCircle: { scale: Scale; clickable: boolean }[][] = [
@@ -186,26 +187,7 @@ export function Circle() {
                         duration: 0.3,
                     }}
                 >
-                    <NotesInScale scale={activeScale} />
-
-                    <p>The main chords of the selected key.</p>
-                    <div className="d-flex mb-3">
-                        {(activeScale.name === 'Major'
-                            ? ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii']
-                            : ['i', 'iidim', 'III', 'iv', 'v', 'VI', 'VII']
-                        ).map((romanNum, idx) => (
-                            <Card key={idx} className="flex-even">
-                                <Card.Header className="text-center text-truncate">
-                                    {romanNum}
-                                </Card.Header>
-                                <Card.Body className="text-center fw-bold text-truncate px-0">
-                                    {activeScale.chords
-                                        .map((x) => x[0])
-                                        [idx].format('short')}
-                                </Card.Body>
-                            </Card>
-                        ))}
-                    </div>
+                    <ScaleInfo scale={activeScale} />
                 </motion.div>
             </Col>
             <Modal show={showHelp} onHide={() => setShowHelp(false)}>

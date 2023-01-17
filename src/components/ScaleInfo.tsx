@@ -1,159 +1,134 @@
-import { motion } from 'framer-motion';
-import { ChangeEvent, useState } from 'react';
-import { Button, Card, Col, Form, Row } from 'react-bootstrap';
-import { Navigate, useNavigate, useParams, useRouteError } from 'react-router-dom';
-import { LetterChar } from '../theory-utils/letter';
+import { useState } from 'react';
+import { Alert, Button, Card } from 'react-bootstrap';
+import { BsPlayFill } from 'react-icons/bs';
+import * as Tone from 'tone';
+import { pianoSynth } from '../audio/pianoSynth';
+import { AccidentalSign } from '../theory-utils/accidental';
+import { Chord } from '../theory-utils/chord';
 import { Note } from '../theory-utils/note';
-import { ScaleName } from '../theory-utils/scale';
-import { getScaleFormUrlParams, ScaleParamError } from '../utils/url';
-import { NotesInScale } from './NotesInScale';
+import { Scale } from '../theory-utils/scale/Scale';
 import Piano from './Piano';
 
-const allScaleNames: ScaleName[] = [
-    'Major',
-    'Natural Minor',
-    'Harmonic Minor',
-    'Melodic Minor',
-    'Major Pentatonic',
-    'Minor Pentatonic',
-];
+interface NotesInScaleProps {
+    scale: Scale;
+}
+export function ScaleInfo(props: NotesInScaleProps) {
+    const [playingNote, setPlayingNote] = useState<Note | null>(null);
 
-export function ScaleInfo() {
-    const navigate = useNavigate();
+    async function playScale() {
+        await Tone.start();
+        new Tone.Part(
+            (time, value) => {
+                pianoSynth.triggerAttackRelease(value.note, 0.2, time);
+                setPlayingNote(value.noteObj);
+                if (value.noteObj.equals(props.scale.notes.slice(-1)[0])) {
+                    setTimeout(() => {
+                        setPlayingNote(null);
+                    }, 1000 * 0.2);
+                }
+            },
+            props.scale.notes.map((note, index) => ({
+                time: index * 0.2,
+                note: note.format(true),
+                noteObj: note,
+            }))
+        ).start();
+        Tone.Transport.start();
+    }
 
-    const urlParams = useParams<{ scale: string }>();
-
-    const activeScale = getScaleFormUrlParams(urlParams.scale!);
-
-    const [useFlat, setUseFlat] = useState(
-        activeScale.tonic.accidental.sign === 'b'
-    );
-
-    function handleUseFlatChange(e: ChangeEvent<HTMLInputElement>) {
-        const checked = e.target.checked;
-        setUseFlat(checked);
-        if (activeScale.tonic.accidental.sign !== '') {
-            const letters: LetterChar[][] = [
-                ['C', 'D'],
-                ['D', 'E'],
-                ['F', 'G'],
-                ['G', 'A'],
-                ['A', 'B'],
-            ];
-            const newLetter = letters.filter(
-                (x) => x[checked ? 0 : 1] === activeScale.tonic.letter.char
-            )[0][checked ? 1 : 0];
-            navigate(
-                '/scales/' +
-                    encodeURIComponent(
-                        new Note(newLetter, checked ? 'b' : '#').format() +
-                            ' ' +
-                            activeScale.name
-                    )
-            );
-        }
+    function playChord(chord: Chord) {
+        pianoSynth.triggerAttackRelease(
+            chord.notes.map((x) => x.format(true)),
+            0.5,
+            Tone.now(),
+            0.5
+        );
     }
 
     return (
-        <>
-            <h3>Scale info</h3>
-            <Row>
-                <Col md={6}>
-                    <p>Select root note and scale name</p>
-                    <Row>
-                        <Col>
-                            <Piano
-                                highlightedNotes={[activeScale.tonic]}
-                                useFlats={useFlat}
-                                onNoteClick={(note) =>
-                                    navigate(
-                                        '/scales/' +
-                                            encodeURIComponent(
-                                                note.format() +
-                                                    ' ' +
-                                                    activeScale.name
+        <div className="mb-3">
+            <p>Notes of the selected key on the keyboard.</p>
+            <div className="mb-3">
+                <Piano
+                    highlightedNotes={
+                        playingNote ? [playingNote] : props.scale.notes
+                    }
+                    startOctave={4}
+                    endOctave={5}
+                />
+            </div>
+            {props.scale.notes.some((x) =>
+                (['##', 'bb'] as AccidentalSign[]).includes(x.accidental.sign)
+            ) && (
+                <Alert variant="danger">
+                    This is theoretical key because its key signature have at
+                    least one double-flat (bb) or double-sharp (##).
+                </Alert>
+            )}
+            <div className="d-flex mb-3">
+                {props.scale.notes.map((note, index) => {
+                    return (
+                        <Card
+                            key={props.scale.format() + note.format(true)}
+                            className="flex-even"
+                            bg={
+                                playingNote && note.equals(playingNote)
+                                    ? 'secondary'
+                                    : ''
+                            }
+                            text={
+                                playingNote && note.equals(playingNote)
+                                    ? 'light'
+                                    : 'dark'
+                            }
+                        >
+                            <Card.Header className="text-center">
+                                {index + 1}
+                            </Card.Header>
+                            <Card.Body className="text-center fw-bold text-truncate px-0">
+                                {note.format(false)}
+                            </Card.Body>
+                        </Card>
+                    );
+                })}
+            </div>
+            <Button
+                onClick={playScale}
+                disabled={playingNote != null}
+                size="sm"
+                className="mb-3"
+            >
+                <BsPlayFill /> Play scale
+            </Button>
+            {props.scale.chords.length > 0 && (
+                <>
+                    <p>The main chords of the selected key.</p>
+                    <div className="d-flex mb-3">
+                        {props.scale.chords.map((chord, index) => (
+                            <Card key={index} className="flex-even">
+                                <Card.Header className="text-center text-truncate">
+                                    {index + 1}
+                                </Card.Header>
+                                <Card.Body className="text-center fw-bold text-truncate px-0">
+                                    {chord[0].format('short')}
+                                </Card.Body>
+                                <Card.Footer className="text-center px-0">
+                                    <Button
+                                        size="sm"
+                                        onClick={() =>
+                                            playChord(
+                                                props.scale.chords[index][0]
                                             )
-                                    )
-                                }
-                            />
-                        </Col>
-                        <Col>
-                            {allScaleNames.map((scaleName) => (
-                                <Button
-                                    key={scaleName}
-                                    className="w-100 mb-1"
-                                    variant={
-                                        scaleName.includes('Minor')
-                                            ? 'info'
-                                            : 'warning'
-                                    }
-                                    disabled={activeScale.name === scaleName}
-                                    onClick={() =>
-                                        navigate(
-                                            '/scales/' +
-                                                encodeURIComponent(
-                                                    activeScale.tonic.format() +
-                                                        ' ' +
-                                                        scaleName
-                                                )
-                                        )
-                                    }
-                                >
-                                    {scaleName}
-                                </Button>
-                            ))}
-                        </Col>
-                    </Row>
-                    <div className="d-flex">
-                        <h6 className="me-3">{activeScale.format()}</h6>
-                        <Form.Check
-                            type="switch"
-                            label="Use flats (b)"
-                            className="mb-1"
-                            checked={useFlat}
-                            onChange={handleUseFlatChange}
-                        />
+                                        }
+                                    >
+                                        <BsPlayFill />
+                                    </Button>
+                                </Card.Footer>
+                            </Card>
+                        ))}
                     </div>
-                </Col>
-                <Col md={6}>
-                    <motion.div
-                        key={activeScale.format()}
-                        initial={{ rotateY: 180 }}
-                        animate={{ rotateY: 0 }}
-                        transition={{
-                            duration: 0.3,
-                        }}
-                    >
-                        <NotesInScale scale={activeScale} />
-
-                        {activeScale.chords.length > 0 && (
-                            <>
-                                <p>The main chords of the selected key.</p>
-                                <div className="d-flex mb-3">
-                                    {activeScale.chords.map((chord, index) => (
-                                        <Card key={index} className="flex-even">
-                                            <Card.Header className="text-center text-truncate">
-                                                {index + 1}
-                                            </Card.Header>
-                                            <Card.Body className="text-center fw-bold text-truncate px-0">
-                                                {chord[0].format('short')}
-                                            </Card.Body>
-                                        </Card>
-                                    ))}
-                                </div>
-                            </>
-                        )}
-                    </motion.div>
-                </Col>
-            </Row>
-        </>
+                </>
+            )}
+        </div>
     );
-}
-
-export function ScaleInfoErrorElement() {
-    const error = useRouteError();
-    if (error instanceof ScaleParamError) {
-        return <Navigate to="/scales" />;
-    }
-    return null;
 }

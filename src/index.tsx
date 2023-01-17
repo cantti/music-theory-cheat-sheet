@@ -10,7 +10,7 @@ import { AboutMe } from './components/AboutMe';
 import App from './components/App';
 import { Circle, CircleErrorElement } from './components/Circle';
 import { DetectScaleByNotes } from './components/DetectScaleByNotes';
-import { ScaleInfo, ScaleInfoErrorElement } from './components/ScaleInfo';
+import { ScalesCatalog, ScaleInfoErrorElement } from './components/ScalesCatalog';
 import './index.scss';
 import { defaultScaleParam } from './utils/url';
 
@@ -49,7 +49,7 @@ const router = createBrowserRouter(
             />
             <Route
                 path="/scales/:scale"
-                element={<ScaleInfo />}
+                element={<ScalesCatalog />}
                 errorElement={<ScaleInfoErrorElement />}
             />
         </Route>
