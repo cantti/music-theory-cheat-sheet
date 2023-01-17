@@ -31,14 +31,14 @@ function App() {
                         <Nav>
                             <Nav.Link
                                 as={NavLink}
-                                to="/circle/C Major"
+                                to="/circle"
                                 active={location.pathname.startsWith('/circle')}
                             >
                                 Circle of fifths
                             </Nav.Link>
                             <Nav.Link
                                 as={NavLink}
-                                to="/scales/C Major"
+                                to="/scales"
                                 active={location.pathname.startsWith('/scales')}
                             >
                                 Scales

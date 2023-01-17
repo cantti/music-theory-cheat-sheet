@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
 import { ChangeEvent, useState } from 'react';
 import { Button, Card, Col, Form, Row } from 'react-bootstrap';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams, useRouteError } from 'react-router-dom';
 import { LetterChar } from '../theory-utils/letter';
 import { Note } from '../theory-utils/note';
 import { ScaleName } from '../theory-utils/scale';
-import { getScaleFormUrlParams } from '../utils/url';
+import { getScaleFormUrlParams, ScaleParamError } from '../utils/url';
 import { NotesInScale } from './NotesInScale';
 import Piano from './Piano';
 
@@ -18,13 +18,16 @@ const allScaleNames: ScaleName[] = [
     'Minor Pentatonic',
 ];
 
-export function Scale() {
+export function ScaleInfo() {
+    const navigate = useNavigate();
+
     const urlParams = useParams<{ scale: string }>();
+
     const activeScale = getScaleFormUrlParams(urlParams.scale!);
+
     const [useFlat, setUseFlat] = useState(
         activeScale.tonic.accidental.sign === 'b'
     );
-    const navigate = useNavigate();
 
     function handleUseFlatChange(e: ChangeEvent<HTMLInputElement>) {
         const checked = e.target.checked;
@@ -145,4 +148,12 @@ export function Scale() {
             </Row>
         </>
     );
+}
+
+export function ScaleInfoErrorElement() {
+    const error = useRouteError();
+    if (error instanceof ScaleParamError) {
+        return <Navigate to="/scales" />;
+    }
+    return null;
 }

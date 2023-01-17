@@ -1,8 +1,13 @@
-import { AccidentalSign } from "./AccidentalSign";
+import { accidentalSchemas } from './accidentalSchemas';
+import { AccidentalSign } from './AccidentalSign';
 
-export abstract class Accidental {
-    abstract readonly sign: AccidentalSign;
-    abstract readonly shift: number;
+export class Accidental {
+    constructor(public sign: AccidentalSign) {}
+
+    get shift() {
+        return accidentalSchemas[this.sign].index;
+    }
+
     toString() {
         return this.sign;
     }
@@ -10,5 +15,3 @@ export abstract class Accidental {
         return this.sign === other.sign;
     }
 }
-
-

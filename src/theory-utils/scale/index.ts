@@ -1,7 +1,5 @@
 import { Scale } from './Scale';
-import { ScaleName } from './ScaleName';
+import { ScaleName, isScaleName } from './ScaleName';
 
 export type { ScaleName };
-export { Scale };
-
-
+export { Scale, isScaleName };

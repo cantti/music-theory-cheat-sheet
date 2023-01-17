@@ -1,22 +1,19 @@
-import {
-    Accidental,
-} from '../accidental/Accidental';
-import { AccidentalSign } from "../accidental/AccidentalSign";
+import { Accidental } from '../accidental/Accidental';
+import { AccidentalSign } from '../accidental/AccidentalSign';
 import { Letter } from '../letter/Letter';
-import { LetterChar } from "../letter/LetterChar";
-import { createAccidental, Natural } from '../accidental';
+import { LetterChar } from '../letter/LetterChar';
 
 export class Note {
     constructor(
         letter: Letter | LetterChar,
-        accidental: Accidental | AccidentalSign = new Natural(),
+        accidental: Accidental | AccidentalSign = new Accidental(''),
         public octave: number = 4
     ) {
         this.letter = letter instanceof Letter ? letter : new Letter(letter);
         this.accidental =
             accidental instanceof Accidental
                 ? accidental
-                : createAccidental(accidental);
+                : new Accidental(accidental);
     }
 
     letter: Letter;

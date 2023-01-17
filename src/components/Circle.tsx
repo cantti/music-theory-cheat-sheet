@@ -3,9 +3,14 @@ import _ from 'lodash';
 import { useState } from 'react';
 import { Button, Card, Col, Modal, Row } from 'react-bootstrap';
 import { BsQuestionCircle } from 'react-icons/bs';
-import { useNavigate, useParams } from 'react-router-dom';
+import {
+    Navigate,
+    useNavigate,
+    useParams,
+    useRouteError,
+} from 'react-router-dom';
 import { Scale } from '../theory-utils/scale/Scale';
-import { getScaleFormUrlParams } from '../utils/url';
+import { getScaleFormUrlParams, ScaleParamError } from '../utils/url';
 import styles from './Circle.module.scss';
 import { Note } from '../theory-utils/note';
 import { NotesInScale } from './NotesInScale';
@@ -84,7 +89,7 @@ const scalesInCircle: { scale: Scale; clickable: boolean }[][] = [
     [{ scale: new Scale(new Note('D'), 'Natural Minor'), clickable: true }],
 ];
 
-export function ScaleInfo() {
+export function Circle() {
     const [showHelp, setShowHelp] = useState(false);
 
     const navigate = useNavigate();
@@ -220,4 +225,12 @@ export function ScaleInfo() {
             </Modal>
         </Row>
     );
+}
+
+export function CircleErrorElement() {
+    const error = useRouteError();
+    if (error instanceof ScaleParamError) {
+        return <Navigate to="/circle" />;
+    }
+    return null;
 }
