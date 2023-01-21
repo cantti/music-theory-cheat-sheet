@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button, ButtonGroup, Card, Form } from 'react-bootstrap';
 import { BsArrowRight } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
@@ -7,7 +7,6 @@ import { AccidentalSign } from '../../theory-utils/accidental';
 import { Note } from '../../theory-utils/note';
 import { Scale } from '../../theory-utils/scale';
 import { motion } from 'framer-motion';
-import { toast } from 'react-toastify';
 
 const QUESTIONS_NUMBER = 5;
 
@@ -76,6 +75,8 @@ export function NumberOfAccidentalsGame() {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
+    const questionRef = useRef<HTMLDivElement>(null);
+
     function handleStartGameClick() {
         setCurrentQuestionIndex(0);
         const scalesSample = _.sampleSize(
@@ -94,23 +95,18 @@ export function NumberOfAccidentalsGame() {
 
     function handleNextQuestionClick() {
         if (questions[currentQuestionIndex].isRight) {
-            toast.success('Answer is correct', {
-                position: 'bottom-center',
-                theme: 'colored',
-                autoClose: 500,
-            });
+            questionRef.current?.classList.add('bg-success');
         } else {
-            toast.error('Answer is incorrect', {
-                position: 'bottom-center',
-                theme: 'colored',
-                autoClose: 500,
-            });
+            questionRef.current?.classList.add('bg-danger');
         }
-        if (currentQuestionIndex === QUESTIONS_NUMBER - 1) {
-            setGameState('results');
-        } else {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-        }
+        setTimeout(() => {
+            questionRef.current?.classList.remove('bg-success', 'bg-danger');
+            if (currentQuestionIndex === QUESTIONS_NUMBER - 1) {
+                setGameState('results');
+            } else {
+                setCurrentQuestionIndex(currentQuestionIndex + 1);
+            }
+        }, 500);
     }
 
     function handleNumberClick(number: number) {
@@ -157,18 +153,21 @@ export function NumberOfAccidentalsGame() {
                         <Form.Check
                             type="radio"
                             label="Major"
+                            id="major-radio"
                             checked={scalesToPlay === 'major'}
                             onChange={() => setScalesToPlay('major')}
                         />
                         <Form.Check
                             type="radio"
                             label="Minor"
+                            id="minor-radio"
                             checked={scalesToPlay === 'minor'}
                             onChange={() => setScalesToPlay('minor')}
                         />
                         <Form.Check
                             type="radio"
                             label="Both"
+                            id="both-radio"
                             checked={scalesToPlay === 'both'}
                             onChange={() => setScalesToPlay('both')}
                         />
@@ -185,7 +184,7 @@ export function NumberOfAccidentalsGame() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3 }}
                 >
-                    <Card>
+                    <Card ref={questionRef}>
                         <Card.Header>
                             Question {currentQuestionIndex + 1}
                         </Card.Header>
