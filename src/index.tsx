@@ -10,9 +10,14 @@ import { AboutMe } from './components/AboutMe';
 import App from './components/App';
 import { Circle, CircleErrorElement } from './components/Circle';
 import { DetectScaleByNotes } from './components/DetectScaleByNotes';
-import { ScalesCatalog, ScaleInfoErrorElement } from './components/ScalesCatalog';
+import { NumberOfAccidentals } from './components/games/NumberOfAccidentals';
+import {
+    ScalesCatalog,
+    ScaleInfoErrorElement,
+} from './components/ScalesCatalog';
 import './index.scss';
 import { defaultScaleParam } from './utils/url';
+import 'react-toastify/dist/ReactToastify.css';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -51,6 +56,11 @@ const router = createBrowserRouter(
                 path="/scales/:scale"
                 element={<ScalesCatalog />}
                 errorElement={<ScaleInfoErrorElement />}
+            />
+
+            <Route
+                path="/games/number-of-accidentals"
+                element={<NumberOfAccidentals />}
             />
         </Route>
     ),

@@ -1,7 +1,8 @@
 import { Suspense } from 'react';
-import { Container, Nav, Navbar } from 'react-bootstrap';
+import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { GiMusicalNotes } from 'react-icons/gi';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
     const location = useLocation();
@@ -46,6 +47,15 @@ function App() {
                             <Nav.Link as={NavLink} to="/detect-scale-by-notes">
                                 Scale by notes
                             </Nav.Link>
+                            <NavDropdown
+                                title="Games"
+                                id="games-nav-dropdown"
+                                active={location.pathname.startsWith('/games')}
+                            >
+                                <NavDropdown.Item href="/games/number-of-accidentals">
+                                    Number of accidentals
+                                </NavDropdown.Item>
+                            </NavDropdown>
                             <Nav.Link as={NavLink} to="/discography">
                                 About me
                             </Nav.Link>
@@ -56,6 +66,7 @@ function App() {
             <Container>
                 <Outlet />
             </Container>
+            <ToastContainer />
         </Suspense>
     );
 }

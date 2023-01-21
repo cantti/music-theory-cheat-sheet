@@ -24,7 +24,6 @@ function ScaleButton({ scale, index }: ScaleButtonProps) {
                 <Button
                     variant={scale.shortName === 'm' ? 'info' : 'warning'}
                     className="w-100 text-truncate mb-2"
-                    size="lg"
                 >
                     {scale.format('long')}
                 </Button>

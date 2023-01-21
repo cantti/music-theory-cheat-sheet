@@ -1,13 +1,18 @@
 import { motion } from 'framer-motion';
 import { ChangeEvent, useState } from 'react';
-import { Button, Card, Col, Form, Row } from 'react-bootstrap';
-import { Navigate, useNavigate, useParams, useRouteError } from 'react-router-dom';
+import { Button, Col, Form, Row } from 'react-bootstrap';
+import {
+    Navigate,
+    useNavigate,
+    useParams,
+    useRouteError
+} from 'react-router-dom';
 import { LetterChar } from '../theory-utils/letter';
 import { Note } from '../theory-utils/note';
 import { ScaleName } from '../theory-utils/scale';
 import { getScaleFormUrlParams, ScaleParamError } from '../utils/url';
-import { ScaleInfo } from './ScaleInfo';
 import Piano from './Piano';
+import { ScaleInfo } from './ScaleInfo';
 
 const allScaleNames: ScaleName[] = [
     'Major',
