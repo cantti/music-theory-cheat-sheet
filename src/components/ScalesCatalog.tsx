@@ -5,7 +5,7 @@ import {
     Navigate,
     useNavigate,
     useParams,
-    useRouteError
+    useRouteError,
 } from 'react-router-dom';
 import { LetterChar } from '../theory-utils/letter';
 import { Note } from '../theory-utils/note';
@@ -80,6 +80,7 @@ export function ScalesCatalog() {
                                             )
                                     )
                                 }
+                                playSounds={true}
                             />
                         </Col>
                         <Col>

@@ -18,6 +18,7 @@ import {
 import './index.scss';
 import { defaultScaleParam } from './utils/url';
 import 'react-toastify/dist/ReactToastify.css';
+import { ReadingTrainerGame } from './components/games/ReadingTrainerGame';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -62,6 +63,7 @@ const router = createBrowserRouter(
                 path="/games/number-of-accidentals"
                 element={<NumberOfAccidentalsGame />}
             />
+            <Route path="/games/reading-trainer" element={<ReadingTrainerGame />} />
         </Route>
     ),
     { basename: process.env.PUBLIC_URL }

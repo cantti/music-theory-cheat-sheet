@@ -10,6 +10,7 @@ interface PianoProps {
     className?: string;
     onNoteClick?: (note: Note) => void;
     useFlats?: boolean;
+    playSounds?: boolean;
 }
 
 function Piano({
@@ -19,6 +20,7 @@ function Piano({
     className = '',
     onNoteClick = () => {},
     useFlats = false,
+    playSounds = false,
 }: PianoProps) {
     if (startOctave == null || endOctave == null) {
         if (highlightedNotes.length > 0) {
@@ -28,8 +30,8 @@ function Piano({
             startOctave = sortedHighlightedNotes[0].octave;
             endOctave = sortedHighlightedNotes.reverse()[0].octave;
         } else {
-            startOctave = 0;
-            endOctave = 0;
+            startOctave = 4;
+            endOctave = 4;
         }
     }
 
@@ -44,7 +46,9 @@ function Piano({
     }
 
     function playNote(note: Note) {
-        pianoSynth.triggerAttack(note.format(true));
+        if (playSounds) {
+            pianoSynth.triggerAttack(note.format(true));
+        }
     }
 
     function stopNote(note: Note) {

@@ -58,6 +58,12 @@ function App() {
                                 >
                                     Number of accidentals
                                 </NavDropdown.Item>
+                                <NavDropdown.Item
+                                    as={Link}
+                                    to="/games/reading-trainer"
+                                >
+                                    Reading trainer
+                                </NavDropdown.Item>
                             </NavDropdown>
                             <Nav.Link as={NavLink} to="/discography">
                                 About me

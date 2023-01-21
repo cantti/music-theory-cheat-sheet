@@ -8,8 +8,6 @@ import { Note } from '../../theory-utils/note';
 import { Scale } from '../../theory-utils/scale';
 import { motion } from 'framer-motion';
 
-const QUESTIONS_NUMBER = 5;
-
 class Question {
     constructor(public scale: Scale) {}
 
@@ -69,9 +67,11 @@ export function NumberOfAccidentalsGame() {
     const [gameState, setGameState] = useState<
         'welcome' | 'started' | 'results'
     >('welcome');
-    const [scalesToPlay, setScalesToPlay] = useState<
+    const [scaleSetting, setScaleSetting] = useState<
         'major' | 'minor' | 'both'
     >('both');
+    const [questionsNumberSetting, setQuestionsNumberSetting] =
+        useState<number>(10);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
@@ -81,13 +81,13 @@ export function NumberOfAccidentalsGame() {
         setCurrentQuestionIndex(0);
         const scalesSample = _.sampleSize(
             allScales.filter((scale) =>
-                scalesToPlay === 'major'
+                scaleSetting === 'major'
                     ? scale.name === 'Major'
-                    : scalesToPlay === 'minor'
+                    : scaleSetting === 'minor'
                     ? 'Natural Minor'
                     : true
             ),
-            QUESTIONS_NUMBER
+            questionsNumberSetting
         );
         setQuestions(scalesSample.map((scale) => new Question(scale)));
         setGameState('started');
@@ -101,7 +101,7 @@ export function NumberOfAccidentalsGame() {
         }
         setTimeout(() => {
             questionRef.current?.classList.remove('bg-success', 'bg-danger');
-            if (currentQuestionIndex === QUESTIONS_NUMBER - 1) {
+            if (currentQuestionIndex === questionsNumberSetting - 1) {
                 setGameState('results');
             } else {
                 setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -143,34 +143,53 @@ export function NumberOfAccidentalsGame() {
         <div>
             <h3>Number of accidentals game</h3>
             {gameState === 'welcome' && (
-                <div>
-                    <Form.Group className="mb-3">
+                <div className="vstack gap-3">
+                    <Form.Group>
                         <Form.Label>Select scales</Form.Label>
                         <Form.Check
                             type="radio"
                             label="Major"
                             id="major-radio"
-                            checked={scalesToPlay === 'major'}
-                            onChange={() => setScalesToPlay('major')}
+                            checked={scaleSetting === 'major'}
+                            onChange={() => setScaleSetting('major')}
                         />
                         <Form.Check
                             type="radio"
                             label="Minor"
                             id="minor-radio"
-                            checked={scalesToPlay === 'minor'}
-                            onChange={() => setScalesToPlay('minor')}
+                            checked={scaleSetting === 'minor'}
+                            onChange={() => setScaleSetting('minor')}
                         />
                         <Form.Check
                             type="radio"
                             label="Both"
                             id="both-radio"
-                            checked={scalesToPlay === 'both'}
-                            onChange={() => setScalesToPlay('both')}
+                            checked={scaleSetting === 'both'}
+                            onChange={() => setScaleSetting('both')}
                         />
                     </Form.Group>
-                    <Button onClick={handleStartGameClick} variant="success">
-                        Start game <BsArrowRight />
-                    </Button>
+                    <Form.Group>
+                        <Form.Label>Number of questions</Form.Label>
+                        {[5, 10, 15, 20].map((number) => (
+                            <Form.Check
+                                type="radio"
+                                label={number}
+                                id={'questions-number-' + number}
+                                checked={questionsNumberSetting === number}
+                                onChange={() =>
+                                    setQuestionsNumberSetting(number)
+                                }
+                            />
+                        ))}
+                    </Form.Group>
+                    <div>
+                        <Button
+                            onClick={handleStartGameClick}
+                            variant="success"
+                        >
+                            Start game <BsArrowRight />
+                        </Button>
+                    </div>
                 </div>
             )}
             {gameState === 'started' && (
@@ -272,7 +291,7 @@ export function NumberOfAccidentalsGame() {
                             </Card.Header>
                             <Card.Body>
                                 <div>
-                                    <b>Scale: </b>{' '}
+                                    <b>Scale: </b>
                                     <Link
                                         to={
                                             '/scales/' +

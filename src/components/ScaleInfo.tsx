@@ -55,6 +55,7 @@ export function ScaleInfo(props: NotesInScaleProps) {
                     }
                     startOctave={4}
                     endOctave={5}
+                    playSounds={true}
                 />
             </div>
             {props.scale.notes.some((x) =>
