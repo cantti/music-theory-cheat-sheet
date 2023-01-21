@@ -268,8 +268,7 @@ export function NumberOfAccidentalsGame() {
                                         : 'bg-danger'
                                 }
                             >
-                                Question:
-                                {questionNumber + 1}
+                                Question {currentQuestionIndex + 1}
                             </Card.Header>
                             <Card.Body>
                                 <div>
