@@ -10,7 +10,7 @@ import { AboutMe } from './components/AboutMe';
 import App from './components/App';
 import { Circle, CircleErrorElement } from './components/Circle';
 import { DetectScaleByNotes } from './components/DetectScaleByNotes';
-import { NumberOfAccidentals } from './components/games/NumberOfAccidentals';
+import { NumberOfAccidentalsGame } from './components/games/NumberOfAccidentalsGame';
 import {
     ScalesCatalog,
     ScaleInfoErrorElement,
@@ -60,7 +60,7 @@ const router = createBrowserRouter(
 
             <Route
                 path="/games/number-of-accidentals"
-                element={<NumberOfAccidentals />}
+                element={<NumberOfAccidentalsGame />}
             />
         </Route>
     ),
