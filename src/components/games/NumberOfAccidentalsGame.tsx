@@ -133,10 +133,6 @@ export function NumberOfAccidentalsGame() {
             questions.map((question, index) => {
                 if (currentQuestionIndex === index) {
                     question.accidentalAnswer = accidental;
-                    question.accidentalsNumberAnswer =
-                        accidental === ''
-                            ? 0
-                            : question.accidentalsNumberAnswer;
                 }
                 return question;
             })
@@ -213,35 +209,37 @@ export function NumberOfAccidentalsGame() {
                                     ))}
                                 </ButtonGroup>
                             </div>
-                            <div>
-                                <ButtonGroup>
-                                    {(
-                                        ['', '#', 'b'] as Extract<
-                                            AccidentalSign,
-                                            '' | '#' | 'b'
-                                        >[]
-                                    ).map((accidental) => (
-                                        <Button
-                                            key={accidental}
-                                            disabled={
-                                                questions[currentQuestionIndex]
-                                                    .accidentalAnswer ===
-                                                accidental
-                                            }
-                                            onClick={() =>
-                                                handleAccidentalClick(
+                            {questions[currentQuestionIndex]
+                                .accidentalsNumberAnswer > 0 && (
+                                <div>
+                                    <ButtonGroup>
+                                        {(
+                                            ['#', 'b'] as Extract<
+                                                AccidentalSign,
+                                                '#' | 'b'
+                                            >[]
+                                        ).map((accidental) => (
+                                            <Button
+                                                key={accidental}
+                                                disabled={
+                                                    questions[
+                                                        currentQuestionIndex
+                                                    ].accidentalAnswer ===
                                                     accidental
-                                                )
-                                            }
-                                            variant="secondary"
-                                        >
-                                            {accidental === ''
-                                                ? 'none'
-                                                : accidental}
-                                        </Button>
-                                    ))}
-                                </ButtonGroup>
-                            </div>
+                                                }
+                                                onClick={() =>
+                                                    handleAccidentalClick(
+                                                        accidental
+                                                    )
+                                                }
+                                                variant="secondary"
+                                            >
+                                                {accidental}
+                                            </Button>
+                                        ))}
+                                    </ButtonGroup>
+                                </div>
+                            )}
                         </Card.Body>
                         <Card.Footer>
                             <Button onClick={handleNextQuestionClick}>
