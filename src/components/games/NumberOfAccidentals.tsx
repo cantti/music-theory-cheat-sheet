@@ -9,14 +9,34 @@ import { Scale } from '../../theory-utils/scale';
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 
-const questionsNumber = 10;
+const QUESTIONS_NUMBER = 5;
 
-interface Question {
-    scale: Scale;
-    accidentalsNumber: number;
-    accidentalsNumberAnswer: number;
-    accidental: Extract<AccidentalSign, '#' | 'b' | ''>;
-    accidentalAnswer: Extract<AccidentalSign, '#' | 'b' | ''>;
+class Question {
+    constructor(public scale: Scale) {}
+
+    get accidentalsNumber() {
+        return this.scale.notes
+            .slice(0, this.scale.notes.length - 1)
+            .filter((note) => note.accidental.sign !== '').length;
+    }
+
+    accidentalsNumberAnswer: number = 0;
+
+    get accidental(): Extract<AccidentalSign, '#' | 'b' | ''> {
+        return (
+            (this.scale.notes.find((note) => note.accidental.sign !== '')
+                ?.accidental.sign as Extract<AccidentalSign, '#' | 'b'>) || ''
+        );
+    }
+
+    accidentalAnswer: Extract<AccidentalSign, '#' | 'b' | ''> = '';
+
+    get isRight() {
+        return (
+            this.accidentalsNumberAnswer === this.accidentalsNumber &&
+            this.accidentalAnswer === this.accidental
+        );
+    }
 }
 
 const allScales: Scale[] = [
@@ -54,53 +74,26 @@ export function NumberOfAccidentals() {
         'major' | 'minor' | 'both'
     >('both');
     const [questions, setQuestions] = useState<Question[]>([]);
-    const [currentQuestion, setCurrentQuestion] = useState(0);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
     function handleStartGameClick() {
-        setCurrentQuestion(0);
-        const newQuestions: Question[] = [];
-        for (let i = 0; i < questionsNumber; i++) {
-            const scale = _.sample(
-                allScales.filter((scale) =>
-                    scalesToPlay === 'major'
-                        ? scale.name === 'Major'
-                        : scalesToPlay === 'minor'
-                        ? 'Natural Minor'
-                        : true
-                )
-            )!;
-            const question: Question = {
-                scale,
-
-                accidentalsNumber: scale.notes
-                    .slice(0, scale.notes.length - 1)
-                    .filter((note) => note.accidental.sign !== '').length,
-
-                accidental:
-                    (scale.notes.find((note) => note.accidental.sign !== '')
-                        ?.accidental.sign as Extract<
-                        AccidentalSign,
-                        '#' | 'b'
-                    >) || '',
-
-                accidentalsNumberAnswer: 0,
-                accidentalAnswer: '',
-            };
-            newQuestions.push(question);
-        }
-        setQuestions(newQuestions);
+        setCurrentQuestionIndex(0);
+        const scalesSample = _.sampleSize(
+            allScales.filter((scale) =>
+                scalesToPlay === 'major'
+                    ? scale.name === 'Major'
+                    : scalesToPlay === 'minor'
+                    ? 'Natural Minor'
+                    : true
+            ),
+            QUESTIONS_NUMBER
+        );
+        setQuestions(scalesSample.map((scale) => new Question(scale)));
         setGameState('started');
     }
 
-    function isRight(question: Question) {
-        return (
-            question.accidentalsNumberAnswer === question.accidentalsNumber &&
-            question.accidentalAnswer === question.accidental
-        );
-    }
-
     function handleNextQuestionClick() {
-        if (isRight(questions[currentQuestion])) {
+        if (questions[currentQuestionIndex].isRight) {
             toast.success('Answer is correct', {
                 position: 'bottom-center',
                 theme: 'colored',
@@ -113,29 +106,27 @@ export function NumberOfAccidentals() {
                 autoClose: 500,
             });
         }
-        if (currentQuestion === questionsNumber - 1) {
+        if (currentQuestionIndex === QUESTIONS_NUMBER - 1) {
             setGameState('results');
         } else {
-            setCurrentQuestion(currentQuestion + 1);
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
         }
     }
 
     function handleNumberClick(number: number) {
         setQuestions(
-            questions.map((x, i) =>
-                i === currentQuestion
-                    ? {
-                          ...x,
-                          accidentalsNumberAnswer: number,
-                          accidentalAnswer:
-                              number === 0
-                                  ? ''
-                                  : x.accidentalAnswer !== ''
-                                  ? x.accidentalAnswer
-                                  : '#',
-                      }
-                    : x
-            )
+            questions.map((question, index) => {
+                if (currentQuestionIndex === index) {
+                    question.accidentalsNumberAnswer = number;
+                    question.accidentalAnswer =
+                        number === 0
+                            ? ''
+                            : question.accidentalAnswer !== ''
+                            ? question.accidentalAnswer
+                            : '#';
+                }
+                return question;
+            })
         );
     }
 
@@ -143,16 +134,16 @@ export function NumberOfAccidentals() {
         accidental: Extract<AccidentalSign, '#' | 'b' | ''>
     ) {
         setQuestions(
-            questions.map((x, i) =>
-                i === currentQuestion
-                    ? {
-                          ...x,
-                          accidentalAnswer: accidental,
-                          accidentalsNumberAnswer:
-                              accidental === '' ? 0 : x.accidentalsNumberAnswer,
-                      }
-                    : x
-            )
+            questions.map((question, index) => {
+                if (currentQuestionIndex === index) {
+                    question.accidentalAnswer = accidental;
+                    question.accidentalsNumberAnswer =
+                        accidental === ''
+                            ? 0
+                            : question.accidentalsNumberAnswer;
+                }
+                return question;
+            })
         );
     }
 
@@ -189,19 +180,19 @@ export function NumberOfAccidentals() {
             )}
             {gameState === 'started' && (
                 <motion.div
-                    key={currentQuestion}
+                    key={currentQuestionIndex}
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3 }}
                 >
                     <Card>
                         <Card.Header>
-                            Question {currentQuestion + 1}
+                            Question {currentQuestionIndex + 1}
                         </Card.Header>
                         <Card.Body className="vstack gap-3">
                             <div>How many flats or sharps in the key of:</div>
                             <div className="fw-bold">
-                                {questions[currentQuestion].scale.format()}
+                                {questions[currentQuestionIndex].scale.format()}
                             </div>
                             <div>
                                 <ButtonGroup>
@@ -209,7 +200,7 @@ export function NumberOfAccidentals() {
                                         <Button
                                             key={number}
                                             disabled={
-                                                questions[currentQuestion]
+                                                questions[currentQuestionIndex]
                                                     .accidentalsNumberAnswer ===
                                                 number
                                             }
@@ -234,7 +225,7 @@ export function NumberOfAccidentals() {
                                         <Button
                                             key={accidental}
                                             disabled={
-                                                questions[currentQuestion]
+                                                questions[currentQuestionIndex]
                                                     .accidentalAnswer ===
                                                 accidental
                                             }
@@ -275,7 +266,7 @@ export function NumberOfAccidentals() {
                         <Card>
                             <Card.Header
                                 className={
-                                    isRight(question)
+                                    question.isRight
                                         ? 'bg-success'
                                         : 'bg-danger'
                                 }
