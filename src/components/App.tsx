@@ -52,9 +52,9 @@ function App() {
                                 id="games-nav-dropdown"
                                 active={location.pathname.startsWith('/games')}
                             >
-                                <NavDropdown.Item href="/games/number-of-accidentals">
+                                <Link to="/games/number-of-accidentals">
                                     Number of accidentals
-                                </NavDropdown.Item>
+                                </Link>
                             </NavDropdown>
                             <Nav.Link as={NavLink} to="/discography">
                                 About me
