@@ -132,6 +132,7 @@ export function ReadingTrainerGame() {
 
     return (
         <div>
+            <h3>Reading trainer game</h3>
             {gameState === 'welcome' && (
                 <div className="vstack gap-3">
                     <Form.Group>
