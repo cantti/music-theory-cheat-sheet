@@ -141,9 +141,9 @@ export function NumberOfAccidentalsGame() {
 
     return (
         <div>
+            <h3>Number of accidentals game</h3>
             {gameState === 'welcome' && (
                 <div>
-                    <h3>Number of accidentals game</h3>
                     <Form.Group className="mb-3">
                         <Form.Label>Select scales</Form.Label>
                         <Form.Check
@@ -268,7 +268,7 @@ export function NumberOfAccidentalsGame() {
                                         : 'bg-danger'
                                 }
                             >
-                                Question {currentQuestionIndex + 1}
+                                Question {questionNumber + 1}
                             </Card.Header>
                             <Card.Body>
                                 <div>
