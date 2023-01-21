@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/music-theory-cheat-sheet/static/css/main.10ae13b3.css",
-    "main.js": "/music-theory-cheat-sheet/static/js/main.7bf8b36d.js",
+    "main.js": "/music-theory-cheat-sheet/static/js/main.3fa4bc2a.js",
     "index.html": "/music-theory-cheat-sheet/index.html",
     "main.10ae13b3.css.map": "/music-theory-cheat-sheet/static/css/main.10ae13b3.css.map",
-    "main.7bf8b36d.js.map": "/music-theory-cheat-sheet/static/js/main.7bf8b36d.js.map"
+    "main.3fa4bc2a.js.map": "/music-theory-cheat-sheet/static/js/main.3fa4bc2a.js.map"
   },
   "entrypoints": [
     "static/css/main.10ae13b3.css",
-    "static/js/main.7bf8b36d.js"
+    "static/js/main.3fa4bc2a.js"
   ]
 }
