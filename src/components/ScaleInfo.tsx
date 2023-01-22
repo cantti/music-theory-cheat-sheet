@@ -59,7 +59,9 @@ export function ScaleInfo(props: NotesInScaleProps) {
                 />
             </div>
             {props.scale.notes.some((x) =>
-                (['##', 'bb'] as AccidentalSign[]).includes(x.accidental.sign)
+                new Array<AccidentalSign>('##', 'bb').includes(
+                    x.accidental.sign
+                )
             ) && (
                 <Alert variant="danger">
                     This is theoretical key because its key signature have at

@@ -21,7 +21,15 @@ class Question {
 
 const allNotes: Note[] = [];
 
-for (const letterChar of ['C', 'D', 'E', 'F', 'G', 'A', 'B'] as LetterChar[]) {
+for (const letterChar of new Array<LetterChar>(
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'A',
+    'B'
+)) {
     for (const octave of [2, 5]) {
         allNotes.push(new Note(letterChar, '', octave));
     }

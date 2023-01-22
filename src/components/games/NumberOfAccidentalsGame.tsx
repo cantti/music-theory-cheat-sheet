@@ -232,12 +232,9 @@ export function NumberOfAccidentalsGame() {
                                 .accidentalsNumberAnswer > 0 && (
                                 <div>
                                     <ButtonGroup>
-                                        {(
-                                            ['#', 'b'] as Extract<
-                                                AccidentalSign,
-                                                '#' | 'b'
-                                            >[]
-                                        ).map((accidental) => (
+                                        {new Array<
+                                            Extract<AccidentalSign, '#' | 'b'>
+                                        >('#', 'b').map((accidental) => (
                                             <Button
                                                 key={accidental}
                                                 disabled={
