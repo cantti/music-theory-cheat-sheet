@@ -173,7 +173,9 @@ export function NumberOfAccidentalsGame() {
                         )}
                     </Form.Group>
                     <Form.Group>
-                        <Form.Label>Number of questions</Form.Label>
+                        <Form.Label className="fw-bold">
+                            Number of questions
+                        </Form.Label>
                         {[5, 10, 15, 20].map((number) => (
                             <Form.Check
                                 type="radio"
