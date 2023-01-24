@@ -77,9 +77,11 @@ export function NumberOfAccidentalsGame() {
     const [gameState, setGameState] = useState<
         'welcome' | 'started' | 'results'
     >('welcome');
-    const [scaleSetting, setScaleSetting] = useState<
-        'major' | 'minor' | 'both'
-    >('both');
+
+    type ScaleSetting = 'major' | 'minor' | 'both';
+
+    const [scaleSetting, setScaleSetting] = useState<ScaleSetting>('both');
+
     const [questionsCountSetting, setQuestionsCountSetting] =
         useState<number>(10);
     const [questions, setQuestions] = useState<Question[]>([]);
@@ -155,28 +157,20 @@ export function NumberOfAccidentalsGame() {
             {gameState === 'welcome' && (
                 <div className="vstack gap-3">
                     <Form.Group>
-                        <Form.Label>Select scales</Form.Label>
-                        <Form.Check
-                            type="radio"
-                            label="Major"
-                            id="major-radio"
-                            checked={scaleSetting === 'major'}
-                            onChange={() => setScaleSetting('major')}
-                        />
-                        <Form.Check
-                            type="radio"
-                            label="Minor"
-                            id="minor-radio"
-                            checked={scaleSetting === 'minor'}
-                            onChange={() => setScaleSetting('minor')}
-                        />
-                        <Form.Check
-                            type="radio"
-                            label="Both"
-                            id="both-radio"
-                            checked={scaleSetting === 'both'}
-                            onChange={() => setScaleSetting('both')}
-                        />
+                        <Form.Label className="fw-bold">
+                            Select scales
+                        </Form.Label>
+                        {new Array<ScaleSetting>('major', 'minor', 'both').map(
+                            (option) => (
+                                <Form.Check
+                                    type="radio"
+                                    label={_.startCase(option)}
+                                    id={'major-' + option}
+                                    checked={scaleSetting === option}
+                                    onChange={() => setScaleSetting(option)}
+                                />
+                            )
+                        )}
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Number of questions</Form.Label>

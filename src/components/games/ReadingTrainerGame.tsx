@@ -13,15 +13,20 @@ import {
   Form,
   Row,
 } from 'react-bootstrap';
-import { BsArrowRight } from 'react-icons/bs';
+import {
+  BsArrowRight,
+  BsClock,
+} from 'react-icons/bs';
 import { Vex } from 'vexflow';
 
 import { LetterChar } from '../../theory-utils/letter';
 import { Note } from '../../theory-utils/note';
 import Piano from '../Piano';
 
+type Clef = 'treble' | 'bass';
+
 class Question {
-    constructor(public note: Note, public clef: string) {}
+    constructor(public note: Note, public clef: Clef) {}
     noteAnswer?: Note;
     get isRight() {
         return (
@@ -60,7 +65,7 @@ function drawNote(elementId: string, note: Note, clef: string) {
     // draw
     const { Factory } = Vex.Flow;
     const factory = new Factory({
-        renderer: { elementId: elementId, width: 200, height: 200 },
+        renderer: { elementId, width: 200, height: 200 },
     });
     const score = factory.EasyScore();
     factory
@@ -79,36 +84,67 @@ export function ReadingTrainerGame() {
     const [gameState, setGameState] = useState<
         'welcome' | 'started' | 'results'
     >('welcome');
-    const [clefSetting, setClefSetting] = useState<'treble' | 'bass' | 'both'>(
-        'both'
-    );
-    const [questionsCountSetting, setQuestionsCountSetting] =
-        useState<number>(10);
+
+    const [clefSetting, setClefSetting] = useState<Clef | 'both'>('both');
+
+    const [questionsCountSetting, setQuestionsCountSetting] = useState(10);
+    const [timeLimitSetting, setTimeLimitSetting] = useState(5);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
+    const [remainingTime, setRemainingTime] = useState(timeLimitSetting);
+    const [controlsDisabled, setControlsDisabled] = useState(false);
     const questionRef = useRef<HTMLDivElement>(null);
+
+    const intervalId = useRef(0);
+    const intervalCallback = useRef<() => void>();
+
+    useEffect(() => {
+        intervalCallback.current = () => {
+            const newRemainingTime = remainingTime - 1;
+            setRemainingTime(newRemainingTime);
+            if (newRemainingTime === 0) {
+                handleNextQuestionClick();
+            }
+        };
+    });
+
+    function startTimer() {
+        if (timeLimitSetting > 0) {
+            setRemainingTime(timeLimitSetting);
+            intervalId.current = window.setInterval(() => {
+                intervalCallback.current!();
+            }, 1000);
+        }
+    }
+
+    function stopTimer() {
+        if (timeLimitSetting > 0) {
+            window.clearInterval(intervalId.current);
+        }
+    }
 
     function handleStartGameClick() {
         setCurrentQuestionIndex(0);
         const notesSample = _.sampleSize(allNotes, questionsCountSetting);
-        setQuestions(
-            notesSample.map(
-                (note) =>
-                    new Question(
-                        note,
-                        note.octave < 4
-                            ? 'bass'
-                            : note.octave > 4
-                            ? 'treble'
-                            : _.sample(['bass', 'treble'])!
-                    )
-            )
+        const questions = notesSample.map(
+            (note) =>
+                new Question(
+                    note,
+                    note.octave < 4
+                        ? 'bass'
+                        : note.octave > 4
+                        ? 'treble'
+                        : _.sample(['bass', 'treble'])!
+                )
         );
+        setQuestions(questions);
         setGameState('started');
+        startTimer();
     }
 
     function handleNextQuestionClick() {
+        stopTimer();
+        setControlsDisabled(true);
         if (questions[currentQuestionIndex].isRight) {
             questionRef.current?.classList.add('bg-success');
         } else {
@@ -116,10 +152,12 @@ export function ReadingTrainerGame() {
         }
         setTimeout(() => {
             questionRef.current?.classList.remove('bg-success', 'bg-danger');
+            setControlsDisabled(false);
             if (currentQuestionIndex === questionsCountSetting - 1) {
                 setGameState('results');
             } else {
                 setCurrentQuestionIndex(currentQuestionIndex + 1);
+                startTimer();
             }
         }, 500);
     }
@@ -156,41 +194,47 @@ export function ReadingTrainerGame() {
             {gameState === 'welcome' && (
                 <div className="vstack gap-3">
                     <Form.Group>
-                        <Form.Label>Clefs</Form.Label>
-                        <Form.Check
-                            type="radio"
-                            label="Treble"
-                            id="treble-radio"
-                            checked={clefSetting === 'treble'}
-                            onChange={() => setClefSetting('treble')}
-                        />
-                        <Form.Check
-                            type="radio"
-                            label="Bass"
-                            id="bass-radio"
-                            checked={clefSetting === 'bass'}
-                            onChange={() => setClefSetting('bass')}
-                        />
-                        <Form.Check
-                            type="radio"
-                            label="Both"
-                            id="both-radio"
-                            checked={clefSetting === 'both'}
-                            onChange={() => setClefSetting('both')}
-                        />
+                        <Form.Label className="fw-bold">Clefs</Form.Label>
+                        {new Array<Clef | 'both'>('treble', 'bass', 'both').map(
+                            (option) => (
+                                <Form.Check
+                                    key={option}
+                                    type="radio"
+                                    label={_.startCase(option)}
+                                    id={'radio-' + option}
+                                    checked={clefSetting === option}
+                                    onChange={() => setClefSetting(option)}
+                                />
+                            )
+                        )}
                     </Form.Group>
                     <Form.Group>
-                        <Form.Label>Number of questions</Form.Label>
-                        {[5, 10, 15, 20].map((number) => (
+                        <Form.Label className="fw-bold">
+                            Number of questions
+                        </Form.Label>
+                        {[5, 10, 15, 20].map((option) => (
                             <Form.Check
-                                key={number}
+                                key={option}
                                 type="radio"
-                                label={number}
-                                id={'questions-number-' + number}
-                                checked={questionsCountSetting === number}
+                                label={option}
+                                id={'questions-number-' + option}
+                                checked={questionsCountSetting === option}
                                 onChange={() =>
-                                    setQuestionsCountSetting(number)
+                                    setQuestionsCountSetting(option)
                                 }
+                            />
+                        ))}
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label className="fw-bold">Time Limit</Form.Label>
+                        {[0, 3, 5, 10].map((option) => (
+                            <Form.Check
+                                key={option}
+                                type="radio"
+                                label={option === 0 ? 'No limit' : option}
+                                id={'time-limit-' + option}
+                                checked={timeLimitSetting === option}
+                                onChange={() => setTimeLimitSetting(option)}
                             />
                         ))}
                     </Form.Group>
@@ -210,11 +254,16 @@ export function ReadingTrainerGame() {
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3 }}
+                    style={{
+                        pointerEvents: controlsDisabled ? 'none' : 'auto',
+                    }}
                 >
                     <Card ref={questionRef}>
-                        <Card.Header>
-                            Question {currentQuestionIndex + 1} /{' '}
-                            {questionsCountSetting}
+                        <Card.Header className="hstack">
+                            <div>
+                                Question {currentQuestionIndex + 1} /{' '}
+                                {questionsCountSetting}
+                            </div>
                         </Card.Header>
                         <Card.Body className="vstack">
                             <div>Press the correct note</div>
@@ -244,7 +293,17 @@ export function ReadingTrainerGame() {
                                 onClick={handleNextQuestionClick}
                                 variant="dark"
                             >
-                                Next <BsArrowRight />
+                                Next{' '}
+                                {timeLimitSetting > 0 && (
+                                    <motion.span
+                                        key={remainingTime}
+                                        initial={{ opacity: 0, scale: 0.5 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        {remainingTime} <BsClock />
+                                    </motion.span>
+                                )}
                             </Button>
                         </Card.Footer>
                     </Card>
@@ -260,8 +319,8 @@ export function ReadingTrainerGame() {
                             Play again <BsArrowRight />
                         </Button>
                     </div>
-                    {questions.map((question, questionNumber) => (
-                        <Card>
+                    {questions.map((question, questionIndex) => (
+                        <Card key={questionIndex}>
                             <Card.Header
                                 className={
                                     question.isRight
@@ -269,12 +328,12 @@ export function ReadingTrainerGame() {
                                         : 'bg-danger'
                                 }
                             >
-                                Question {questionNumber + 1}
+                                Question {questionIndex + 1}
                             </Card.Header>
                             <Card.Body>
                                 <div>
                                     <b>Note: </b>
-                                    <div id={'staff-' + questionNumber}></div>
+                                    <div id={'staff-' + questionIndex}></div>
                                 </div>
                                 <div>
                                     <b>Right answer: </b>
