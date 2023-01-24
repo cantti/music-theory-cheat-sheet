@@ -1,12 +1,24 @@
+import {
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+
+import { motion } from 'framer-motion';
 import _ from 'lodash';
-import { useEffect, useRef, useState } from 'react';
-import { Button, Card, Col, Form, Row } from 'react-bootstrap';
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  Row,
+} from 'react-bootstrap';
 import { BsArrowRight } from 'react-icons/bs';
 import { Vex } from 'vexflow';
+
 import { LetterChar } from '../../theory-utils/letter';
 import { Note } from '../../theory-utils/note';
 import Piano from '../Piano';
-import { motion } from 'framer-motion';
 
 class Question {
     constructor(public note: Note, public clef: string) {}
@@ -70,7 +82,7 @@ export function ReadingTrainerGame() {
     const [clefSetting, setClefSetting] = useState<'treble' | 'bass' | 'both'>(
         'both'
     );
-    const [questionsNumberSetting, setQuestionsNumberSetting] =
+    const [questionsCountSetting, setQuestionsCountSetting] =
         useState<number>(10);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -79,7 +91,7 @@ export function ReadingTrainerGame() {
 
     function handleStartGameClick() {
         setCurrentQuestionIndex(0);
-        const notesSample = _.sampleSize(allNotes, questionsNumberSetting);
+        const notesSample = _.sampleSize(allNotes, questionsCountSetting);
         setQuestions(
             notesSample.map(
                 (note) =>
@@ -104,7 +116,7 @@ export function ReadingTrainerGame() {
         }
         setTimeout(() => {
             questionRef.current?.classList.remove('bg-success', 'bg-danger');
-            if (currentQuestionIndex === questionsNumberSetting - 1) {
+            if (currentQuestionIndex === questionsCountSetting - 1) {
                 setGameState('results');
             } else {
                 setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -175,9 +187,9 @@ export function ReadingTrainerGame() {
                                 type="radio"
                                 label={number}
                                 id={'questions-number-' + number}
-                                checked={questionsNumberSetting === number}
+                                checked={questionsCountSetting === number}
                                 onChange={() =>
-                                    setQuestionsNumberSetting(number)
+                                    setQuestionsCountSetting(number)
                                 }
                             />
                         ))}
@@ -201,7 +213,8 @@ export function ReadingTrainerGame() {
                 >
                     <Card ref={questionRef}>
                         <Card.Header>
-                            Question {currentQuestionIndex + 1}
+                            Question {currentQuestionIndex + 1} /{' '}
+                            {questionsCountSetting}
                         </Card.Header>
                         <Card.Body className="vstack">
                             <div>Press the correct note</div>
@@ -227,7 +240,10 @@ export function ReadingTrainerGame() {
                             </Row>
                         </Card.Body>
                         <Card.Footer>
-                            <Button onClick={handleNextQuestionClick}>
+                            <Button
+                                onClick={handleNextQuestionClick}
+                                variant="dark"
+                            >
                                 Next <BsArrowRight />
                             </Button>
                         </Card.Footer>

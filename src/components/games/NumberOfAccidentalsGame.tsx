@@ -1,12 +1,22 @@
+import {
+  useRef,
+  useState,
+} from 'react';
+
+import { motion } from 'framer-motion';
 import _ from 'lodash';
-import { useRef, useState } from 'react';
-import { Button, ButtonGroup, Card, Form } from 'react-bootstrap';
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  Form,
+} from 'react-bootstrap';
 import { BsArrowRight } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
+
 import { AccidentalSign } from '../../theory-utils/accidental';
 import { Note } from '../../theory-utils/note';
 import { Scale } from '../../theory-utils/scale';
-import { motion } from 'framer-motion';
 
 class Question {
     constructor(public scale: Scale) {}
@@ -70,7 +80,7 @@ export function NumberOfAccidentalsGame() {
     const [scaleSetting, setScaleSetting] = useState<
         'major' | 'minor' | 'both'
     >('both');
-    const [questionsNumberSetting, setQuestionsNumberSetting] =
+    const [questionsCountSetting, setQuestionsCountSetting] =
         useState<number>(10);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -87,7 +97,7 @@ export function NumberOfAccidentalsGame() {
                     ? 'Natural Minor'
                     : true
             ),
-            questionsNumberSetting
+            questionsCountSetting
         );
         setQuestions(scalesSample.map((scale) => new Question(scale)));
         setGameState('started');
@@ -101,7 +111,7 @@ export function NumberOfAccidentalsGame() {
         }
         setTimeout(() => {
             questionRef.current?.classList.remove('bg-success', 'bg-danger');
-            if (currentQuestionIndex === questionsNumberSetting - 1) {
+            if (currentQuestionIndex === questionsCountSetting - 1) {
                 setGameState('results');
             } else {
                 setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -175,9 +185,9 @@ export function NumberOfAccidentalsGame() {
                                 type="radio"
                                 label={number}
                                 id={'questions-number-' + number}
-                                checked={questionsNumberSetting === number}
+                                checked={questionsCountSetting === number}
                                 onChange={() =>
-                                    setQuestionsNumberSetting(number)
+                                    setQuestionsCountSetting(number)
                                 }
                             />
                         ))}
@@ -201,7 +211,8 @@ export function NumberOfAccidentalsGame() {
                 >
                     <Card ref={questionRef}>
                         <Card.Header>
-                            Question {currentQuestionIndex + 1}
+                            Question {currentQuestionIndex + 1} /{' '}
+                            {questionsCountSetting}
                         </Card.Header>
                         <Card.Body className="vstack gap-3">
                             <div>How many flats or sharps in the key of:</div>
@@ -212,16 +223,17 @@ export function NumberOfAccidentalsGame() {
                                 <ButtonGroup>
                                     {_.range(7).map((number) => (
                                         <Button
+                                            value={number}
                                             key={number}
-                                            disabled={
+                                            active={
                                                 questions[currentQuestionIndex]
                                                     .accidentalsNumberAnswer ===
                                                 number
                                             }
-                                            onClick={() =>
+                                            onClick={(e) =>
                                                 handleNumberClick(number)
                                             }
-                                            variant="secondary"
+                                            variant="outline-dark"
                                         >
                                             {number}
                                         </Button>
@@ -237,7 +249,7 @@ export function NumberOfAccidentalsGame() {
                                         >('#', 'b').map((accidental) => (
                                             <Button
                                                 key={accidental}
-                                                disabled={
+                                                active={
                                                     questions[
                                                         currentQuestionIndex
                                                     ].accidentalAnswer ===
@@ -248,7 +260,7 @@ export function NumberOfAccidentalsGame() {
                                                         accidental
                                                     )
                                                 }
-                                                variant="secondary"
+                                                variant="outline-dark"
                                             >
                                                 {accidental}
                                             </Button>
@@ -258,7 +270,10 @@ export function NumberOfAccidentalsGame() {
                             )}
                         </Card.Body>
                         <Card.Footer>
-                            <Button onClick={handleNextQuestionClick}>
+                            <Button
+                                onClick={handleNextQuestionClick}
+                                variant="dark"
+                            >
                                 Next <BsArrowRight />
                             </Button>
                         </Card.Footer>
