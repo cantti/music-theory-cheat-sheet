@@ -125,7 +125,15 @@ export function ReadingTrainerGame() {
 
     function handleStartGameClick() {
         setCurrentQuestionIndex(0);
-        const notesSample = _.sampleSize(allNotes, questionsCountSetting);
+        const notesSample = _(allNotes)
+            .filter(
+                (x) =>
+                    clefSetting === 'both' ||
+                    (clefSetting === 'bass' && x.octave <= 4) ||
+                    (clefSetting === 'treble' && x.octave >= 4)
+            )
+            .sampleSize(questionsCountSetting)
+            .value();
         const questions = notesSample.map(
             (note) =>
                 new Question(
@@ -134,7 +142,9 @@ export function ReadingTrainerGame() {
                         ? 'bass'
                         : note.octave > 4
                         ? 'treble'
-                        : _.sample(['bass', 'treble'])!
+                        : clefSetting === 'both'
+                        ? _.sample(['bass', 'treble'])!
+                        : clefSetting
                 )
         );
         setQuestions(questions);
