@@ -111,28 +111,25 @@ export function ReadingTrainerGame() {
 
     function handleStartGameClick() {
         setCurrentQuestionIndex(0);
-        const notesSample = _(allNotes)
+        const questions = _(allNotes)
+            .map(
+                (note) =>
+                    new Question(
+                        note,
+                        note.octave < 4
+                            ? 'bass'
+                            : // C4 can be in both bass or treble
+                            note.octave === 4 && note.letter.char === 'C'
+                            ? _.sample(['bass', 'treble'])!
+                            : 'treble'
+                    )
+            )
             .filter(
-                (x) =>
-                    clefSetting === 'both' ||
-                    (clefSetting === 'bass' && x.octave <= 4) ||
-                    (clefSetting === 'treble' && x.octave >= 4)
+                (question) =>
+                    clefSetting === 'both' || question.clef === clefSetting
             )
             .sampleSize(questionsCountSetting)
             .value();
-        const questions = notesSample.map(
-            (note) =>
-                new Question(
-                    note,
-                    note.octave < 4
-                        ? 'bass'
-                        : note.octave > 4
-                        ? 'treble'
-                        : clefSetting === 'both'
-                        ? _.sample(['bass', 'treble'])!
-                        : clefSetting
-                )
-        );
         setQuestions(questions);
         setGameState('started');
         startTimer();

@@ -12,9 +12,8 @@ class Question {
     constructor(public scale: Scale) {}
 
     get accidentalsNumber() {
-        return this.scale.notes
-            .slice(0, this.scale.notes.length - 1)
-            .filter((note) => note.accidental.sign !== '').length;
+        return this.scale.notes.filter((note) => note.accidental.sign !== '')
+            .length;
     }
 
     accidentalsNumberAnswer: number = 0;

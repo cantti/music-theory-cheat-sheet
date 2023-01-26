@@ -22,7 +22,6 @@ const major: ScaleSchema = {
         new Interval('Fifth', 'Perfect'),
         new Interval('Sixth', 'Major'),
         new Interval('Seventh', 'Major'),
-        new Interval('Octave', 'Perfect'),
     ],
     chords: [
         ['Major'],
@@ -45,7 +44,6 @@ const naturalMinor: ScaleSchema = {
         new Interval('Fifth', 'Perfect'),
         new Interval('Sixth', 'Minor'),
         new Interval('Seventh', 'Minor'),
-        new Interval('Octave', 'Perfect'),
     ],
     chords: [
         ['Minor'],
@@ -68,7 +66,6 @@ const harmonicMinor: ScaleSchema = {
         new Interval('Fifth', 'Perfect'),
         new Interval('Sixth', 'Minor'),
         new Interval('Seventh', 'Major'),
-        new Interval('Octave', 'Perfect'),
     ],
     chords: [
         ['Minor'],
@@ -91,7 +88,6 @@ const melodicMinor: ScaleSchema = {
         new Interval('Fifth', 'Perfect'),
         new Interval('Sixth', 'Major'),
         new Interval('Seventh', 'Major'),
-        new Interval('Octave', 'Perfect'),
     ],
     chords: [
         ['Minor'],
@@ -112,7 +108,6 @@ const majorPentatonic: ScaleSchema = {
         new Interval('Third', 'Major'),
         new Interval('Fifth', 'Perfect'),
         new Interval('Sixth', 'Major'),
-        new Interval('Octave', 'Perfect'),
     ],
     chords: [],
 };
@@ -125,7 +120,6 @@ const minorPentatonic: ScaleSchema = {
         new Interval('Fourth', 'Perfect'),
         new Interval('Fifth', 'Perfect'),
         new Interval('Seventh', 'Minor'),
-        new Interval('Octave', 'Perfect'),
     ],
     chords: [],
 };

@@ -21,13 +21,17 @@ export function ScaleInfo(props: NotesInScaleProps) {
             (time, value) => {
                 pianoSynth.triggerAttackRelease(value.note, 0.2, time);
                 setPlayingNote(value.noteObj);
-                if (value.noteObj.equals(props.scale.notes.slice(-1)[0])) {
+                if (
+                    value.noteObj.equals(
+                        props.scale.notesWithTopTonic.slice(-1)[0]
+                    )
+                ) {
                     setTimeout(() => {
                         setPlayingNote(null);
                     }, 1000 * 0.2);
                 }
             },
-            props.scale.notes.map((note, index) => ({
+            props.scale.notesWithTopTonic.map((note, index) => ({
                 time: index * 0.2,
                 note: note.format(true),
                 noteObj: note,
@@ -51,7 +55,9 @@ export function ScaleInfo(props: NotesInScaleProps) {
             <div className="mb-3">
                 <Piano
                     highlightedNotes={
-                        playingNote ? [playingNote] : props.scale.notes
+                        playingNote
+                            ? [playingNote]
+                            : props.scale.notesWithTopTonic
                     }
                     startOctave={4}
                     endOctave={5}

@@ -1,4 +1,5 @@
 import { Chord } from '../chord';
+import { Interval } from '../interval';
 import { Note } from '../note';
 import { getNotesByIntervals } from '../utils/getNotesByIntervals';
 import { ScaleName } from './ScaleName';
@@ -13,6 +14,13 @@ export class Scale {
 
     get notes() {
         return getNotesByIntervals(this.tonic, this.intervals);
+    }
+
+    get notesWithTopTonic() {
+        return getNotesByIntervals(this.tonic, [
+            ...this.intervals,
+            new Interval('Octave', 'Perfect'),
+        ]);
     }
 
     get intervals() {
