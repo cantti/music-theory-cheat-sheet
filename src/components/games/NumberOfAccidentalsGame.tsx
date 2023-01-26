@@ -1,19 +1,9 @@
-import {
-  useRef,
-  useState,
-} from 'react';
-
 import { motion } from 'framer-motion';
 import _ from 'lodash';
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  Form,
-} from 'react-bootstrap';
-import { BsArrowRight } from 'react-icons/bs';
+import { useRef, useState } from 'react';
+import { Button, ButtonGroup, Card } from 'react-bootstrap';
+import { BsArrowRight, BsFlag } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
-
 import { AccidentalSign } from '../../theory-utils/accidental';
 import { Note } from '../../theory-utils/note';
 import { Scale } from '../../theory-utils/scale';
@@ -156,44 +146,45 @@ export function NumberOfAccidentalsGame() {
             <h3>Number of accidentals game</h3>
             {gameState === 'welcome' && (
                 <div className="vstack gap-3">
-                    <Form.Group>
-                        <Form.Label className="fw-bold">
-                            Select scales
-                        </Form.Label>
-                        {new Array<ScaleSetting>('major', 'minor', 'both').map(
-                            (option) => (
-                                <Form.Check
-                                    type="radio"
-                                    label={_.startCase(option)}
-                                    id={'major-' + option}
-                                    checked={scaleSetting === option}
-                                    onChange={() => setScaleSetting(option)}
-                                />
-                            )
-                        )}
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label className="fw-bold">
-                            Number of questions
-                        </Form.Label>
-                        {[5, 10, 15, 20].map((number) => (
-                            <Form.Check
-                                type="radio"
-                                label={number}
-                                id={'questions-number-' + number}
-                                checked={questionsCountSetting === number}
-                                onChange={() =>
-                                    setQuestionsCountSetting(number)
-                                }
-                            />
-                        ))}
-                    </Form.Group>
                     <div>
-                        <Button
-                            onClick={handleStartGameClick}
-                            variant="success"
-                        >
-                            Start game <BsArrowRight />
+                        <p className="fw-bold">Select scales</p>
+                        <ButtonGroup>
+                            {new Array<ScaleSetting>(
+                                'major',
+                                'minor',
+                                'both'
+                            ).map((option) => (
+                                <Button
+                                    key={option}
+                                    variant="outline-dark"
+                                    active={scaleSetting === option}
+                                    onClick={() => setScaleSetting(option)}
+                                >
+                                    {_.startCase(option)}
+                                </Button>
+                            ))}
+                        </ButtonGroup>
+                    </div>
+                    <div>
+                        <p className="fw-bold">Number of questions</p>
+                        <ButtonGroup>
+                            {[5, 10, 15, 20].map((option) => (
+                                <Button
+                                    key={option}
+                                    variant="outline-dark"
+                                    active={questionsCountSetting === option}
+                                    onClick={() =>
+                                        setQuestionsCountSetting(option)
+                                    }
+                                >
+                                    {option}
+                                </Button>
+                            ))}
+                        </ButtonGroup>
+                    </div>
+                    <div>
+                        <Button onClick={handleStartGameClick} variant="dark">
+                            <BsFlag /> Start
                         </Button>
                     </div>
                 </div>

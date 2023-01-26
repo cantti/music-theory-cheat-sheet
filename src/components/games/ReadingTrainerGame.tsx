@@ -1,24 +1,10 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import _ from 'lodash';
-import {
-  Button,
-  Card,
-  Col,
-  Form,
-  Row,
-} from 'react-bootstrap';
-import {
-  BsArrowRight,
-  BsClock,
-} from 'react-icons/bs';
+import { Button, ButtonGroup, Card, Col, Row } from 'react-bootstrap';
+import { BsArrowRight, BsClock, BsFlag } from 'react-icons/bs';
+import { GiFClef, GiGClef } from 'react-icons/gi';
 import { Vex } from 'vexflow';
-
 import { LetterChar } from '../../theory-utils/letter';
 import { Note } from '../../theory-utils/note';
 import Piano from '../Piano';
@@ -47,7 +33,7 @@ for (const letterChar of new Array<LetterChar>(
     'A',
     'B'
 )) {
-    for (const octave of [2, 5]) {
+    for (const octave of _.range(2, 6)) {
         allNotes.push(new Note(letterChar, '', octave));
     }
 }
@@ -203,57 +189,67 @@ export function ReadingTrainerGame() {
             <h3>Reading trainer game</h3>
             {gameState === 'welcome' && (
                 <div className="vstack gap-3">
-                    <Form.Group>
-                        <Form.Label className="fw-bold">Clefs</Form.Label>
-                        {new Array<Clef | 'both'>('treble', 'bass', 'both').map(
-                            (option) => (
-                                <Form.Check
-                                    key={option}
-                                    type="radio"
-                                    label={_.startCase(option)}
-                                    id={'radio-' + option}
-                                    checked={clefSetting === option}
-                                    onChange={() => setClefSetting(option)}
-                                />
-                            )
-                        )}
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label className="fw-bold">
-                            Number of questions
-                        </Form.Label>
-                        {[5, 10, 15, 20].map((option) => (
-                            <Form.Check
-                                key={option}
-                                type="radio"
-                                label={option}
-                                id={'questions-number-' + option}
-                                checked={questionsCountSetting === option}
-                                onChange={() =>
-                                    setQuestionsCountSetting(option)
-                                }
-                            />
-                        ))}
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label className="fw-bold">Time Limit</Form.Label>
-                        {[0, 3, 5, 10].map((option) => (
-                            <Form.Check
-                                key={option}
-                                type="radio"
-                                label={option === 0 ? 'No limit' : option}
-                                id={'time-limit-' + option}
-                                checked={timeLimitSetting === option}
-                                onChange={() => setTimeLimitSetting(option)}
-                            />
-                        ))}
-                    </Form.Group>
                     <div>
-                        <Button
-                            onClick={handleStartGameClick}
-                            variant="success"
-                        >
-                            Start game <BsArrowRight />
+                        <p className="fw-bold">Clefs</p>
+                        <ButtonGroup>
+                            {new Array<Clef | 'both'>(
+                                'treble',
+                                'bass',
+                                'both'
+                            ).map((option) => (
+                                <Button
+                                    key={option}
+                                    variant="outline-dark"
+                                    active={clefSetting === option}
+                                    onClick={() => setClefSetting(option)}
+                                >
+                                    {option === 'treble' ? (
+                                        <GiGClef />
+                                    ) : option === 'bass' ? (
+                                        <GiFClef />
+                                    ) : (
+                                        ''
+                                    )}{' '}
+                                    {_.startCase(option)}
+                                </Button>
+                            ))}
+                        </ButtonGroup>
+                    </div>
+                    <div>
+                        <p className="fw-bold">Number of questions</p>
+                        <ButtonGroup>
+                            {[5, 10, 15, 20].map((option) => (
+                                <Button
+                                    key={option}
+                                    variant="outline-dark"
+                                    active={questionsCountSetting === option}
+                                    onClick={() =>
+                                        setQuestionsCountSetting(option)
+                                    }
+                                >
+                                    {option}
+                                </Button>
+                            ))}
+                        </ButtonGroup>
+                    </div>
+                    <div>
+                        <p className="fw-bold">Time Limit</p>
+                        <ButtonGroup>
+                            {[0, 3, 5, 10].map((option) => (
+                                <Button
+                                    key={option}
+                                    variant="outline-dark"
+                                    active={timeLimitSetting === option}
+                                    onClick={() => setTimeLimitSetting(option)}
+                                >
+                                    {option === 0 ? 'No limit' : option}
+                                </Button>
+                            ))}
+                        </ButtonGroup>
+                    </div>
+                    <div>
+                        <Button onClick={handleStartGameClick} variant="dark">
+                            <BsFlag /> Start
                         </Button>
                     </div>
                 </div>
