@@ -11,15 +11,17 @@ import Piano from '../Piano';
 
 type Clef = 'treble' | 'bass';
 
-class Question {
-    constructor(public note: Note, public clef: Clef) {}
+interface Question {
+    note: Note;
+    clef: Clef;
     noteAnswer?: Note;
-    get isRight() {
-        return (
-            this.noteAnswer &&
-            this.note.letter.char === this.noteAnswer.letter.char
-        );
-    }
+}
+
+function questionIsRight(question: Question) {
+    return (
+        question.noteAnswer &&
+        question.note.letter.char === question.noteAnswer.letter.char
+    );
 }
 
 const allNotes: Note[] = [];
@@ -112,18 +114,16 @@ export function ReadingTrainerGame() {
     function handleStartGameClick() {
         setCurrentQuestionIndex(0);
         const questions = _(allNotes)
-            .map(
-                (note) =>
-                    new Question(
-                        note,
-                        note.octave < 4
-                            ? 'bass'
-                            : // C4 can be in both bass or treble
-                            note.octave === 4 && note.letter.char === 'C'
-                            ? _.sample(['bass', 'treble'])!
-                            : 'treble'
-                    )
-            )
+            .map<Question>((note) => ({
+                note,
+                clef:
+                    note.octave < 4
+                        ? 'bass'
+                        : // C4 can be in both bass or treble
+                        note.octave === 4 && note.letter.char === 'C'
+                        ? _.sample(['bass', 'treble'])!
+                        : 'treble',
+            }))
             .filter(
                 (question) =>
                     clefSetting === 'both' || question.clef === clefSetting
@@ -138,7 +138,7 @@ export function ReadingTrainerGame() {
     function handleNextQuestionClick() {
         stopTimer();
         setControlsDisabled(true);
-        if (questions[currentQuestionIndex].isRight) {
+        if (questionIsRight(questions[currentQuestionIndex])) {
             questionRef.current?.classList.add('bg-success');
         } else {
             questionRef.current?.classList.add('bg-danger');
@@ -157,13 +157,11 @@ export function ReadingTrainerGame() {
 
     function handleNoteClick(note: Note) {
         setQuestions(
-            questions.map((question, index) => {
-                if (currentQuestionIndex === index) {
-                    note.accidental.sign = '';
-                    question.noteAnswer = note;
-                }
-                return question;
-            })
+            questions.map<Question>((question, index) =>
+                currentQuestionIndex === index
+                    ? { ...question, noteAnswer: note }
+                    : question
+            )
         );
     }
 
@@ -326,7 +324,7 @@ export function ReadingTrainerGame() {
                         <Card key={questionIndex}>
                             <Card.Header
                                 className={
-                                    question.isRight
+                                    questionIsRight(question)
                                         ? 'bg-success'
                                         : 'bg-danger'
                                 }
