@@ -338,12 +338,12 @@ export function ReadingTrainerGame() {
                                 </div>
                                 <div>
                                     <b>Right answer: </b>
-                                    {question.note.format()}
+                                    {question.note.format(false)}
                                 </div>
                                 <div>
                                     <b>Your answer: </b>
                                     {question.noteAnswer
-                                        ? question.noteAnswer.format()
+                                        ? question.noteAnswer.format(false)
                                         : ''}
                                 </div>
                             </Card.Body>

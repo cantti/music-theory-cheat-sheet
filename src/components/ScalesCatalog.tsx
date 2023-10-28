@@ -51,7 +51,7 @@ export function ScalesCatalog() {
             navigate(
                 '/scales/' +
                     encodeURIComponent(
-                        new Note(newLetter, checked ? 'b' : '#').format() +
+                        new Note(newLetter, checked ? 'b' : '#').format(false) +
                             ' ' +
                             activeScale.name
                     )
@@ -74,7 +74,7 @@ export function ScalesCatalog() {
                                     navigate(
                                         '/scales/' +
                                             encodeURIComponent(
-                                                note.format() +
+                                                note.format(false) +
                                                     ' ' +
                                                     activeScale.name
                                             )
@@ -98,7 +98,7 @@ export function ScalesCatalog() {
                                         navigate(
                                             '/scales/' +
                                                 encodeURIComponent(
-                                                    activeScale.tonic.format() +
+                                                    activeScale.tonic.format(false) +
                                                         ' ' +
                                                         scaleName
                                                 )

@@ -24,7 +24,7 @@ export class Note {
         return this.octave * 12 + this.letter.index + this.accidental.shift;
     }
 
-    format(showOctave: boolean = false) {
+    format(showOctave: boolean) {
         let result: string =
             this.letter.toString() + this.accidental.toString();
         if (showOctave) {
