@@ -66,7 +66,7 @@ const router = createBrowserRouter(
             <Route path="/games/reading-trainer" element={<ReadingTrainerGame />} />
         </Route>
     ),
-    { basename: process.env.PUBLIC_URL }
+    { basename: import.meta.env.BASE_URL }
 );
 
 createRoot(document.getElementById('root')!).render(
