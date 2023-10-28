@@ -7,7 +7,7 @@ const pianoSynth = new Tone.Sampler({
         C5: 'Piano5_0x7F_C-5.wav',
         C6: 'Piano5_0x7F_C-6.wav',
     },
-    baseUrl: import.meta.env.BASE_URL + '/piano-samples/',
+    baseUrl: import.meta.env.BASE_URL + 'piano-samples/',
     release: 1,
 });
 
