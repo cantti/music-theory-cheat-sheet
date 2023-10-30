@@ -1,10 +1,15 @@
+import _ from 'lodash';
 import { Note } from '../note';
 import { getNotesByIntervals } from '../utils/getNotesByIntervals';
 import { ChordName } from './ChordName';
 import { chordSchemas } from './chordSchemas';
 
 export class Chord {
-    constructor(public tonic: Note, public name: ChordName) {}
+    constructor(
+        readonly tonic: Note,
+        readonly name: ChordName,
+        readonly inversion: number = 0
+    ) {}
 
     get shortName() {
         return chordSchemas[this.name].shortName;
@@ -15,7 +20,17 @@ export class Chord {
     }
 
     get notes() {
-        return getNotesByIntervals(this.tonic, this.intervals);
+        return getNotesByIntervals(this.tonic, this.intervals).map(
+            (note, i) =>
+                new Note(
+                    note.letter,
+                    note.accidental,
+                    (i < this.inversion % this.intervals.length
+                        ? note.octave + 1
+                        : note.octave) +
+                        Math.floor(this.inversion / this.intervals.length)
+                )
+        );
     }
 
     format(kind: 'short' | 'long' = 'long', showOctave = false) {
@@ -32,5 +47,9 @@ export class Chord {
             chord.tonic.letter === this.tonic.letter &&
             chord.tonic.accidental.equals(this.tonic.accidental)
         );
+    }
+
+    invert(number: number) {
+        return new Chord(this.tonic, this.name, this.inversion + number);
     }
 }

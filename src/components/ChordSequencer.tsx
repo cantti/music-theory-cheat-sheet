@@ -12,7 +12,7 @@ interface GridEvent {
 
 export function ChordSequencer() {
     const grid: (GridEvent | null)[] = [
-        { chord: new Chord(new Note('C'), 'Major'), length: 4 },
+        { chord: new Chord(new Note('C'), 'Major').invert(2), length: 4 },
         null,
         null,
         null,
@@ -26,7 +26,7 @@ export function ChordSequencer() {
         null,
         { chord: new Chord(new Note('A'), 'Minor'), length: 2 },
         null,
-        { chord: new Chord(new Note('G'), 'Major'), length: 2 },
+        { chord: new Chord(new Note('B'), 'Diminished'), length: 2 },
         null,
     ];
 
