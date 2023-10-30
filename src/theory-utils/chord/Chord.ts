@@ -34,18 +34,19 @@ export class Chord {
     }
 
     format(kind: 'short' | 'long' = 'long', showOctave = false) {
-        if (kind === 'short') {
-            return this.tonic.format(showOctave) + this.shortName;
-        } else {
-            return this.tonic.format(showOctave) + ' ' + this.name;
-        }
+        const tonic = this.tonic.format(showOctave);
+        const chordName = kind === 'short' ? this.shortName : ' ' + this.name;
+        const lowestNote = _.minBy(this.notes, (x) => x.index)?.format(false);
+        const inv =
+            lowestNote !== this.tonic.format(false) ? ' / ' + lowestNote : '';
+        return `${tonic}${chordName}${inv}`;
     }
 
     equals(chord: Chord) {
         return (
             chord.name === this.name &&
             chord.tonic.letter === this.tonic.letter &&
-            chord.tonic.accidental.equals(this.tonic.accidental)
+            chord.tonic.accidental == this.tonic.accidental
         );
     }
 

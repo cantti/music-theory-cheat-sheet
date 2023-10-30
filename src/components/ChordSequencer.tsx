@@ -1,3 +1,4 @@
+import { Card, CardGroup } from 'react-bootstrap';
 import { pianoSynth } from '../audio/pianoSynth';
 import { Chord } from '../theory-utils/chord';
 import { Note } from '../theory-utils/note';
@@ -12,19 +13,35 @@ interface GridEvent {
 
 export function ChordSequencer() {
     const grid: (GridEvent | null)[] = [
-        { chord: new Chord(new Note('C'), 'Major').invert(2), length: 4 },
+        { chord: new Chord(new Note('C'), 'Major').invert(1), length: 8 },
         null,
         null,
         null,
-        { chord: new Chord(new Note('F'), 'Major'), length: 4 },
         null,
         null,
         null,
-        { chord: new Chord(new Note('G'), 'Major'), length: 4 },
+        null,
+        { chord: new Chord(new Note('F'), 'Major'), length: 8 },
         null,
         null,
         null,
-        { chord: new Chord(new Note('A'), 'Minor'), length: 2 },
+        null,
+        null,
+        null,
+        null,
+        { chord: new Chord(new Note('G'), 'Major'), length: 8 },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        { chord: new Chord(new Note('A'), 'Minor'), length: 4 },
+        null,
+        null,
+        null,
+        null,
         null,
         { chord: new Chord(new Note('B'), 'Diminished'), length: 2 },
         null,
@@ -35,7 +52,7 @@ export function ChordSequencer() {
         if (gridEvent) {
             pianoSynth.triggerAttackRelease(
                 gridEvent.chord.notes.map((x) => x.format(true)),
-                { "8n": gridEvent.length },
+                { '8n': gridEvent.length },
                 Tone.now(),
                 0.5
             );
@@ -44,16 +61,30 @@ export function ChordSequencer() {
         beat = (beat + 1) % grid.length;
     }
 
-    Tone.Transport.scheduleRepeat(repeat, '8n');
-
     return (
-        <button
-            onClick={() => {
-                Tone.start();
-                Tone.Transport.start();
-            }}
-        >
-            Start
-        </button>
+        <div>
+            <div style={{ overflowX: 'scroll', display: 'flex' }}>
+                {grid.map((gridEvent, index) => (
+                    <Card style={{ minWidth: '100px' }}>
+                        <Card.Body>
+                            <Card.Title>{index + 1}</Card.Title>
+                            <Card.Text>
+                                {gridEvent?.chord.format('short') ?? 'rest'}
+                            </Card.Text>
+                        </Card.Body>
+                        <Card.Footer>del</Card.Footer>
+                    </Card>
+                ))}
+            </div>
+            <button
+                onClick={() => {
+                    Tone.Transport.scheduleRepeat(repeat, '8n');
+                    Tone.start();
+                    Tone.Transport.start();
+                }}
+            >
+                Start
+            </button>
+        </div>
     );
 }
