@@ -1,8 +1,7 @@
+import { Accidental, accidentalSchemas } from '../note/accidental';
 import { Interval, IntervalNumber } from '../interval';
-import { Letter } from '../letter/Letter';
 import { Note } from '../note';
-import { allAccidentals } from './allAccidentals';
-import { allLetters } from './allLetters';
+import { Letter, letterSchemas } from '../note/letter';
 
 const majorScaleSemitones: {
     interval: Interval;
@@ -93,31 +92,32 @@ export function getNotesByIntervals(
     let result: Note[] = [];
 
     intervals.forEach((interval) => {
-        const newNoteLetter: Letter =
-            allLetters[
-                (allLetters.findIndex((x) => x.equals(root.letter)) +
-                    sortedIntervals.indexOf(interval.name)) %
-                    allLetters.length
-            ];
+        const newNoteLetter: Letter = Object.keys(letterSchemas)[
+            (Object.keys(letterSchemas).indexOf(root.letter) +
+                sortedIntervals.indexOf(interval.name)) %
+                Object.keys(letterSchemas).length
+        ] as Letter;
 
         const newNoteOctave: number = Math.trunc(
             root.octave +
-                (allLetters.findIndex((x) => x.equals(root.letter)) +
+                (Object.keys(letterSchemas).indexOf(root.letter) +
                     sortedIntervals.indexOf(interval.name)) /
-                    allLetters.length
+                    Object.keys(letterSchemas).length
         );
 
         const rootIndex =
-            root.octave * 12 + root.letter.index + root.accidental.shift;
+            root.octave * 12 +
+            letterSchemas[root.letter].index +
+            accidentalSchemas[root.accidental].shift;
 
         const accidentalShift: number =
             rootIndex +
             totalSemitonesByInterval(interval) -
-            (newNoteOctave * 12 + newNoteLetter.index);
+            (newNoteOctave * 12 + letterSchemas[newNoteLetter].index);
 
-        const newNoteAccidental = allAccidentals.find(
-            (x) => x.shift === accidentalShift
-        );
+        const newNoteAccidental = (
+            Object.keys(accidentalSchemas) as Accidental[]
+        ).find((key) => accidentalSchemas[key].shift == accidentalShift);
 
         result.push(new Note(newNoteLetter, newNoteAccidental, newNoteOctave));
     });

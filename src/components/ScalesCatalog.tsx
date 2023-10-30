@@ -7,7 +7,7 @@ import {
     useParams,
     useRouteError,
 } from 'react-router-dom';
-import { LetterChar } from '../theory-utils/letter';
+import { Letter } from '../theory-utils/note/letter';
 import { Note } from '../theory-utils/note';
 import { ScaleName } from '../theory-utils/scale';
 import { getScaleFormUrlParams, ScaleParamError } from '../utils/url';
@@ -31,14 +31,14 @@ export function ScalesCatalog() {
     const activeScale = getScaleFormUrlParams(urlParams.scale!);
 
     const [useFlat, setUseFlat] = useState(
-        activeScale.tonic.accidental.sign === 'b'
+        activeScale.tonic.accidental === 'b'
     );
 
     function handleUseFlatChange(e: ChangeEvent<HTMLInputElement>) {
         const checked = e.target.checked;
         setUseFlat(checked);
-        if (activeScale.tonic.accidental.sign !== '') {
-            const letters: LetterChar[][] = [
+        if (activeScale.tonic.accidental !== '') {
+            const letters: Letter[][] = [
                 ['C', 'D'],
                 ['D', 'E'],
                 ['F', 'G'],
@@ -46,7 +46,7 @@ export function ScalesCatalog() {
                 ['A', 'B'],
             ];
             const newLetter = letters.filter(
-                (x) => x[checked ? 0 : 1] === activeScale.tonic.letter.char
+                (x) => x[checked ? 0 : 1] === activeScale.tonic.letter
             )[0][checked ? 1 : 0];
             navigate(
                 '/scales/' +
@@ -98,7 +98,9 @@ export function ScalesCatalog() {
                                         navigate(
                                             '/scales/' +
                                                 encodeURIComponent(
-                                                    activeScale.tonic.format(false) +
+                                                    activeScale.tonic.format(
+                                                        false
+                                                    ) +
                                                         ' ' +
                                                         scaleName
                                                 )

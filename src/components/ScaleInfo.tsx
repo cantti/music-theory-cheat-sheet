@@ -3,7 +3,7 @@ import { Alert, Button, Card } from 'react-bootstrap';
 import { BsPlayFill } from 'react-icons/bs';
 import * as Tone from 'tone';
 import { pianoSynth } from '../audio/pianoSynth';
-import { AccidentalSign } from '../theory-utils/accidental';
+import { Accidental } from '../theory-utils/note/accidental';
 import { Chord } from '../theory-utils/chord';
 import { Note } from '../theory-utils/note';
 import { Scale } from '../theory-utils/scale/Scale';
@@ -65,8 +65,8 @@ export function ScaleInfo(props: NotesInScaleProps) {
                 />
             </div>
             {props.scale.notes.some((x) =>
-                new Array<AccidentalSign>('##', 'bb').includes(
-                    x.accidental.sign
+                new Array<Accidental>('##', 'bb').includes(
+                    x.accidental
                 )
             ) && (
                 <Alert variant="danger">

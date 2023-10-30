@@ -60,7 +60,7 @@ function Piano({
             <motion.div
                 whileTap={{ scale: 0.95 }}
                 className={
-                    props.note.accidental.sign
+                    props.note.accidental
                         ? styles.blackKey
                         : styles.whiteKey
                 }
