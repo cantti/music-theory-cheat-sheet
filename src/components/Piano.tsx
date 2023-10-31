@@ -45,7 +45,7 @@ function Piano({
         return highlightedNotes.map((x) => x.index).includes(note.index);
     }
 
-    function playNote(note: Note) {
+    async function playNote(note: Note) {
         if (playSounds) {
             pianoSynth.triggerAttack(note.format(true));
         }
@@ -60,9 +60,7 @@ function Piano({
             <motion.div
                 whileTap={{ scale: 0.95 }}
                 className={
-                    props.note.accidental
-                        ? styles.blackKey
-                        : styles.whiteKey
+                    props.note.accidental ? styles.blackKey : styles.whiteKey
                 }
                 role="button"
                 onClick={() => {

@@ -1,8 +1,10 @@
-import { Card, CardGroup } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import { pianoSynth } from '../audio/pianoSynth';
 import { Chord } from '../theory-utils/chord';
 import { Note } from '../theory-utils/note';
 import * as Tone from 'tone';
+import { startTone } from '../audio/startTone';
+import Table from 'react-bootstrap/Table';
 
 let beat = 0;
 
@@ -63,23 +65,33 @@ export function ChordSequencer() {
 
     return (
         <div>
-            <div style={{ overflowX: 'scroll', display: 'flex' }}>
-                {grid.map((gridEvent, index) => (
-                    <Card style={{ minWidth: '100px' }}>
-                        <Card.Body>
-                            <Card.Title>{index + 1}</Card.Title>
-                            <Card.Text>
-                                {gridEvent?.chord.format('short') ?? 'rest'}
-                            </Card.Text>
-                        </Card.Body>
-                        <Card.Footer>del</Card.Footer>
-                    </Card>
-                ))}
-            </div>
+            <h3>Chord Sequencer</h3>
+            <Table bordered responsive>
+                <tbody>
+                    <tr>
+                        <td className="text-center fw-bold">#</td>
+                        {grid.map((gridEvent, index) => (
+                            <td className="text-nowrap text-center text-muted">
+                                {index}
+                            </td>
+                        ))}
+                    </tr>
+                    <tr>
+                        <td className="text-center fw-bold">Chord</td>
+                        {grid.map((gridEvent, index) => (
+                            <td className="text-nowrap text-center">
+                                <div style={{ width: '50px' }}>
+                                    {gridEvent?.chord.format('short') ?? ''}
+                                </div>
+                            </td>
+                        ))}
+                    </tr>
+                </tbody>
+            </Table>
             <button
-                onClick={() => {
+                onClick={async () => {
+                    await startTone();
                     Tone.Transport.scheduleRepeat(repeat, '8n');
-                    Tone.start();
                     Tone.Transport.start();
                 }}
             >
