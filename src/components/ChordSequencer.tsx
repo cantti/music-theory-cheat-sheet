@@ -1,7 +1,6 @@
 import { Button, ButtonGroup, Form } from 'react-bootstrap';
 import { pianoSynth } from '../audio/pianoSynth';
-import { Chord, chord } from '../theory-utils/chord';
-import { n } from '../theory-utils/note';
+import { Chord } from '../theory-utils/chord';
 import * as Tone from 'tone';
 import { startTone } from '../audio/startTone';
 import Table from 'react-bootstrap/Table';
@@ -19,40 +18,9 @@ export function ChordSequencer() {
 
     const scale = allScales[selectedScale];
 
-    const [steps, setSteps] = useState<(Step | null)[]>([
-        { chord: chord(n('C'), 'Major'), length: 8 },
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        { chord: chord(n('F'), 'Major'), length: 8 },
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        { chord: chord(n('G'), 'Major'), length: 8 },
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        { chord: chord(n('A'), 'Minor'), length: 4 },
-        null,
-        null,
-        null,
-        { chord: chord(n('B'), 'Diminished'), length: 4 },
-        null,
-        null,
-        null,
-    ]);
+    const [steps, setSteps] = useState<(Step | null)[]>(
+        _.fill(_.range(0, 32), null)
+    );
 
     const [activeStepIndex, setActiveStepIndex] = useState(0);
 
