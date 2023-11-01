@@ -3,7 +3,7 @@ import { Alert, Button, Card } from 'react-bootstrap';
 import { BsPlayFill } from 'react-icons/bs';
 import * as Tone from 'tone';
 import { pianoSynth } from '../audio/pianoSynth';
-import { Accidental } from '../theory-utils/note/accidental';
+import { Accidental } from '../theory-utils/accidental';
 import { Chord } from '../theory-utils/chord';
 import { Note } from '../theory-utils/note';
 import Piano from './Piano';

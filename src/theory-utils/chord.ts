@@ -1,7 +1,7 @@
 import _ from 'lodash';
-import { Note } from '../note';
-import { getNotesByIntervals } from '../utils/getNotesByIntervals';
-import { chordSchemas } from './chordSchemas';
+import { Note } from './note';
+import { getNotesByIntervals } from './getNotesByIntervals';
+import { Interval, interval } from './interval';
 
 export type ChordName = 'Minor' | 'Major' | 'Diminished' | 'Augmented';
 
@@ -59,3 +59,34 @@ export class Chord {
 export function chord(tonic: Note, name: ChordName, inversion: number = 0) {
     return new Chord(tonic, name, inversion);
 }
+
+type ChordSchema = {
+    shortName: string;
+    intervals: Interval[];
+};
+
+type ChordSchemas = {
+    [K in ChordName]: ChordSchema;
+};
+
+export const chordSchemas: ChordSchemas = {
+    Minor: {
+        shortName: 'm',
+        intervals: [interval('Third', 'Minor'), interval('Fifth', 'Perfect')],
+    },
+    Major: {
+        shortName: '',
+        intervals: [interval('Third', 'Major'), interval('Fifth', 'Perfect')],
+    },
+    Diminished: {
+        shortName: 'dim',
+        intervals: [
+            interval('Third', 'Minor'),
+            interval('Fifth', 'Diminished'),
+        ],
+    },
+    Augmented: {
+        shortName: 'aug',
+        intervals: [interval('Third', 'Major'), interval('Fifth', 'Augmented')],
+    },
+};

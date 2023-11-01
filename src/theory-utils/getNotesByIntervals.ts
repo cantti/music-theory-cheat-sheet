@@ -1,42 +1,42 @@
-import { Accidental, accidentalSchemas } from '../note/accidental';
-import { Interval, IntervalNumber } from '../interval';
-import { Note } from '../note';
-import { Letter, letterSchemas } from '../note/letter';
+import { Accidental, accidentalSchemas } from './accidental';
+import { Interval, IntervalNumber, interval } from './interval';
+import { Note } from './note';
+import { Letter, letterSchemas } from './letter';
 
 const majorScaleSemitones: {
     interval: Interval;
     semitones: number;
 }[] = [
     {
-        interval: new Interval('Unison', 'Perfect'),
+        interval: interval('Unison', 'Perfect'),
         semitones: 0,
     },
     {
-        interval: new Interval('Second', 'Major'),
+        interval: interval('Second', 'Major'),
         semitones: 2,
     },
     {
-        interval: new Interval('Third', 'Major'),
+        interval: interval('Third', 'Major'),
         semitones: 4,
     },
     {
-        interval: new Interval('Fourth', 'Perfect'),
+        interval: interval('Fourth', 'Perfect'),
         semitones: 5,
     },
     {
-        interval: new Interval('Fifth', 'Perfect'),
+        interval: interval('Fifth', 'Perfect'),
         semitones: 7,
     },
     {
-        interval: new Interval('Sixth', 'Major'),
+        interval: interval('Sixth', 'Major'),
         semitones: 9,
     },
     {
-        interval: new Interval('Seventh', 'Major'),
+        interval: interval('Seventh', 'Major'),
         semitones: 11,
     },
     {
-        interval: new Interval('Octave', 'Perfect'),
+        interval: interval('Octave', 'Perfect'),
         semitones: 12,
     },
 ];

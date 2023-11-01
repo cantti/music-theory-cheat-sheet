@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import { Note, n } from '../note';
-import { Scale } from '../scale';
+import { Note, n } from './note';
+import { Scale } from './scale';
 
 const allScales: Scale[] = [
     new Scale(n('C'), 'Major'),

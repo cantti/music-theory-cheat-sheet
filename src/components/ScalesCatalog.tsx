@@ -7,12 +7,12 @@ import {
     useParams,
     useRouteError,
 } from 'react-router-dom';
-import { Letter } from '../theory-utils/note/letter';
+import { Letter } from '../theory-utils/letter';
 import { Note } from '../theory-utils/note';
 import { getScaleFormUrlParams, ScaleParamError } from '../utils/url';
 import Piano from './Piano';
 import { ScaleInfo } from './ScaleInfo';
-import { ScaleName } from '../theory-utils/scale/ScaleName';
+import { ScaleName } from '../theory-utils/scale';
 
 const allScaleNames: ScaleName[] = [
     'Major',

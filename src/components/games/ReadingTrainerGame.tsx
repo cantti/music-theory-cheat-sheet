@@ -5,7 +5,7 @@ import { Button, ButtonGroup, Card, Col, Row } from 'react-bootstrap';
 import { BsArrowRight, BsClock, BsFlag } from 'react-icons/bs';
 import { GiFClef, GiGClef } from 'react-icons/gi';
 import { Vex } from 'vexflow';
-import { Letter } from '../../theory-utils/note/letter';
+import { Letter } from '../../theory-utils/letter';
 import { Note } from '../../theory-utils/note';
 import Piano from '../Piano';
 

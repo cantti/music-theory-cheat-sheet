@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { Button, ButtonGroup, Card } from 'react-bootstrap';
 import { BsArrowRight, BsFlag } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
-import { Accidental } from '../../theory-utils/note/accidental';
+import { Accidental } from '../../theory-utils/accidental';
 import { Note } from '../../theory-utils/note';
 import { Scale } from '../../theory-utils/scale';
 
