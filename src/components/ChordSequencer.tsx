@@ -1,4 +1,4 @@
-import { Form } from 'react-bootstrap';
+import { Button, ButtonGroup, Form } from 'react-bootstrap';
 import { pianoSynth } from '../audio/pianoSynth';
 import { Chord, chord } from '../theory-utils/chord';
 import { n } from '../theory-utils/note';
@@ -6,21 +6,21 @@ import * as Tone from 'tone';
 import { startTone } from '../audio/startTone';
 import Table from 'react-bootstrap/Table';
 import _ from 'lodash';
-import { ReactElement, useState } from 'react';
-import { Scale } from '../theory-utils/scale';
-
-let currentStepIndex = 0;
+import { ReactElement, useEffect, useState } from 'react';
+import { allScales } from '../theory-utils/getScalesByNotes';
 
 interface Step {
     chord: Chord;
     length: number;
 }
 
-const scale = new Scale(n('C'), 'Major');
-
 export function ChordSequencer() {
+    const [selectedScale, setSelectedScale] = useState<number>(0);
+
+    const scale = allScales[selectedScale];
+
     const [steps, setSteps] = useState<(Step | null)[]>([
-        { chord: chord(n('C'), 'Major').invert(1), length: 4 },
+        { chord: chord(n('C'), 'Major'), length: 8 },
         null,
         null,
         null,
@@ -48,32 +48,16 @@ export function ChordSequencer() {
         null,
         null,
         null,
-        { chord: chord(n('B'), 'Diminished'), length: 2 },
+        { chord: chord(n('B'), 'Diminished'), length: 4 },
         null,
         null,
         null,
     ]);
 
-    function repeat() {
-        const step = steps[currentStepIndex];
-        if (step) {
-            pianoSynth.triggerAttackRelease(
-                step.chord.notes.map((x) => x.format(true)),
-                { '8n': step.length },
-                Tone.now(),
-                0.5
-            );
-        }
+    const [activeStepIndex, setActiveStepIndex] = useState(0);
 
-        currentStepIndex = (currentStepIndex + 1) % steps.length;
-    }
-
-    function handleStepDurationChange(
-        targetStepIndex: number,
-        e: React.FormEvent<HTMLSelectElement>
-    ) {
+    function handleStepDurationChange(targetStepIndex: number, input: number) {
         const newSteps: (Step | null)[] = [];
-        const input = parseInt(e.currentTarget.value);
         for (let i = 0; i < steps.length; i++) {
             const step = steps[i];
             if (i === targetStepIndex && step != null) {
@@ -111,52 +95,60 @@ export function ChordSequencer() {
             currentStep = steps[i];
             columns.push(
                 <td key={i} colSpan={currentStep?.length ?? 1}>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Chord</Form.Label>
-                        <Form.Select
-                            size="sm"
-                            className={
-                                currentStep != null ? 'bg-success-subtle' : ''
-                            }
-                            onChange={(e) => {
-                                setSteps(
-                                    steps.map((step, stepIndex) =>
-                                        stepIndex !== i
-                                            ? step
-                                            : e.target.value === '-1'
-                                            ? null
-                                            : {
-                                                  chord: scale.chords[
-                                                      parseInt(e.target.value)
-                                                  ][0],
-                                                  length: step?.length ?? 1,
-                                              }
-                                    )
-                                );
-                            }}
-                            value={scale.chords
-                                .map((x) => x[0])
-                                .findIndex(
-                                    (x) =>
-                                        currentStep != null &&
-                                        x.equals(currentStep.chord)
-                                )}
-                        >
-                            <option value="-1">Rest</option>
+                    <div className="mb-3 h2">
+                        {currentStep?.chord.format('short') ?? <>&nbsp;</>}
+                    </div>
+
+                    <div className="mb-3">
+                        <div className="mb-1">Select chord</div>
+                        <ButtonGroup size="sm">
+                            <Button
+                                variant="outline-secondary"
+                                onClick={() => {
+                                    setSteps(
+                                        steps.map((step, stepIndex) =>
+                                            stepIndex === i ? null : step
+                                        )
+                                    );
+                                }}
+                            >
+                                Rest
+                            </Button>
                             {scale.chords.map((chord, index) => (
-                                <option value={index}>
+                                <Button
+                                    key={index}
+                                    variant="outline-secondary"
+                                    onClick={() => {
+                                        setSteps(
+                                            steps.map((step, stepIndex) =>
+                                                stepIndex === i
+                                                    ? {
+                                                          chord: chord[0],
+                                                          length:
+                                                              step?.length ?? 1,
+                                                      }
+                                                    : step
+                                            )
+                                        );
+                                    }}
+                                >
                                     {chord[0].format('short')}
-                                </option>
+                                </Button>
                             ))}
-                        </Form.Select>
-                    </Form.Group>
+                        </ButtonGroup>
+                    </div>
 
                     <Form.Group className="mb-3">
                         <Form.Label>Duration</Form.Label>
                         <Form.Select
                             size="sm"
                             disabled={currentStep == null}
-                            onChange={(e) => handleStepDurationChange(i, e)}
+                            onChange={(e) =>
+                                handleStepDurationChange(
+                                    i,
+                                    parseInt(e.currentTarget.value)
+                                )
+                            }
                             value={currentStep?.length ?? 1}
                         >
                             {_.range(1, steps.length + 1).map((i) => (
@@ -171,35 +163,100 @@ export function ChordSequencer() {
         return columns;
     }
 
+    useEffect(() => {
+        Tone.Transport.cancel();
+        for (let i = 0; i < steps.length; i++) {
+            Tone.Transport.schedule(
+                () => {
+                    const step = steps[i];
+                    if (step) {
+                        pianoSynth.triggerAttackRelease(
+                            step.chord.notes.map((x) => x.format(true)),
+                            { '8n': step.length },
+                            Tone.now(),
+                            0.5
+                        );
+                    }
+                    setActiveStepIndex(i);
+                    if (i === steps.length - 1) {
+                        Tone.Transport.position = 0;
+                    }
+                },
+                { '8n': i }
+            );
+        }
+    }, [activeStepIndex, steps]);
+
+    async function play() {
+        await startTone();
+        if (Tone.Transport.state === 'started') {
+            Tone.Transport.stop();
+            setActiveStepIndex(0);
+        } else {
+            Tone.Transport.start();
+        }
+    }
+
     return (
         <div>
             <h3>Chord Sequencer</h3>
+
+            <Form.Group className="mb-3">
+                <Form.Label>Scale</Form.Label>
+                <Form.Select
+                    size="sm"
+                    onChange={(e) => {
+                        setSelectedScale(parseInt(e.target.value));
+                    }}
+                    value={selectedScale}
+                >
+                    {allScales.map((scale, index) => (
+                        <option value={index}>{scale.format('long')}</option>
+                    ))}
+                </Form.Select>
+            </Form.Group>
+
             <Table bordered responsive>
                 <tbody>
                     <tr>
+                        <td className="text-nowrap text-muted">1 / 4</td>
+                        {_.range(0, steps.length / 2).map((i) => (
+                            <td
+                                className={`text-nowrap text-center text-muted`}
+                                key={i}
+                                colSpan={2}
+                            >
+                                {i + 1}
+                            </td>
+                        ))}
+                    </tr>
+                    <tr>
+                        <td className="text-nowrap text-muted">1 / 8</td>
                         {steps.map((_step, index) => (
                             <td
-                                className="text-nowrap text-center text-muted"
+                                className={`text-nowrap text-center text-muted ${
+                                    index === activeStepIndex
+                                        ? 'bg-danger-subtle'
+                                        : ''
+                                }`}
                                 key={index}
-                                style={{ minWidth: '100px' }}
+                                style={{ minWidth: '50px' }}
                             >
                                 {index + 1}
                             </td>
                         ))}
                     </tr>
-                    <tr>{getColumns()}</tr>
+                    <tr>
+                        <td></td>
+                        {getColumns()}
+                    </tr>
                 </tbody>
             </Table>
-            <button
-                onClick={async () => {
-                    await startTone();
-                    Tone.Transport.cancel();
-                    Tone.Transport.scheduleRepeat(repeat, '8n');
-                    Tone.Transport.start();
-                }}
-            >
-                Start
-            </button>
+            <div className="mt-3">
+                <Button variant="primary" onClick={play}>
+                    Play
+                </Button>
+            </div>
         </div>
     );
 }

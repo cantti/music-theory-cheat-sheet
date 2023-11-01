@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { Note, n } from './note';
 import { Scale } from './scale';
 
-const allScales: Scale[] = [
+export const allScales: Scale[] = [
     new Scale(n('C'), 'Major'),
     new Scale(n('G'), 'Major'),
     new Scale(n('D'), 'Major'),
