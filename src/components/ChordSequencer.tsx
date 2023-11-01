@@ -9,9 +9,9 @@ import _ from 'lodash';
 import { ReactElement, useState } from 'react';
 import { Scale } from '../theory-utils/scale';
 
-let beat = 0;
+let currentStepIndex = 0;
 
-interface GridEvent {
+interface Step {
     chord: Chord;
     length: number;
 }
@@ -19,7 +19,7 @@ interface GridEvent {
 const scale = new Scale(n('C'), 'Major');
 
 export function ChordSequencer() {
-    const [grid, setGrid] = useState<(GridEvent | null)[]>([
+    const [steps, setSteps] = useState<(Step | null)[]>([
         { chord: chord(n('C'), 'Major').invert(1), length: 4 },
         null,
         null,
@@ -55,52 +55,79 @@ export function ChordSequencer() {
     ]);
 
     function repeat() {
-        const gridEvent = grid[beat];
-        if (gridEvent) {
+        const step = steps[currentStepIndex];
+        if (step) {
             pianoSynth.triggerAttackRelease(
-                gridEvent.chord.notes.map((x) => x.format(true)),
-                { '8n': gridEvent.length },
+                step.chord.notes.map((x) => x.format(true)),
+                { '8n': step.length },
                 Tone.now(),
                 0.5
             );
         }
 
-        beat = (beat + 1) % grid.length;
+        currentStepIndex = (currentStepIndex + 1) % steps.length;
+    }
+
+    function handleStepDurationChange(
+        targetStepIndex: number,
+        e: React.FormEvent<HTMLSelectElement>
+    ) {
+        const newSteps: (Step | null)[] = [];
+        const input = parseInt(e.currentTarget.value);
+        for (let i = 0; i < steps.length; i++) {
+            const step = steps[i];
+            if (i === targetStepIndex && step != null) {
+                newSteps.push({
+                    ...step,
+                    length: i + input - 1 < steps.length ? input : 1,
+                });
+            } else {
+                const changedStep = newSteps[targetStepIndex];
+                if (
+                    i > targetStepIndex &&
+                    changedStep != null &&
+                    targetStepIndex + changedStep.length - 1 >= i
+                ) {
+                    // remove overlap
+                    newSteps.push(null);
+                } else {
+                    newSteps.push(steps[i]);
+                }
+            }
+        }
+        setSteps(newSteps);
     }
 
     function getColumns() {
         const columns: ReactElement[] = [];
-        let currentEvent: GridEvent | null = null;
-        for (let i = 0; i < grid.length; i++) {
+        let currentEvent: Step | null = null;
+        for (let i = 0; i < steps.length; i++) {
             if (
                 currentEvent &&
-                grid.indexOf(currentEvent) + currentEvent.length - 1 >= i
+                steps.indexOf(currentEvent) + currentEvent.length - 1 >= i
             ) {
                 continue;
             }
-            currentEvent = grid[i];
+            currentEvent = steps[i];
             columns.push(
-                <td
-                    key={i}
-                    colSpan={currentEvent?.length ?? 1}
-                >
+                <td key={i} colSpan={currentEvent?.length ?? 1}>
                     <Form.Group className="mb-3">
                         <Form.Label>Chord</Form.Label>
                         <Form.Select
                             size="sm"
-                            className="mb-2"
+                            className="mb-2 w-100"
                             onChange={(e) => {
-                                setGrid(
-                                    grid.map((gridItem, iGridItem) =>
-                                        iGridItem !== i
-                                            ? gridItem
+                                setSteps(
+                                    steps.map((step, stepIndex) =>
+                                        stepIndex !== i
+                                            ? step
                                             : e.target.value === '-1'
                                             ? null
                                             : {
                                                   chord: scale.chords[
                                                       parseInt(e.target.value)
                                                   ][0],
-                                                  length: gridItem?.length ?? 1,
+                                                  length: step?.length ?? 1,
                                               }
                                     )
                                 );
@@ -114,7 +141,6 @@ export function ChordSequencer() {
                                           )
                                     : -1
                             }
-                            style={{ minWidth: '100px' }}
                         >
                             <option value="-1">Rest</option>
                             {scale.chords.map((chord, index) => (
@@ -130,23 +156,10 @@ export function ChordSequencer() {
                         <Form.Select
                             size="sm"
                             disabled={currentEvent == null}
-                            onChange={(e) => {
-                                setGrid(
-                                    grid.map((gridItem, iGridItem) =>
-                                        iGridItem !== i || gridItem == null
-                                            ? gridItem
-                                            : {
-                                                  ...gridItem,
-                                                  length: parseInt(
-                                                      e.target.value
-                                                  ),
-                                              }
-                                    )
-                                );
-                            }}
+                            onChange={(e) => handleStepDurationChange(i, e)}
                             value={currentEvent?.length ?? 1}
                         >
-                            {_.range(1, grid.length + 1).map((i) => (
+                            {_.range(1, steps.length + 1).map((i) => (
                                 <option value={i}>{i}</option>
                             ))}
                         </Form.Select>
@@ -165,10 +178,11 @@ export function ChordSequencer() {
                 <tbody>
                     <tr>
                         <td className="text-center fw-bold">#</td>
-                        {grid.map((gridEvent, index) => (
+                        {steps.map((_step, index) => (
                             <td
                                 className="text-nowrap text-center text-muted"
                                 key={index}
+                                style={{ minWidth: '100px' }}
                             >
                                 {index + 1}
                             </td>
