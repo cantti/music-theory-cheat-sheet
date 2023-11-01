@@ -35,7 +35,7 @@ function Piano({
         }
     }
 
-    let octaves: number[] = [];
+    const octaves: number[] = [];
 
     for (let i = startOctave; i <= endOctave; i++) {
         octaves.push(i);
@@ -45,7 +45,7 @@ function Piano({
         return highlightedNotes.map((x) => x.index).includes(note.index);
     }
 
-    function playNote(note: Note) {
+    async function playNote(note: Note) {
         if (playSounds) {
             pianoSynth.triggerAttack(note.format(true));
         }
@@ -60,18 +60,16 @@ function Piano({
             <motion.div
                 whileTap={{ scale: 0.95 }}
                 className={
-                    props.note.accidental.sign
-                        ? styles.blackKey
-                        : styles.whiteKey
+                    props.note.accidental ? styles.blackKey : styles.whiteKey
                 }
                 role="button"
                 onClick={() => {
                     onNoteClick(props.note);
                 }}
-                onMouseDown={(e) => {
+                onMouseDown={() => {
                     playNote(props.note);
                 }}
-                onMouseUp={(e) => {
+                onMouseUp={() => {
                     stopNote(props.note);
                 }}
                 onMouseLeave={(e) => {

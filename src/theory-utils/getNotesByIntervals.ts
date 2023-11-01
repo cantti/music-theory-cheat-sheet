@@ -1,43 +1,42 @@
-import { Interval, IntervalNumber } from '../interval';
-import { Letter } from '../letter/Letter';
-import { Note } from '../note';
-import { allAccidentals } from './allAccidentals';
-import { allLetters } from './allLetters';
+import { Accidental, accidentalSchemas } from './accidental';
+import { Interval, IntervalNumber, interval } from './interval';
+import { Note } from './note';
+import { Letter, letterSchemas } from './letter';
 
 const majorScaleSemitones: {
     interval: Interval;
     semitones: number;
 }[] = [
     {
-        interval: new Interval('Unison', 'Perfect'),
+        interval: interval('Unison', 'Perfect'),
         semitones: 0,
     },
     {
-        interval: new Interval('Second', 'Major'),
+        interval: interval('Second', 'Major'),
         semitones: 2,
     },
     {
-        interval: new Interval('Third', 'Major'),
+        interval: interval('Third', 'Major'),
         semitones: 4,
     },
     {
-        interval: new Interval('Fourth', 'Perfect'),
+        interval: interval('Fourth', 'Perfect'),
         semitones: 5,
     },
     {
-        interval: new Interval('Fifth', 'Perfect'),
+        interval: interval('Fifth', 'Perfect'),
         semitones: 7,
     },
     {
-        interval: new Interval('Sixth', 'Major'),
+        interval: interval('Sixth', 'Major'),
         semitones: 9,
     },
     {
-        interval: new Interval('Seventh', 'Major'),
+        interval: interval('Seventh', 'Major'),
         semitones: 11,
     },
     {
-        interval: new Interval('Octave', 'Perfect'),
+        interval: interval('Octave', 'Perfect'),
         semitones: 12,
     },
 ];
@@ -90,34 +89,35 @@ export function getNotesByIntervals(
         'Octave',
     ];
 
-    let result: Note[] = [];
+    const result: Note[] = [root];
 
     intervals.forEach((interval) => {
-        const newNoteLetter: Letter =
-            allLetters[
-                (allLetters.findIndex((x) => x.equals(root.letter)) +
-                    sortedIntervals.indexOf(interval.name)) %
-                    allLetters.length
-            ];
+        const newNoteLetter: Letter = Object.keys(letterSchemas)[
+            (Object.keys(letterSchemas).indexOf(root.letter) +
+                sortedIntervals.indexOf(interval.name)) %
+                Object.keys(letterSchemas).length
+        ] as Letter;
 
         const newNoteOctave: number = Math.trunc(
             root.octave +
-                (allLetters.findIndex((x) => x.equals(root.letter)) +
+                (Object.keys(letterSchemas).indexOf(root.letter) +
                     sortedIntervals.indexOf(interval.name)) /
-                    allLetters.length
+                    Object.keys(letterSchemas).length
         );
 
         const rootIndex =
-            root.octave * 12 + root.letter.index + root.accidental.shift;
+            root.octave * 12 +
+            letterSchemas[root.letter].index +
+            accidentalSchemas[root.accidental].shift;
 
         const accidentalShift: number =
             rootIndex +
             totalSemitonesByInterval(interval) -
-            (newNoteOctave * 12 + newNoteLetter.index);
+            (newNoteOctave * 12 + letterSchemas[newNoteLetter].index);
 
-        const newNoteAccidental = allAccidentals.find(
-            (x) => x.shift === accidentalShift
-        );
+        const newNoteAccidental = (
+            Object.keys(accidentalSchemas) as Accidental[]
+        ).find((key) => accidentalSchemas[key].shift == accidentalShift);
 
         result.push(new Note(newNoteLetter, newNoteAccidental, newNoteOctave));
     });

@@ -19,6 +19,7 @@ import './index.scss';
 import { defaultScaleParam } from './utils/url';
 import 'react-toastify/dist/ReactToastify.css';
 import { ReadingTrainerGame } from './components/games/ReadingTrainerGame';
+import { ChordSequencer } from './components/ChordSequencer';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -63,7 +64,13 @@ const router = createBrowserRouter(
                 path="/games/number-of-accidentals"
                 element={<NumberOfAccidentalsGame />}
             />
+
             <Route path="/games/reading-trainer" element={<ReadingTrainerGame />} />
+
+            <Route
+                path="/chord-sequencer"
+                element={<ChordSequencer />}
+            />
         </Route>
     ),
     { basename: import.meta.env.BASE_URL }

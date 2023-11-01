@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { Button, ButtonGroup, Card } from 'react-bootstrap';
 import { BsArrowRight, BsFlag } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
-import { AccidentalSign } from '../../theory-utils/accidental';
+import { Accidental } from '../../theory-utils/accidental';
 import { Note } from '../../theory-utils/note';
 import { Scale } from '../../theory-utils/scale';
 
@@ -12,20 +12,20 @@ class Question {
     constructor(public scale: Scale) {}
 
     get accidentalsNumber() {
-        return this.scale.notes.filter((note) => note.accidental.sign !== '')
+        return this.scale.notes.filter((note) => note.accidental !== '')
             .length;
     }
 
     accidentalsNumberAnswer: number = 0;
 
-    get accidental(): Extract<AccidentalSign, '#' | 'b' | ''> {
+    get accidental(): Extract<Accidental, '#' | 'b' | ''> {
         return (
-            (this.scale.notes.find((note) => note.accidental.sign !== '')
-                ?.accidental.sign as Extract<AccidentalSign, '#' | 'b'>) || ''
+            (this.scale.notes.find((note) => note.accidental !== '')
+                ?.accidental as Extract<Accidental, '#' | 'b'>) || ''
         );
     }
 
-    accidentalAnswer: Extract<AccidentalSign, '#' | 'b' | ''> = '';
+    accidentalAnswer: Extract<Accidental, '#' | 'b' | ''> = '';
 
     get isRight() {
         return (
@@ -128,7 +128,7 @@ export function NumberOfAccidentalsGame() {
     }
 
     function handleAccidentalClick(
-        accidental: Extract<AccidentalSign, '#' | 'b' | ''>
+        accidental: Extract<Accidental, '#' | 'b' | ''>
     ) {
         setQuestions(
             questions.map((question, index) => {
@@ -216,7 +216,7 @@ export function NumberOfAccidentalsGame() {
                                                     .accidentalsNumberAnswer ===
                                                 number
                                             }
-                                            onClick={(e) =>
+                                            onClick={() =>
                                                 handleNumberClick(number)
                                             }
                                             variant="outline-dark"
@@ -231,7 +231,7 @@ export function NumberOfAccidentalsGame() {
                                 <div>
                                     <ButtonGroup>
                                         {new Array<
-                                            Extract<AccidentalSign, '#' | 'b'>
+                                            Extract<Accidental, '#' | 'b'>
                                         >('#', 'b').map((accidental) => (
                                             <Button
                                                 key={accidental}

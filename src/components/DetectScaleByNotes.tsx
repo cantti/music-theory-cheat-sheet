@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Note } from '../theory-utils/note';
-import { Scale } from '../theory-utils/scale/Scale';
-import { getScalesByNotes } from '../theory-utils/utils/getScalesByNotes';
+import { getScalesByNotes } from '../theory-utils/getScalesByNotes';
 import Piano from './Piano';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Scale } from '../theory-utils/scale';
 
 interface ScaleButtonProps {
     scale: Scale;

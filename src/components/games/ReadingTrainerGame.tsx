@@ -5,7 +5,7 @@ import { Button, ButtonGroup, Card, Col, Row } from 'react-bootstrap';
 import { BsArrowRight, BsClock, BsFlag } from 'react-icons/bs';
 import { GiFClef, GiGClef } from 'react-icons/gi';
 import { Vex } from 'vexflow';
-import { LetterChar } from '../../theory-utils/letter';
+import { Letter } from '../../theory-utils/letter';
 import { Note } from '../../theory-utils/note';
 import Piano from '../Piano';
 
@@ -20,21 +20,13 @@ interface Question {
 function questionIsRight(question: Question) {
     return (
         question.noteAnswer &&
-        question.note.letter.char === question.noteAnswer.letter.char
+        question.note.letter === question.noteAnswer.letter
     );
 }
 
 const allNotes: Note[] = [];
 
-for (const letterChar of new Array<LetterChar>(
-    'C',
-    'D',
-    'E',
-    'F',
-    'G',
-    'A',
-    'B'
-)) {
+for (const letterChar of new Array<Letter>('C', 'D', 'E', 'F', 'G', 'A', 'B')) {
     for (const octave of _.range(2, 6)) {
         allNotes.push(new Note(letterChar, '', octave));
     }
@@ -120,7 +112,7 @@ export function ReadingTrainerGame() {
                     note.octave < 4
                         ? 'bass'
                         : // C4 can be in both bass or treble
-                        note.octave === 4 && note.letter.char === 'C'
+                        note.octave === 4 && note.letter === 'C'
                         ? _.sample(['bass', 'treble'])!
                         : 'treble',
             }))

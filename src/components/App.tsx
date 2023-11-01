@@ -65,6 +65,9 @@ function App() {
                                     Reading trainer
                                 </NavDropdown.Item>
                             </NavDropdown>
+                            <Nav.Link as={NavLink} to="/chord-sequencer">
+                                Chord Sequencer
+                            </Nav.Link>
                             <Nav.Link as={NavLink} to="/discography">
                                 About me
                             </Nav.Link>

@@ -3,11 +3,12 @@ import { Alert, Button, Card } from 'react-bootstrap';
 import { BsPlayFill } from 'react-icons/bs';
 import * as Tone from 'tone';
 import { pianoSynth } from '../audio/pianoSynth';
-import { AccidentalSign } from '../theory-utils/accidental';
+import { Accidental } from '../theory-utils/accidental';
 import { Chord } from '../theory-utils/chord';
 import { Note } from '../theory-utils/note';
-import { Scale } from '../theory-utils/scale/Scale';
 import Piano from './Piano';
+import { startTone } from '../audio/startTone';
+import { Scale } from '../theory-utils/scale';
 
 interface NotesInScaleProps {
     scale: Scale;
@@ -16,7 +17,7 @@ export function ScaleInfo(props: NotesInScaleProps) {
     const [playingNote, setPlayingNote] = useState<Note | null>(null);
 
     async function playScale() {
-        await Tone.start();
+        await startTone();
         new Tone.Part(
             (time, value) => {
                 pianoSynth.triggerAttackRelease(value.note, 0.2, time);
@@ -65,9 +66,7 @@ export function ScaleInfo(props: NotesInScaleProps) {
                 />
             </div>
             {props.scale.notes.some((x) =>
-                new Array<AccidentalSign>('##', 'bb').includes(
-                    x.accidental.sign
-                )
+                new Array<Accidental>('##', 'bb').includes(x.accidental)
             ) && (
                 <Alert variant="danger">
                     This is theoretical key because its key signature have at
