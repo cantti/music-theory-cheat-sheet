@@ -1,7 +1,8 @@
 import { isAccidental } from '../theory-utils/note/accidental';
 import { isLetterChar } from '../theory-utils/note/letter';
 import { Note } from '../theory-utils/note';
-import { isScaleName, Scale } from '../theory-utils/scale';
+import {  Scale } from '../theory-utils/scale';
+import { isScaleName } from '../theory-utils/scale/ScaleName';
 
 export class ScaleParamError extends Error {
     constructor(message?: string) {

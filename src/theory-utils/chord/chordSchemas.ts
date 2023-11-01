@@ -1,5 +1,5 @@
-import { Interval } from '../interval';
-import { ChordName } from './ChordName';
+import { ChordName } from '.';
+import { Interval, interval } from '../interval';
 
 type ChordSchema = {
     shortName: string;
@@ -13,34 +13,21 @@ type ChordSchemas = {
 export const chordSchemas: ChordSchemas = {
     Minor: {
         shortName: 'm',
-        intervals: [
-            new Interval('Unison', 'Perfect'),
-            new Interval('Third', 'Minor'),
-            new Interval('Fifth', 'Perfect'),
-        ],
+        intervals: [interval('Third', 'Minor'), interval('Fifth', 'Perfect')],
     },
     Major: {
         shortName: '',
-        intervals: [
-            new Interval('Unison', 'Perfect'),
-            new Interval('Third', 'Major'),
-            new Interval('Fifth', 'Perfect'),
-        ],
+        intervals: [interval('Third', 'Major'), interval('Fifth', 'Perfect')],
     },
     Diminished: {
         shortName: 'dim',
         intervals: [
-            new Interval('Unison', 'Perfect'),
-            new Interval('Third', 'Minor'),
-            new Interval('Fifth', 'Diminished'),
+            interval('Third', 'Minor'),
+            interval('Fifth', 'Diminished'),
         ],
     },
     Augmented: {
         shortName: 'aug',
-        intervals: [
-            new Interval('Unison', 'Perfect'),
-            new Interval('Third', 'Major'),
-            new Interval('Fifth', 'Augmented'),
-        ],
+        intervals: [interval('Third', 'Major'), interval('Fifth', 'Augmented')],
     },
 };

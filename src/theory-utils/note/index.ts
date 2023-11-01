@@ -33,3 +33,11 @@ export class Note {
         );
     }
 }
+
+export function n(
+    letter: Letter,
+    accidental: Accidental = '',
+    octave: number = 4
+) {
+    return new Note(letter, accidental, octave);
+}

@@ -15,7 +15,6 @@ type ScaleSchemas = {
 const major: ScaleSchema = {
     shortName: '',
     intervals: [
-        new Interval('Unison', 'Perfect'),
         new Interval('Second', 'Major'),
         new Interval('Third', 'Major'),
         new Interval('Fourth', 'Perfect'),
@@ -37,7 +36,6 @@ const major: ScaleSchema = {
 const naturalMinor: ScaleSchema = {
     shortName: 'm',
     intervals: [
-        new Interval('Unison', 'Perfect'),
         new Interval('Second', 'Major'),
         new Interval('Third', 'Minor'),
         new Interval('Fourth', 'Perfect'),
@@ -59,7 +57,6 @@ const naturalMinor: ScaleSchema = {
 const harmonicMinor: ScaleSchema = {
     shortName: '',
     intervals: [
-        new Interval('Unison', 'Perfect'),
         new Interval('Second', 'Major'),
         new Interval('Third', 'Minor'),
         new Interval('Fourth', 'Perfect'),
@@ -81,7 +78,6 @@ const harmonicMinor: ScaleSchema = {
 const melodicMinor: ScaleSchema = {
     shortName: '',
     intervals: [
-        new Interval('Unison', 'Perfect'),
         new Interval('Second', 'Major'),
         new Interval('Third', 'Minor'),
         new Interval('Fourth', 'Perfect'),
@@ -103,7 +99,6 @@ const melodicMinor: ScaleSchema = {
 const majorPentatonic: ScaleSchema = {
     shortName: '',
     intervals: [
-        new Interval('Unison', 'Perfect'),
         new Interval('Second', 'Major'),
         new Interval('Third', 'Major'),
         new Interval('Fifth', 'Perfect'),
@@ -115,7 +110,6 @@ const majorPentatonic: ScaleSchema = {
 const minorPentatonic: ScaleSchema = {
     shortName: '',
     intervals: [
-        new Interval('Unison', 'Perfect'),
         new Interval('Third', 'Minor'),
         new Interval('Fourth', 'Perfect'),
         new Interval('Fifth', 'Perfect'),

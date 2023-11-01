@@ -1,32 +1,32 @@
 import _ from 'lodash';
-import { Note } from '../note';
-import { Scale } from '../scale/Scale';
+import { Note, n } from '../note';
+import { Scale } from '../scale';
 
 const allScales: Scale[] = [
-    new Scale(new Note('C'), 'Major'),
-    new Scale(new Note('G'), 'Major'),
-    new Scale(new Note('D'), 'Major'),
-    new Scale(new Note('A'), 'Major'),
-    new Scale(new Note('E'), 'Major'),
-    new Scale(new Note('B'), 'Major'),
-    new Scale(new Note('G', 'b'), 'Major'),
-    new Scale(new Note('D', 'b'), 'Major'),
-    new Scale(new Note('A', 'b'), 'Major'),
-    new Scale(new Note('E', 'b'), 'Major'),
-    new Scale(new Note('B', 'b'), 'Major'),
-    new Scale(new Note('F'), 'Major'),
-    new Scale(new Note('A'), 'Natural Minor'),
-    new Scale(new Note('E'), 'Natural Minor'),
-    new Scale(new Note('B'), 'Natural Minor'),
-    new Scale(new Note('F', '#'), 'Natural Minor'),
-    new Scale(new Note('C', '#'), 'Natural Minor'),
-    new Scale(new Note('G', '#'), 'Natural Minor'),
-    new Scale(new Note('E', 'b'), 'Natural Minor'),
-    new Scale(new Note('B', 'b'), 'Natural Minor'),
-    new Scale(new Note('F'), 'Natural Minor'),
-    new Scale(new Note('C'), 'Natural Minor'),
-    new Scale(new Note('G'), 'Natural Minor'),
-    new Scale(new Note('D'), 'Natural Minor'),
+    new Scale(n('C'), 'Major'),
+    new Scale(n('G'), 'Major'),
+    new Scale(n('D'), 'Major'),
+    new Scale(n('A'), 'Major'),
+    new Scale(n('E'), 'Major'),
+    new Scale(n('B'), 'Major'),
+    new Scale(n('G', 'b'), 'Major'),
+    new Scale(n('D', 'b'), 'Major'),
+    new Scale(n('A', 'b'), 'Major'),
+    new Scale(n('E', 'b'), 'Major'),
+    new Scale(n('B', 'b'), 'Major'),
+    new Scale(n('F'), 'Major'),
+    new Scale(n('A'), 'Natural Minor'),
+    new Scale(n('E'), 'Natural Minor'),
+    new Scale(n('B'), 'Natural Minor'),
+    new Scale(n('F', '#'), 'Natural Minor'),
+    new Scale(n('C', '#'), 'Natural Minor'),
+    new Scale(n('G', '#'), 'Natural Minor'),
+    new Scale(n('E', 'b'), 'Natural Minor'),
+    new Scale(n('B', 'b'), 'Natural Minor'),
+    new Scale(n('F'), 'Natural Minor'),
+    new Scale(n('C'), 'Natural Minor'),
+    new Scale(n('G'), 'Natural Minor'),
+    new Scale(n('D'), 'Natural Minor'),
 ];
 
 export const getScalesByNotes = (notes: Note[]) => {

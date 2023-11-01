@@ -7,10 +7,10 @@ import {
     Navigate,
     useNavigate,
     useParams,
-    useRouteError
+    useRouteError,
 } from 'react-router-dom';
-import { Note } from '../theory-utils/note';
-import { Scale } from '../theory-utils/scale';
+import { n } from '../theory-utils/note';
+import { Scale, scale } from '../theory-utils/scale';
 import { getScaleFormUrlParams, ScaleParamError } from '../utils/url';
 import styles from './Circle.module.scss';
 import { ScaleInfo } from './ScaleInfo';
@@ -18,76 +18,76 @@ import { ScaleInfo } from './ScaleInfo';
 const MotionButton = motion(Button);
 
 const scalesInCircle: { scale: Scale; clickable: boolean }[][] = [
-    [{ scale: new Scale(new Note('C'), 'Major'), clickable: true }],
-    [{ scale: new Scale(new Note('G'), 'Major'), clickable: true }],
-    [{ scale: new Scale(new Note('D'), 'Major'), clickable: true }],
-    [{ scale: new Scale(new Note('A'), 'Major'), clickable: true }],
-    [{ scale: new Scale(new Note('E'), 'Major'), clickable: true }],
+    [{ scale: scale(n('C'), 'Major'), clickable: true }],
+    [{ scale: scale(n('G'), 'Major'), clickable: true }],
+    [{ scale: scale(n('D'), 'Major'), clickable: true }],
+    [{ scale: scale(n('A'), 'Major'), clickable: true }],
+    [{ scale: scale(n('E'), 'Major'), clickable: true }],
     [
-        { scale: new Scale(new Note('B'), 'Major'), clickable: true },
-        { scale: new Scale(new Note('C', 'b'), 'Major'), clickable: false },
+        { scale: scale(n('B'), 'Major'), clickable: true },
+        { scale: scale(n('C', 'b'), 'Major'), clickable: false },
     ],
     [
-        { scale: new Scale(new Note('F', '#'), 'Major'), clickable: false },
-        { scale: new Scale(new Note('G', 'b'), 'Major'), clickable: true },
+        { scale: scale(n('F', '#'), 'Major'), clickable: false },
+        { scale: scale(n('G', 'b'), 'Major'), clickable: true },
     ],
     [
-        { scale: new Scale(new Note('C', '#'), 'Major'), clickable: false },
-        { scale: new Scale(new Note('D', 'b'), 'Major'), clickable: true },
+        { scale: scale(n('C', '#'), 'Major'), clickable: false },
+        { scale: scale(n('D', 'b'), 'Major'), clickable: true },
     ],
-    [{ scale: new Scale(new Note('A', 'b'), 'Major'), clickable: true }],
-    [{ scale: new Scale(new Note('E', 'b'), 'Major'), clickable: true }],
-    [{ scale: new Scale(new Note('B', 'b'), 'Major'), clickable: true }],
-    [{ scale: new Scale(new Note('F'), 'Major'), clickable: true }],
-    [{ scale: new Scale(new Note('A'), 'Natural Minor'), clickable: true }],
-    [{ scale: new Scale(new Note('E'), 'Natural Minor'), clickable: true }],
-    [{ scale: new Scale(new Note('B'), 'Natural Minor'), clickable: true }],
+    [{ scale: scale(n('A', 'b'), 'Major'), clickable: true }],
+    [{ scale: scale(n('E', 'b'), 'Major'), clickable: true }],
+    [{ scale: scale(n('B', 'b'), 'Major'), clickable: true }],
+    [{ scale: scale(n('F'), 'Major'), clickable: true }],
+    [{ scale: scale(n('A'), 'Natural Minor'), clickable: true }],
+    [{ scale: scale(n('E'), 'Natural Minor'), clickable: true }],
+    [{ scale: scale(n('B'), 'Natural Minor'), clickable: true }],
     [
         {
-            scale: new Scale(new Note('F', '#'), 'Natural Minor'),
+            scale: scale(n('F', '#'), 'Natural Minor'),
             clickable: true,
         },
     ],
     [
         {
-            scale: new Scale(new Note('C', '#'), 'Natural Minor'),
+            scale: scale(n('C', '#'), 'Natural Minor'),
             clickable: true,
         },
     ],
     [
         {
-            scale: new Scale(new Note('G', '#'), 'Natural Minor'),
+            scale: scale(n('G', '#'), 'Natural Minor'),
             clickable: true,
         },
         {
-            scale: new Scale(new Note('A', 'b'), 'Natural Minor'),
+            scale: scale(n('A', 'b'), 'Natural Minor'),
             clickable: false,
         },
     ],
     [
         {
-            scale: new Scale(new Note('D', '#'), 'Natural Minor'),
+            scale: scale(n('D', '#'), 'Natural Minor'),
             clickable: false,
         },
         {
-            scale: new Scale(new Note('E', 'b'), 'Natural Minor'),
+            scale: scale(n('E', 'b'), 'Natural Minor'),
             clickable: true,
         },
     ],
     [
         {
-            scale: new Scale(new Note('A', '#'), 'Natural Minor'),
+            scale: scale(n('A', '#'), 'Natural Minor'),
             clickable: false,
         },
         {
-            scale: new Scale(new Note('B', 'b'), 'Natural Minor'),
+            scale: scale(n('B', 'b'), 'Natural Minor'),
             clickable: true,
         },
     ],
-    [{ scale: new Scale(new Note('F'), 'Natural Minor'), clickable: true }],
-    [{ scale: new Scale(new Note('C'), 'Natural Minor'), clickable: true }],
-    [{ scale: new Scale(new Note('G'), 'Natural Minor'), clickable: true }],
-    [{ scale: new Scale(new Note('D'), 'Natural Minor'), clickable: true }],
+    [{ scale: scale(n('F'), 'Natural Minor'), clickable: true }],
+    [{ scale: scale(n('C'), 'Natural Minor'), clickable: true }],
+    [{ scale: scale(n('G'), 'Natural Minor'), clickable: true }],
+    [{ scale: scale(n('D'), 'Natural Minor'), clickable: true }],
 ];
 
 export function Circle() {
