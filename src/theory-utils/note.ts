@@ -25,6 +25,10 @@ export class Note {
         return result;
     }
 
+    setOctave(octave: number) {
+        return new Note(this.letter, this.accidental, octave);
+    }
+
     equals(other: Note) {
         return (
             this.letter === other.letter &&

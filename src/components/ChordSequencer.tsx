@@ -85,7 +85,11 @@ export function ChordSequencer() {
                             {scale.chords.map((chord, index) => (
                                 <Button
                                     key={index}
-                                    variant="outline-secondary"
+                                    variant={`${
+                                        !currentStep?.chord.equals(chord[0])
+                                            ? 'outline-'
+                                            : ''
+                                    }secondary`}
                                     onClick={() => {
                                         setSteps(
                                             steps.map((step, stepIndex) =>
@@ -101,6 +105,40 @@ export function ChordSequencer() {
                                     }}
                                 >
                                     {chord[0].format('short')}
+                                </Button>
+                            ))}
+                        </ButtonGroup>
+                    </div>
+
+                    <div className="mb-3">
+                        <div className="mb-1">Octave</div>
+                        <ButtonGroup size="sm">
+                            {[2, 3, 4, 5].map((octave) => (
+                                <Button
+                                    key={octave}
+                                    variant={`${
+                                        currentStep?.chord.tonic.octave !==
+                                        octave
+                                            ? 'outline-'
+                                            : ''
+                                    }secondary`}
+                                    onClick={() => {
+                                        setSteps(
+                                            steps.map((step, stepIndex) =>
+                                                stepIndex === i && step != null
+                                                    ? {
+                                                          chord: step.chord.setOctave(
+                                                              octave
+                                                          ),
+                                                          length:
+                                                              step?.length ?? 1,
+                                                      }
+                                                    : step
+                                            )
+                                        );
+                                    }}
+                                >
+                                    {octave}
                                 </Button>
                             ))}
                         </ButtonGroup>
@@ -133,21 +171,22 @@ export function ChordSequencer() {
 
     useEffect(() => {
         Tone.Transport.cancel();
-        for (let i = 0; i < steps.length; i++) {
+        for (let i = 0; i <= steps.length; i++) {
             Tone.Transport.schedule(
                 () => {
-                    const step = steps[i];
-                    if (step) {
-                        pianoSynth.triggerAttackRelease(
-                            step.chord.notes.map((x) => x.format(true)),
-                            { '8n': step.length },
-                            Tone.now(),
-                            0.5
-                        );
-                    }
-                    setActiveStepIndex(i);
-                    if (i === steps.length - 1) {
+                    if (i === steps.length) {
                         Tone.Transport.position = 0;
+                    } else {
+                        const step = steps[i];
+                        if (step) {
+                            pianoSynth.triggerAttackRelease(
+                                step.chord.notes.map((x) => x.format(true)),
+                                { '8n': step.length },
+                                Tone.now(),
+                                0.5
+                            );
+                        }
+                        setActiveStepIndex(i);
                     }
                 },
                 { '8n': i }
@@ -188,13 +227,13 @@ export function ChordSequencer() {
                 <tbody>
                     <tr>
                         <td className="text-nowrap text-muted">1 / 4</td>
-                        {_.range(0, steps.length / 2).map((i) => (
+                        {_.range(0, steps.length / 2).map((index) => (
                             <td
                                 className={`text-nowrap text-center text-muted`}
-                                key={i}
+                                key={index}
                                 colSpan={2}
                             >
-                                {i + 1}
+                                {index + 1}
                             </td>
                         ))}
                     </tr>

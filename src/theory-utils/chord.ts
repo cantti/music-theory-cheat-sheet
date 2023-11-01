@@ -54,6 +54,10 @@ export class Chord {
     invert(number: number) {
         return new Chord(this.tonic, this.name, this.inversion + number);
     }
+
+    setOctave(octave: number) {
+        return new Chord(this.tonic.setOctave(octave), this.name);
+    }
 }
 
 export function chord(tonic: Note, name: ChordName, inversion: number = 0) {
