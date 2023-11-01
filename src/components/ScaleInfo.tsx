@@ -6,9 +6,9 @@ import { pianoSynth } from '../audio/pianoSynth';
 import { Accidental } from '../theory-utils/note/accidental';
 import { Chord } from '../theory-utils/chord';
 import { Note } from '../theory-utils/note';
-import { Scale } from '../theory-utils/scale/Scale';
 import Piano from './Piano';
 import { startTone } from '../audio/startTone';
+import { Scale } from '../theory-utils/scale';
 
 interface NotesInScaleProps {
     scale: Scale;

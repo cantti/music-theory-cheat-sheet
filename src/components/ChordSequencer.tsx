@@ -1,4 +1,4 @@
-import { Button, Card } from 'react-bootstrap';
+import { Button, Card, Form } from 'react-bootstrap';
 import { pianoSynth } from '../audio/pianoSynth';
 import { Chord, chord } from '../theory-utils/chord';
 import { Note, n } from '../theory-utils/note';
@@ -6,7 +6,8 @@ import * as Tone from 'tone';
 import { startTone } from '../audio/startTone';
 import Table from 'react-bootstrap/Table';
 import _ from 'lodash';
-import { ReactElement } from 'react';
+import { ReactElement, useState } from 'react';
+import { Scale } from '../theory-utils/scale';
 
 let beat = 0;
 
@@ -15,9 +16,15 @@ interface GridEvent {
     length: number;
 }
 
+const scale = new Scale(n('C'), 'Major');
+
 export function ChordSequencer() {
-    const grid: (GridEvent | null)[] = [
+    const [grid, setGrid] = useState<(GridEvent | null)[]>([
         { chord: chord(n('C'), 'Major').invert(1), length: 4 },
+        null,
+        null,
+        null,
+        null,
         null,
         null,
         null,
@@ -45,7 +52,7 @@ export function ChordSequencer() {
         null,
         null,
         null,
-    ];
+    ]);
 
     function repeat() {
         const gridEvent = grid[beat];
@@ -61,17 +68,94 @@ export function ChordSequencer() {
         beat = (beat + 1) % grid.length;
     }
 
-    const els: ReactElement[] = [];
+    function getColumns() {
+        const columns: ReactElement[] = [];
+        let currentEvent: GridEvent | null = null;
+        for (let i = 0; i < grid.length; i++) {
+            if (
+                currentEvent &&
+                grid.indexOf(currentEvent) + currentEvent.length - 1 >= i
+            ) {
+                continue;
+            }
+            currentEvent = grid[i];
+            columns.push(
+                <td
+                    key={i}
+                    colSpan={currentEvent?.length ?? 1}
+                >
+                    <Form.Group className="mb-3">
+                        <Form.Label>Chord</Form.Label>
+                        <Form.Select
+                            size="sm"
+                            className="mb-2"
+                            onChange={(e) => {
+                                setGrid(
+                                    grid.map((gridItem, iGridItem) =>
+                                        iGridItem !== i
+                                            ? gridItem
+                                            : e.target.value === '-1'
+                                            ? null
+                                            : {
+                                                  chord: scale.chords[
+                                                      parseInt(e.target.value)
+                                                  ][0],
+                                                  length: gridItem?.length ?? 1,
+                                              }
+                                    )
+                                );
+                            }}
+                            value={
+                                currentEvent
+                                    ? scale.chords
+                                          .map((x) => x[0])
+                                          .findIndex((x) =>
+                                              x.equals(currentEvent?.chord!)
+                                          )
+                                    : -1
+                            }
+                            style={{ minWidth: '100px' }}
+                        >
+                            <option value="-1">Rest</option>
+                            {scale.chords.map((chord, index) => (
+                                <option value={index}>
+                                    {chord[0].format('short')}
+                                </option>
+                            ))}
+                        </Form.Select>
+                    </Form.Group>
 
-    let current: GridEvent | null = null;
+                    <Form.Group className="mb-3">
+                        <Form.Label>Duration</Form.Label>
+                        <Form.Select
+                            size="sm"
+                            disabled={currentEvent == null}
+                            onChange={(e) => {
+                                setGrid(
+                                    grid.map((gridItem, iGridItem) =>
+                                        iGridItem !== i || gridItem == null
+                                            ? gridItem
+                                            : {
+                                                  ...gridItem,
+                                                  length: parseInt(
+                                                      e.target.value
+                                                  ),
+                                              }
+                                    )
+                                );
+                            }}
+                            value={currentEvent?.length ?? 1}
+                        >
+                            {_.range(1, grid.length + 1).map((i) => (
+                                <option value={i}>{i}</option>
+                            ))}
+                        </Form.Select>
+                    </Form.Group>
+                </td>
+            );
+        }
 
-    for (let i = 0; i < grid.length; i++) {
-        if (current && grid.indexOf(current) + current.length - 1 <= i) {
-            current = null;
-        }
-        if (grid[i]) {
-            current = grid[i];
-        }
+        return columns;
     }
 
     return (
@@ -91,36 +175,15 @@ export function ChordSequencer() {
                         ))}
                     </tr>
                     <tr>
-                        <td className="text-center fw-bold">Chord</td>
-                        {grid.map((gridEvent, index) => {
-                            const prev = _(grid)
-                                .slice(0, index)
-                                .findLast((x) => x != null);
-                            if (prev && !gridEvent) {
-                                const iPrev = grid.indexOf(prev);
-                                if (iPrev + prev.length - 1 >= index) {
-                                    return null;
-                                }
-                            }
-                            return (
-                                <td
-                                    className="text-nowrap text-center"
-                                    key={index}
-                                    colSpan={gridEvent?.length}
-                                >
-                                    <Button variant="primary" className="w-100">
-                                        {gridEvent?.chord.format('short') ??
-                                            'rest'}
-                                    </Button>
-                                </td>
-                            );
-                        })}
+                        <td></td>
+                        {getColumns()}
                     </tr>
                 </tbody>
             </Table>
             <button
                 onClick={async () => {
                     await startTone();
+                    Tone.Transport.cancel();
                     Tone.Transport.scheduleRepeat(repeat, '8n');
                     Tone.Transport.start();
                 }}
