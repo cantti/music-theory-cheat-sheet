@@ -104,7 +104,7 @@ export function ChordSequencer() {
         for (let i = 0; i < steps.length; i++) {
             if (
                 currentStep &&
-                steps.indexOf(currentStep) + currentStep.length - 1 >= i
+                i < steps.indexOf(currentStep) + currentStep.length
             ) {
                 continue;
             }
@@ -115,7 +115,9 @@ export function ChordSequencer() {
                         <Form.Label>Chord</Form.Label>
                         <Form.Select
                             size="sm"
-                            className={currentStep != null ? 'bg-success-subtle' : ''}
+                            className={
+                                currentStep != null ? 'bg-success-subtle' : ''
+                            }
                             onChange={(e) => {
                                 setSteps(
                                     steps.map((step, stepIndex) =>
