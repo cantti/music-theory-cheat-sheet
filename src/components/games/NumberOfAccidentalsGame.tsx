@@ -12,7 +12,7 @@ class Question {
     constructor(public scale: Scale) {}
 
     get accidentalsNumber() {
-        return this.scale.notes.filter((note) => note.accidental.sign !== '')
+        return this.scale.notes.filter((note) => note.accidental !== '')
             .length;
     }
 
@@ -20,8 +20,8 @@ class Question {
 
     get accidental(): Extract<Accidental, '#' | 'b' | ''> {
         return (
-            (this.scale.notes.find((note) => note.accidental.sign !== '')
-                ?.accidental.sign as Extract<Accidental, '#' | 'b'>) || ''
+            (this.scale.notes.find((note) => note.accidental !== '')
+                ?.accidental as Extract<Accidental, '#' | 'b'>) || ''
         );
     }
 
@@ -216,7 +216,7 @@ export function NumberOfAccidentalsGame() {
                                                     .accidentalsNumberAnswer ===
                                                 number
                                             }
-                                            onClick={(e) =>
+                                            onClick={() =>
                                                 handleNumberClick(number)
                                             }
                                             variant="outline-dark"

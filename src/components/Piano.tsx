@@ -35,7 +35,7 @@ function Piano({
         }
     }
 
-    let octaves: number[] = [];
+    const octaves: number[] = [];
 
     for (let i = startOctave; i <= endOctave; i++) {
         octaves.push(i);
@@ -66,10 +66,10 @@ function Piano({
                 onClick={() => {
                     onNoteClick(props.note);
                 }}
-                onMouseDown={(e) => {
+                onMouseDown={() => {
                     playNote(props.note);
                 }}
-                onMouseUp={(e) => {
+                onMouseUp={() => {
                     stopNote(props.note);
                 }}
                 onMouseLeave={(e) => {

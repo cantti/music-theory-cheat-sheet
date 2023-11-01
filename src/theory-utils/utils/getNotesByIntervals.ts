@@ -89,7 +89,7 @@ export function getNotesByIntervals(
         'Octave',
     ];
 
-    let result: Note[] = [root];
+    const result: Note[] = [root];
 
     intervals.forEach((interval) => {
         const newNoteLetter: Letter = Object.keys(letterSchemas)[

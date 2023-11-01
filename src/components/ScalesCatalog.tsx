@@ -9,10 +9,10 @@ import {
 } from 'react-router-dom';
 import { Letter } from '../theory-utils/note/letter';
 import { Note } from '../theory-utils/note';
-import { ScaleName } from '../theory-utils/scale';
 import { getScaleFormUrlParams, ScaleParamError } from '../utils/url';
 import Piano from './Piano';
 import { ScaleInfo } from './ScaleInfo';
+import { ScaleName } from '../theory-utils/scale/ScaleName';
 
 const allScaleNames: ScaleName[] = [
     'Major',

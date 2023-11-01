@@ -1,7 +1,7 @@
-import { Button, Card, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { pianoSynth } from '../audio/pianoSynth';
 import { Chord, chord } from '../theory-utils/chord';
-import { Note, n } from '../theory-utils/note';
+import { n } from '../theory-utils/note';
 import * as Tone from 'tone';
 import { startTone } from '../audio/startTone';
 import Table from 'react-bootstrap/Table';
@@ -134,15 +134,13 @@ export function ChordSequencer() {
                                     )
                                 );
                             }}
-                            value={
-                                currentStep
-                                    ? scale.chords
-                                          .map((x) => x[0])
-                                          .findIndex((x) =>
-                                              x.equals(currentStep?.chord!)
-                                          )
-                                    : -1
-                            }
+                            value={scale.chords
+                                .map((x) => x[0])
+                                .findIndex(
+                                    (x) =>
+                                        currentStep != null &&
+                                        x.equals(currentStep.chord)
+                                )}
                         >
                             <option value="-1">Rest</option>
                             {scale.chords.map((chord, index) => (
