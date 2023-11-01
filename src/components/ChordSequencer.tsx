@@ -79,14 +79,14 @@ export function ChordSequencer() {
             if (i === targetStepIndex && step != null) {
                 newSteps.push({
                     ...step,
-                    length: i + input - 1 < steps.length ? input : 1,
+                    length: i + input <= steps.length ? input : 1,
                 });
             } else {
                 const changedStep = newSteps[targetStepIndex];
                 if (
                     i > targetStepIndex &&
                     changedStep != null &&
-                    targetStepIndex + changedStep.length - 1 >= i
+                    i < targetStepIndex + changedStep.length
                 ) {
                     // remove overlap
                     newSteps.push(null);
@@ -100,22 +100,22 @@ export function ChordSequencer() {
 
     function getColumns() {
         const columns: ReactElement[] = [];
-        let currentEvent: Step | null = null;
+        let currentStep: Step | null = null;
         for (let i = 0; i < steps.length; i++) {
             if (
-                currentEvent &&
-                steps.indexOf(currentEvent) + currentEvent.length - 1 >= i
+                currentStep &&
+                steps.indexOf(currentStep) + currentStep.length - 1 >= i
             ) {
                 continue;
             }
-            currentEvent = steps[i];
+            currentStep = steps[i];
             columns.push(
-                <td key={i} colSpan={currentEvent?.length ?? 1}>
+                <td key={i} colSpan={currentStep?.length ?? 1}>
                     <Form.Group className="mb-3">
                         <Form.Label>Chord</Form.Label>
                         <Form.Select
                             size="sm"
-                            className="mb-2 w-100"
+                            className={currentStep != null ? 'bg-success-subtle' : ''}
                             onChange={(e) => {
                                 setSteps(
                                     steps.map((step, stepIndex) =>
@@ -133,11 +133,11 @@ export function ChordSequencer() {
                                 );
                             }}
                             value={
-                                currentEvent
+                                currentStep
                                     ? scale.chords
                                           .map((x) => x[0])
                                           .findIndex((x) =>
-                                              x.equals(currentEvent?.chord!)
+                                              x.equals(currentStep?.chord!)
                                           )
                                     : -1
                             }
@@ -155,9 +155,9 @@ export function ChordSequencer() {
                         <Form.Label>Duration</Form.Label>
                         <Form.Select
                             size="sm"
-                            disabled={currentEvent == null}
+                            disabled={currentStep == null}
                             onChange={(e) => handleStepDurationChange(i, e)}
-                            value={currentEvent?.length ?? 1}
+                            value={currentStep?.length ?? 1}
                         >
                             {_.range(1, steps.length + 1).map((i) => (
                                 <option value={i}>{i}</option>
@@ -177,7 +177,6 @@ export function ChordSequencer() {
             <Table bordered responsive>
                 <tbody>
                     <tr>
-                        <td className="text-center fw-bold">#</td>
                         {steps.map((_step, index) => (
                             <td
                                 className="text-nowrap text-center text-muted"
@@ -188,10 +187,7 @@ export function ChordSequencer() {
                             </td>
                         ))}
                     </tr>
-                    <tr>
-                        <td></td>
-                        {getColumns()}
-                    </tr>
+                    <tr>{getColumns()}</tr>
                 </tbody>
             </Table>
             <button
