@@ -74,17 +74,17 @@ export function ChordSequencer() {
                                 variant="outline-secondary"
                                 onClick={() => {
                                     setSteps(
-                                        steps.map((step, stepIndex) =>
-                                            stepIndex === i ? null : step
+                                        steps.map((step, i2) =>
+                                            i2 === i ? null : step
                                         )
                                     );
                                 }}
                             >
                                 Rest
                             </Button>
-                            {scale.chords.map((chord, index) => (
+                            {scale.chords.map((chord, i2) => (
                                 <Button
-                                    key={index}
+                                    key={i2}
                                     variant={`${
                                         !currentStep?.chord.equals(chord[0])
                                             ? 'outline-'
@@ -92,8 +92,8 @@ export function ChordSequencer() {
                                     }secondary`}
                                     onClick={() => {
                                         setSteps(
-                                            steps.map((step, stepIndex) =>
-                                                stepIndex === i
+                                            steps.map((step, i2) =>
+                                                i2 === i
                                                     ? {
                                                           chord: chord[0],
                                                           length:
@@ -124,8 +124,8 @@ export function ChordSequencer() {
                                     }secondary`}
                                     onClick={() => {
                                         setSteps(
-                                            steps.map((step, stepIndex) =>
-                                                stepIndex === i && step != null
+                                            steps.map((step, i2) =>
+                                                i2 === i && step != null
                                                     ? {
                                                           chord: step.chord.setOctave(
                                                               octave
@@ -239,17 +239,17 @@ export function ChordSequencer() {
                     </tr>
                     <tr>
                         <td className="text-nowrap text-muted">1 / 8</td>
-                        {steps.map((_step, index) => (
+                        {steps.map((_step, i) => (
                             <td
                                 className={`text-nowrap text-center text-muted ${
-                                    index === activeStepIndex
+                                    i === activeStepIndex
                                         ? 'bg-danger-subtle'
                                         : ''
                                 }`}
-                                key={index}
+                                key={i}
                                 style={{ minWidth: '50px' }}
                             >
-                                {index + 1}
+                                {i + 1}
                             </td>
                         ))}
                     </tr>
