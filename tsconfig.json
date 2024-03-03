@@ -21,8 +21,8 @@
     "noFallthroughCasesInSwitch": true,
 
     // https://stackoverflow.com/questions/66039933/typescript-types-for-import-meta-env
-    "types": ["vite/client"]
+    "types": ["vite/client"],
   },
   "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
 }

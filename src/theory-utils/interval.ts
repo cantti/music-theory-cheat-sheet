@@ -1,24 +1,27 @@
 export type IntervalNumber =
-    | 'Unison'
-    | 'Second'
-    | 'Third'
-    | 'Fourth'
-    | 'Fifth'
-    | 'Sixth'
-    | 'Seventh'
-    | 'Octave';
+  | "Unison"
+  | "Second"
+  | "Third"
+  | "Fourth"
+  | "Fifth"
+  | "Sixth"
+  | "Seventh"
+  | "Octave";
 
 export type IntervalQuality =
-    | 'Perfect'
-    | 'Minor'
-    | 'Major'
-    | 'Diminished'
-    | 'Augmented';
+  | "Perfect"
+  | "Minor"
+  | "Major"
+  | "Diminished"
+  | "Augmented";
 
 export class Interval {
-    constructor(public name: IntervalNumber, public quality: IntervalQuality) {}
+  constructor(
+    public name: IntervalNumber,
+    public quality: IntervalQuality,
+  ) {}
 }
 
 export function interval(name: IntervalNumber, quality: IntervalQuality) {
-    return new Interval(name, quality);
+  return new Interval(name, quality);
 }

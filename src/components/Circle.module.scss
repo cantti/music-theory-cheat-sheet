@@ -1,74 +1,74 @@
-@use 'sass:math';
-@import 'bootstrap/scss/functions';
-@import 'bootstrap/scss/variables';
-@import 'bootstrap/scss/mixins';
+@use "sass:math";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
 
 $fontSize: 2rem;
 
 $keySize: $fontSize * 1.6;
 
 .circleOfFifths {
-    //compensate key size
-    padding-top: $keySize * 0.5;
-    padding-bottom: $keySize * 0.5;
+  //compensate key size
+  padding-top: $keySize * 0.5;
+  padding-bottom: $keySize * 0.5;
 
-    @include media-breakpoint-up(lg) {
-        width: 70%;
-        margin-left: auto;
-        margin-right: auto;
-    }
+  @include media-breakpoint-up(lg) {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .circle {
-    border-radius: 50%;
-    border: 2px solid gray;
+  border-radius: 50%;
+  border: 2px solid gray;
 }
 
 .majorCircle {
-    $size: 90%;
+  $size: 90%;
 
-    width: $size;
+  width: $size;
 
-    //to align to center
-    margin-left: (100% - $size) * 0.5;
+  //to align to center
+  margin-left: (100% - $size) * 0.5;
 
-    //to make height same as width
-    height: 0;
-    padding-bottom: $size;
+  //to make height same as width
+  height: 0;
+  padding-bottom: $size;
 
-    position: relative;
+  position: relative;
 }
 
 .minorCircle {
-    $size: 60%;
+  $size: 60%;
 
-    position: absolute;
-    left: calc((100% - $size) / 2);
-    top: calc((100% - $size) / 2);
-    width: $size;
+  position: absolute;
+  left: calc((100% - $size) / 2);
+  top: calc((100% - $size) / 2);
+  width: $size;
 
-    //to make height same as width
-    height: 0;
-    padding-bottom: $size;
+  //to make height same as width
+  height: 0;
+  padding-bottom: $size;
 }
 
 .key {
-    position: absolute;
-    width: $keySize;
-    height: $keySize;
-    line-height: 1 !important;
-    padding: 0 !important;
-    border-radius: 50% !important;
+  position: absolute;
+  width: $keySize;
+  height: $keySize;
+  line-height: 1 !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
 
-    //to make key in the middle of circle board (based on width and height property
-    margin-left: -$keySize * 0.5;
-    margin-top: -$keySize * 0.5;
+  //to make key in the middle of circle board (based on width and height property
+  margin-left: -$keySize * 0.5;
+  margin-top: -$keySize * 0.5;
 }
 
 @for $i from 0 through 11 {
-    .circle .key:nth-child(#{$i + 1}) {
-        $radius: 50%;
-        left: $radius + math.sin($i * 30deg) * $radius;
-        top: $radius - math.cos($i * 30deg) * $radius;
-    }
+  .circle .key:nth-child(#{$i + 1}) {
+    $radius: 50%;
+    left: $radius + math.sin($i * 30deg) * $radius;
+    top: $radius - math.cos($i * 30deg) * $radius;
+  }
 }
