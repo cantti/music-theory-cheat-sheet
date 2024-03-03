@@ -7,7 +7,7 @@ import Table from 'react-bootstrap/Table';
 import _, { parseInt } from 'lodash';
 import { ReactElement, useEffect, useState } from 'react';
 import { allScales } from '../theory-utils/getScalesByNotes';
-import { BsPauseFill, BsPlay, BsPlayFill, BsStopFill } from 'react-icons/bs';
+import { BsPlayFill, BsStopFill } from 'react-icons/bs';
 
 interface Step {
     chord: Chord;
