@@ -7,6 +7,7 @@ import Table from 'react-bootstrap/Table';
 import _, { parseInt } from 'lodash';
 import { ReactElement, useEffect, useState } from 'react';
 import { allScales } from '../theory-utils/getScalesByNotes';
+import { BsPauseFill, BsPlay, BsPlayFill, BsStopFill } from 'react-icons/bs';
 
 interface Step {
     chord: Chord;
@@ -77,101 +78,107 @@ export function ChordSequencer() {
             columns.push(
                 <td
                     key={iStep}
-                    className={iStep !== iCurrStep ? 'invisible' : ''}
+                    className={
+                        iStep === activeStepIndex ? 'bg-secondary-subtle' : ''
+                    }
                     style={{
                         borderLeftStyle:
                             iStep !== iCurrStep ? 'hidden' : undefined,
                     }}
                 >
-                    <div className="mb-3 h2">
-                        {step?.chord.format('short') ?? <>&nbsp;</>}
-                    </div>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>Chord</Form.Label>
-                        <Form.Select
-                            size="sm"
-                            onChange={(e) => {
-                                const val = parseInt(e.target.value);
-                                setSteps(
-                                    steps.map((step, i) =>
-                                        i === iStep
-                                            ? val == -1
-                                                ? null
-                                                : {
-                                                      chord: scale.chords[
-                                                          val
-                                                      ][0].setOctave(
-                                                          defaultOctave,
+                    <div className={iStep !== iCurrStep ? 'invisible' : ''}>
+                        <div className="mb-3 h2">
+                            {step?.chord.format('short') ?? <>&nbsp;</>}
+                        </div>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Chord</Form.Label>
+                            <Form.Select
+                                size="sm"
+                                onChange={(e) => {
+                                    const val = parseInt(e.target.value);
+                                    setSteps(
+                                        steps.map((step, i) =>
+                                            i === iStep
+                                                ? val == -1
+                                                    ? null
+                                                    : {
+                                                          chord: scale.chords[
+                                                              val
+                                                          ][0].setOctave(
+                                                              defaultOctave,
+                                                          ),
+                                                          length:
+                                                              step?.length ?? 1,
+                                                      }
+                                                : step,
+                                        ),
+                                    );
+                                }}
+                                value={
+                                    step == null
+                                        ? '-1'
+                                        : scale.chords.findIndex((x) =>
+                                              x[0].equals(step!.chord),
+                                          )
+                                }
+                            >
+                                <option value="-1">-</option>
+                                {scale.chords.map((chord, i) => (
+                                    <option value={i}>
+                                        {chord[0].format('short')}
+                                    </option>
+                                ))}
+                            </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Octave</Form.Label>
+                            <Form.Select
+                                size="sm"
+                                disabled={step == null}
+                                onChange={(e) => {
+                                    setSteps(
+                                        steps.map((step, i) =>
+                                            i === iStep && step != null
+                                                ? {
+                                                      chord: step.chord.setOctave(
+                                                          parseInt(
+                                                              e.target.value,
+                                                          ),
                                                       ),
                                                       length: step?.length ?? 1,
                                                   }
-                                            : step,
-                                    ),
-                                );
-                            }}
-                            value={
-                                step == null
-                                    ? '-1'
-                                    : scale.chords.findIndex((x) =>
-                                          x[0].equals(step!.chord),
-                                      )
-                            }
-                        >
-                            <option value="-1">-</option>
-                            {scale.chords.map((chord, i) => (
-                                <option value={i}>
-                                    {chord[0].format('short')}
-                                </option>
-                            ))}
-                        </Form.Select>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>Octave</Form.Label>
-                        <Form.Select
-                            size="sm"
-                            disabled={step == null}
-                            onChange={(e) => {
-                                setSteps(
-                                    steps.map((step, i) =>
-                                        i === iStep && step != null
-                                            ? {
-                                                  chord: step.chord.setOctave(
-                                                      parseInt(e.target.value),
-                                                  ),
-                                                  length: step?.length ?? 1,
-                                              }
-                                            : step,
-                                    ),
-                                );
-                            }}
-                            value={step?.chord.tonic.octave ?? defaultOctave}
-                        >
-                            {[2, 3, 4, 5].map((i) => (
-                                <option value={i}>{i}</option>
-                            ))}
-                        </Form.Select>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>Duration</Form.Label>
-                        <Form.Select
-                            size="sm"
-                            disabled={step == null}
-                            onChange={(e) =>
-                                handleStepDurationChange(
-                                    iStep,
-                                    parseInt(e.target.value),
-                                )
-                            }
-                            value={step?.length ?? 1}
-                        >
-                            {_.range(1, steps.length + 1).map((i) => (
-                                <option value={i}>{i}</option>
-                            ))}
-                        </Form.Select>
-                    </Form.Group>
+                                                : step,
+                                        ),
+                                    );
+                                }}
+                                value={
+                                    step?.chord.tonic.octave ?? defaultOctave
+                                }
+                            >
+                                {[2, 3, 4, 5].map((i) => (
+                                    <option value={i}>{i}</option>
+                                ))}
+                            </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Duration</Form.Label>
+                            <Form.Select
+                                size="sm"
+                                disabled={step == null}
+                                onChange={(e) =>
+                                    handleStepDurationChange(
+                                        iStep,
+                                        parseInt(e.target.value),
+                                    )
+                                }
+                                value={step?.length ?? 1}
+                            >
+                                {_.range(1, steps.length + 1).map((i) => (
+                                    <option value={i}>{i}</option>
+                                ))}
+                            </Form.Select>
+                        </Form.Group>
+                    </div>
                 </td>,
             );
         }
@@ -181,19 +188,23 @@ export function ChordSequencer() {
 
     useEffect(() => {
         Tone.Transport.cancel();
+        pianoSynth.releaseAll();
         for (let i = 0; i <= steps.length; i++) {
             Tone.Transport.schedule(
                 () => {
                     if (i === steps.length) {
-                        Tone.Transport.position = 0;
+                        Tone.Transport.stop();
+                        setActiveStepIndex(0);
                     } else {
                         const step = steps[i];
                         if (step) {
-                            pianoSynth.triggerAttackRelease(
-                                step.chord.notes.map((x) => x.format(true)),
-                                { '8n': step.length },
-                                Tone.now(),
-                                0.5,
+                            const notes = step.chord.notes.map((x) =>
+                                x.format(true),
+                            );
+                            pianoSynth.triggerAttack(notes);
+                            Tone.Transport.schedule(
+                                () => pianoSynth.triggerRelease(notes),
+                                { '8n': (i + step.length) * 0.99 },
                             );
                         }
                         setActiveStepIndex(i);
@@ -202,12 +213,13 @@ export function ChordSequencer() {
                 { '8n': i },
             );
         }
-    }, [activeStepIndex, steps]);
+    }, [steps]);
 
     async function play() {
         await startTone();
         if (Tone.Transport.state === 'started') {
             Tone.Transport.stop();
+            pianoSynth.releaseAll();
             setActiveStepIndex(0);
         } else {
             Tone.Transport.start();
@@ -269,7 +281,7 @@ export function ChordSequencer() {
                             <td
                                 className={`text-nowrap text-center text-muted ${
                                     i === activeStepIndex
-                                        ? 'bg-danger-subtle'
+                                        ? 'bg-secondary-subtle'
                                         : ''
                                 }`}
                                 key={i}
@@ -286,8 +298,16 @@ export function ChordSequencer() {
                 </tbody>
             </Table>
             <div className="mt-3">
-                <Button variant="primary" onClick={play}>
-                    Play
+                <Button variant="dark" onClick={play}>
+                    {Tone.Transport.state !== 'started' ? (
+                        <>
+                            <BsPlayFill /> Play
+                        </>
+                    ) : (
+                        <>
+                            <BsStopFill /> Stop
+                        </>
+                    )}
                 </Button>
             </div>
         </div>
