@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import { pianoSynth } from '../audio/pianoSynth';
 import { Chord } from '../theory-utils/chord';
 import * as Tone from 'tone';
@@ -15,13 +15,16 @@ interface Step {
 
 const defaultOctave = 4;
 
+const numberOfStepsOptions = [4, 8, 16, 32, 64, 128];
+
 export function ChordSequencer() {
     const [selectedScale, setSelectedScale] = useState<number>(0);
+    const [stepsCount, setStepsCount] = useState<number>(32);
 
     const scale = allScales[selectedScale];
 
     const [steps, setSteps] = useState<(Step | null)[]>(
-        _.fill(_.range(0, 32), null),
+        _.fill(_.range(0, stepsCount), null),
     );
 
     const [activeStepIndex, setActiveStepIndex] = useState(0);
@@ -52,6 +55,18 @@ export function ChordSequencer() {
         setSteps(newSteps);
     }
 
+    function handleStepsCountChange(newStepsCount: number) {
+        setStepsCount(newStepsCount);
+        let newSteps = steps.slice(0, newStepsCount);
+        if (newStepsCount > steps.length) {
+            newSteps = [
+                ...newSteps,
+                ...new Array(newStepsCount - steps.length).fill(null),
+            ];
+        }
+        setSteps(newSteps);
+    }
+
     function getColumns() {
         const columns: ReactElement[] = [];
         let iCurrStep = 0;
@@ -77,10 +92,10 @@ export function ChordSequencer() {
                         <Form.Select
                             size="sm"
                             onChange={(e) => {
-                                const val = parseInt(e.currentTarget.value);
+                                const val = parseInt(e.target.value);
                                 setSteps(
-                                    steps.map((step, i2) =>
-                                        i2 === iStep
+                                    steps.map((step, i) =>
+                                        i === iStep
                                             ? val == -1
                                                 ? null
                                                 : {
@@ -104,8 +119,8 @@ export function ChordSequencer() {
                             }
                         >
                             <option value="-1">-</option>
-                            {scale.chords.map((chord, i2) => (
-                                <option value={i2}>
+                            {scale.chords.map((chord, i) => (
+                                <option value={i}>
                                     {chord[0].format('short')}
                                 </option>
                             ))}
@@ -119,13 +134,11 @@ export function ChordSequencer() {
                             disabled={step == null}
                             onChange={(e) => {
                                 setSteps(
-                                    steps.map((step, i2) =>
-                                        i2 === iStep && step != null
+                                    steps.map((step, i) =>
+                                        i === iStep && step != null
                                             ? {
                                                   chord: step.chord.setOctave(
-                                                      parseInt(
-                                                          e.currentTarget.value,
-                                                      ),
+                                                      parseInt(e.target.value),
                                                   ),
                                                   length: step?.length ?? 1,
                                               }
@@ -149,7 +162,7 @@ export function ChordSequencer() {
                             onChange={(e) =>
                                 handleStepDurationChange(
                                     iStep,
-                                    parseInt(e.currentTarget.value),
+                                    parseInt(e.target.value),
                                 )
                             }
                             value={step?.length ?? 1}
@@ -220,6 +233,22 @@ export function ChordSequencer() {
                 </Form.Select>
             </Form.Group>
 
+            <Form.Group className="mb-3">
+                <Form.Label>Steps (1/8)</Form.Label>
+                <Form.Select
+                    size="sm"
+                    onChange={(e) =>
+                        handleStepsCountChange(parseInt(e.target.value))
+                    }
+                    value={stepsCount}
+                >
+                    {numberOfStepsOptions.map((option) => (
+                        <option value={option}>{option}</option>
+                    ))}
+                </Form.Select>
+            </Form.Group>
+
+            <p>Sequencer</p>
             <Table bordered responsive>
                 <tbody>
                     <tr>
