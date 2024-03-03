@@ -79,7 +79,11 @@ export function ChordSequencer() {
                 <td
                     key={iStep}
                     className={
-                        iStep === activeStepIndex ? 'bg-secondary-subtle' : ''
+                        activeStepIndex >= iCurrStep &&
+                        activeStepIndex <
+                            iCurrStep + (steps[iCurrStep]?.length ?? 1)
+                            ? 'bg-secondary-subtle'
+                            : ''
                     }
                     style={{
                         borderLeftStyle:
