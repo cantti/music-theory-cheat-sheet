@@ -4,7 +4,7 @@ import { Chord } from '../theory-utils/chord';
 import * as Tone from 'tone';
 import { startTone } from '../audio/startTone';
 import Table from 'react-bootstrap/Table';
-import _ from 'lodash';
+import _, { parseInt } from 'lodash';
 import { ReactElement, useEffect, useState } from 'react';
 import { allScales } from '../theory-utils/getScalesByNotes';
 
@@ -13,13 +13,15 @@ interface Step {
     length: number;
 }
 
+const defaultOctave = 4;
+
 export function ChordSequencer() {
     const [selectedScale, setSelectedScale] = useState<number>(0);
 
     const scale = allScales[selectedScale];
 
     const [steps, setSteps] = useState<(Step | null)[]>(
-        _.fill(_.range(0, 32), null)
+        _.fill(_.range(0, 32), null),
     );
 
     const [activeStepIndex, setActiveStepIndex] = useState(0);
@@ -52,117 +54,112 @@ export function ChordSequencer() {
 
     function getColumns() {
         const columns: ReactElement[] = [];
-        let currentStep: Step | null = null;
-        for (let i = 0; i < steps.length; i++) {
-            if (
-                currentStep &&
-                i < steps.indexOf(currentStep) + currentStep.length
-            ) {
-                continue;
+        let iCurrStep = 0;
+        for (const [iStep, step] of steps.entries()) {
+            if (iCurrStep + (steps[iCurrStep]?.length ?? 1) == iStep) {
+                iCurrStep = iStep;
             }
-            currentStep = steps[i];
             columns.push(
-                <td key={i} colSpan={currentStep?.length ?? 1}>
+                <td
+                    key={iStep}
+                    className={iStep !== iCurrStep ? 'invisible' : ''}
+                    style={{
+                        borderLeftStyle:
+                            iStep !== iCurrStep ? 'hidden' : undefined,
+                    }}
+                >
                     <div className="mb-3 h2">
-                        {currentStep?.chord.format('short') ?? <>&nbsp;</>}
+                        {step?.chord.format('short') ?? <>&nbsp;</>}
                     </div>
 
-                    <div className="mb-3">
-                        <div className="mb-1">Select chord</div>
-                        <ButtonGroup size="sm">
-                            <Button
-                                variant="outline-secondary"
-                                onClick={() => {
-                                    setSteps(
-                                        steps.map((step, i2) =>
-                                            i2 === i ? null : step
-                                        )
-                                    );
-                                }}
-                            >
-                                Rest
-                            </Button>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Chord</Form.Label>
+                        <Form.Select
+                            size="sm"
+                            onChange={(e) => {
+                                const val = parseInt(e.currentTarget.value);
+                                setSteps(
+                                    steps.map((step, i2) =>
+                                        i2 === iStep
+                                            ? val == -1
+                                                ? null
+                                                : {
+                                                      chord: scale.chords[
+                                                          val
+                                                      ][0].setOctave(
+                                                          defaultOctave,
+                                                      ),
+                                                      length: step?.length ?? 1,
+                                                  }
+                                            : step,
+                                    ),
+                                );
+                            }}
+                            value={
+                                step == null
+                                    ? '-1'
+                                    : scale.chords.findIndex((x) =>
+                                          x[0].equals(step!.chord),
+                                      )
+                            }
+                        >
+                            <option value="-1">-</option>
                             {scale.chords.map((chord, i2) => (
-                                <Button
-                                    key={i2}
-                                    variant={`${
-                                        !currentStep?.chord.equals(chord[0])
-                                            ? 'outline-'
-                                            : ''
-                                    }secondary`}
-                                    onClick={() => {
-                                        setSteps(
-                                            steps.map((step, i2) =>
-                                                i2 === i
-                                                    ? {
-                                                          chord: chord[0],
-                                                          length:
-                                                              step?.length ?? 1,
-                                                      }
-                                                    : step
-                                            )
-                                        );
-                                    }}
-                                >
+                                <option value={i2}>
                                     {chord[0].format('short')}
-                                </Button>
+                                </option>
                             ))}
-                        </ButtonGroup>
-                    </div>
+                        </Form.Select>
+                    </Form.Group>
 
-                    <div className="mb-3">
-                        <div className="mb-1">Octave</div>
-                        <ButtonGroup size="sm">
-                            {[2, 3, 4, 5].map((octave) => (
-                                <Button
-                                    key={octave}
-                                    variant={`${
-                                        currentStep?.chord.tonic.octave !==
-                                        octave
-                                            ? 'outline-'
-                                            : ''
-                                    }secondary`}
-                                    onClick={() => {
-                                        setSteps(
-                                            steps.map((step, i2) =>
-                                                i2 === i && step != null
-                                                    ? {
-                                                          chord: step.chord.setOctave(
-                                                              octave
-                                                          ),
-                                                          length:
-                                                              step?.length ?? 1,
-                                                      }
-                                                    : step
-                                            )
-                                        );
-                                    }}
-                                >
-                                    {octave}
-                                </Button>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Octave</Form.Label>
+                        <Form.Select
+                            size="sm"
+                            disabled={step == null}
+                            onChange={(e) => {
+                                setSteps(
+                                    steps.map((step, i2) =>
+                                        i2 === iStep && step != null
+                                            ? {
+                                                  chord: step.chord.setOctave(
+                                                      parseInt(
+                                                          e.currentTarget.value,
+                                                      ),
+                                                  ),
+                                                  length: step?.length ?? 1,
+                                              }
+                                            : step,
+                                    ),
+                                );
+                            }}
+                            value={step?.chord.tonic.octave ?? defaultOctave}
+                        >
+                            {[2, 3, 4, 5].map((i) => (
+                                <option value={i}>{i}</option>
                             ))}
-                        </ButtonGroup>
-                    </div>
+                        </Form.Select>
+                    </Form.Group>
 
                     <Form.Group className="mb-3">
                         <Form.Label>Duration</Form.Label>
                         <Form.Select
                             size="sm"
-                            disabled={currentStep == null}
+                            disabled={step == null}
                             onChange={(e) =>
                                 handleStepDurationChange(
-                                    i,
-                                    parseInt(e.currentTarget.value)
+                                    iStep,
+                                    parseInt(e.currentTarget.value),
                                 )
                             }
-                            value={currentStep?.length ?? 1}
+                            value={step?.length ?? 1}
                         >
                             {_.range(1, steps.length + 1).map((i) => (
                                 <option value={i}>{i}</option>
                             ))}
                         </Form.Select>
                     </Form.Group>
-                </td>
+                </td>,
             );
         }
 
@@ -183,13 +180,13 @@ export function ChordSequencer() {
                                 step.chord.notes.map((x) => x.format(true)),
                                 { '8n': step.length },
                                 Tone.now(),
-                                0.5
+                                0.5,
                             );
                         }
                         setActiveStepIndex(i);
                     }
                 },
-                { '8n': i }
+                { '8n': i },
             );
         }
     }, [activeStepIndex, steps]);
