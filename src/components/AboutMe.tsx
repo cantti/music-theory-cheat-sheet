@@ -6,12 +6,12 @@ export const AboutMe = () => {
         <>
             <h3>About me</h3>
             <p>
-                I'm musician from Saint Petersburg. I mainly work in the reggae
-                dub genre under the pseudonym <b>Cantti</b>. There are also
-                releases in the Synthwave genre under the pseudonym{' '}
-                <b>Imminent State</b>. Below is a list of my albums with links
-                to Bandcamp where you can buy them. All albums are also
-                available on streaming services. Recently I started my{' '}
+                Musician and software developer currently living in Sweden. I
+                mainly work in the reggae dub genre under the pseudonym{' '}
+                <b>Cantti</b>. There are also releases in the Synthwave genre
+                under the pseudonym <b>Imminent State</b>. Below is a list of my
+                albums with links to Bandcamp where you can buy them. All albums
+                are also available on streaming services. Recently I started my{' '}
                 <a
                     href="https://www.youtube.com/channel/UCS26LO1Y8E8ACgkgv7sOd7A"
                     rel="noreferrer"
@@ -53,7 +53,7 @@ export const AboutMe = () => {
                                 )}
                             </div>
                         </li>
-                    )
+                    ),
                 )}
             </ul>
         </>
