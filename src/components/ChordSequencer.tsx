@@ -1,13 +1,13 @@
-import { Button, Form } from "react-bootstrap";
-import { pianoSynth } from "../audio/pianoSynth";
-import { Chord } from "../theory-utils/chord";
-import * as Tone from "tone";
-import { startTone } from "../audio/startTone";
-import Table from "react-bootstrap/Table";
-import _, { parseInt } from "lodash";
-import { ReactElement, useEffect, useState } from "react";
-import { allScales } from "../theory-utils/getScalesByNotes";
-import { BsPlayFill, BsStopFill } from "react-icons/bs";
+import { Button, Form } from 'react-bootstrap';
+import { pianoSynth } from '../audio/pianoSynth';
+import { Chord } from '../theory-utils/chord';
+import * as Tone from 'tone';
+import { startTone } from '../audio/startTone';
+import Table from 'react-bootstrap/Table';
+import _, { parseInt } from 'lodash';
+import { ReactElement, useEffect, useState } from 'react';
+import { allScales } from '../theory-utils/getScalesByNotes';
+import { BsPlayFill, BsStopFill } from 'react-icons/bs';
 
 interface Step {
   chord: Chord;
@@ -29,6 +29,8 @@ export function ChordSequencer() {
   );
 
   const [activeStepIndex, setActiveStepIndex] = useState(0);
+
+  const [bpm, setBpm] = useState(120);
 
   function handleStepDurationChange(targetStepIndex: number, input: number) {
     const newSteps: (Step | null)[] = [];
@@ -81,16 +83,16 @@ export function ChordSequencer() {
           className={
             activeStepIndex >= iCurrStep &&
             activeStepIndex < iCurrStep + (steps[iCurrStep]?.length ?? 1)
-              ? "bg-secondary-subtle"
-              : ""
+              ? 'bg-secondary-subtle'
+              : ''
           }
           style={{
-            borderLeftStyle: iStep !== iCurrStep ? "hidden" : undefined,
+            borderLeftStyle: iStep !== iCurrStep ? 'hidden' : undefined,
           }}
         >
-          <div className={iStep !== iCurrStep ? "invisible" : ""}>
+          <div className={iStep !== iCurrStep ? 'invisible' : ''}>
             <div className="mb-3 h2">
-              {step?.chord.format("short") ?? <>&nbsp;</>}
+              {step?.chord.format('short') ?? <>&nbsp;</>}
             </div>
             <Form.Group className="mb-3">
               <Form.Label>Chord</Form.Label>
@@ -114,13 +116,13 @@ export function ChordSequencer() {
                 }}
                 value={
                   step == null
-                    ? "-1"
+                    ? '-1'
                     : scale.chords.findIndex((x) => x[0].equals(step!.chord))
                 }
               >
                 <option value="-1">-</option>
                 {scale.chords.map((chord, i) => (
-                  <option value={i}>{chord[0].format("short")}</option>
+                  <option value={i}>{chord[0].format('short')}</option>
                 ))}
               </Form.Select>
             </Form.Group>
@@ -188,20 +190,24 @@ export function ChordSequencer() {
               const notes = step.chord.notes.map((x) => x.format(true));
               pianoSynth.triggerAttack(notes);
               Tone.Transport.schedule(() => pianoSynth.triggerRelease(notes), {
-                "8n": (i + step.length) * 0.99,
+                '8n': (i + step.length) * 0.99,
               });
             }
             setActiveStepIndex(i);
           }
         },
-        { "8n": i },
+        { '8n': i },
       );
     }
   }, [steps]);
 
+  useEffect(() => {
+    Tone.Transport.bpm.value = bpm;
+  }, [bpm]);
+
   async function play() {
     await startTone();
-    if (Tone.Transport.state === "started") {
+    if (Tone.Transport.state === 'started') {
       Tone.Transport.stop();
       pianoSynth.releaseAll();
       setActiveStepIndex(0);
@@ -224,7 +230,7 @@ export function ChordSequencer() {
           value={selectedScale}
         >
           {allScales.map((scale, index) => (
-            <option value={index}>{scale.format("long")}</option>
+            <option value={index}>{scale.format('long')}</option>
           ))}
         </Form.Select>
       </Form.Group>
@@ -240,6 +246,17 @@ export function ChordSequencer() {
             <option value={option}>{option}</option>
           ))}
         </Form.Select>
+      </Form.Group>
+
+      <Form.Group className="mb-3">
+        <Form.Label>BPM</Form.Label>
+        <Form.Range
+          min="1"
+          max="300"
+          value={bpm}
+          onChange={(e) => setBpm(parseInt(e.target.value))}
+        />
+        <Form.Text>{bpm}</Form.Text>
       </Form.Group>
 
       <p>Sequencer</p>
@@ -262,10 +279,10 @@ export function ChordSequencer() {
             {steps.map((_step, i) => (
               <td
                 className={`text-nowrap text-center text-muted ${
-                  i === activeStepIndex ? "bg-secondary-subtle" : ""
+                  i === activeStepIndex ? 'bg-secondary-subtle' : ''
                 }`}
                 key={i}
-                style={{ minWidth: "50px" }}
+                style={{ minWidth: '50px' }}
               >
                 {i + 1}
               </td>
@@ -279,7 +296,7 @@ export function ChordSequencer() {
       </Table>
       <div className="mt-3">
         <Button variant="dark" onClick={play}>
-          {Tone.Transport.state !== "started" ? (
+          {Tone.Transport.state !== 'started' ? (
             <>
               <BsPlayFill /> Play
             </>
