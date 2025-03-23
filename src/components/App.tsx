@@ -20,7 +20,7 @@ function App() {
             <GiMusicalNotes className="me-3" size="2rem" />
             <div className="lh-sm">
               <div>Music Theory</div>
-              <div className="fs-6">Cheat Sheet</div>
+              <div className="fs-6">Notes</div>
             </div>
           </Navbar.Brand>
           <Navbar.Toggle />
