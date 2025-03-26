@@ -6,7 +6,6 @@ import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 import remarkToc from 'remark-toc';
 import rehypeSlug from 'rehype-slug';
-import { BsLink45Deg } from 'react-icons/bs';
 
 export default function Course() {
   return (
