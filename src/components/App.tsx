@@ -1,8 +1,8 @@
-import { Suspense } from "react";
-import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
-import { GiMusicalNotes } from "react-icons/gi";
-import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import { Suspense } from 'react';
+import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { GiMusicalNotes } from 'react-icons/gi';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   const location = useLocation();
@@ -29,14 +29,14 @@ function App() {
               <Nav.Link
                 as={NavLink}
                 to="/circle"
-                active={location.pathname.startsWith("/circle")}
+                active={location.pathname.startsWith('/circle')}
               >
                 Circle of fifths
               </Nav.Link>
               <Nav.Link
                 as={NavLink}
                 to="/scales"
-                active={location.pathname.startsWith("/scales")}
+                active={location.pathname.startsWith('/scales')}
               >
                 Scales
               </Nav.Link>
@@ -46,7 +46,7 @@ function App() {
               <NavDropdown
                 title="Games"
                 id="games-nav-dropdown"
-                active={location.pathname.startsWith("/games")}
+                active={location.pathname.startsWith('/games')}
               >
                 <NavDropdown.Item as={Link} to="/games/number-of-accidentals">
                   Number of accidentals
@@ -57,6 +57,14 @@ function App() {
               </NavDropdown>
               <Nav.Link as={NavLink} to="/chord-sequencer">
                 Chord Sequencer
+              </Nav.Link>
+              <Nav.Link
+                as={NavLink}
+                to="/course"
+                active={location.pathname.startsWith('/course')}
+                className="text-warning"
+              >
+                Course
               </Nav.Link>
               <Nav.Link as={NavLink} to="/discography">
                 About me
