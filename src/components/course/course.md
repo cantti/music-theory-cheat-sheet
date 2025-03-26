@@ -1,6 +1,6 @@
 # Course
 
-Materials for **Creating and Producing** course.
+Materials for **Creating and Producing Music** course.
 
 Write your questions to cantti@outlook.com
 
@@ -14,7 +14,7 @@ Write your questions to cantti@outlook.com
 
 In the lesson, we covered an overview of the course, got to know each other, and discussed the fundamentals of music production. We explored the different stages of production, various DAWs (including Ableton Live), and essential gear for music production.
 
-**Home Assignment**
+**Homework**
 
 Your assignment is to download and install Ableton Live on your computer and ensure that your audio setup is working.
 
@@ -41,6 +41,21 @@ In today's lesson, we covered the basics of Ableton Live’s interface, explored
 </details>
 
 <br />
+
+
+**Youtube lessons**
+
+Useful lessons I suggest you watch this week:
+
+Learn how to get set up and navigate Live’s interface. This amazing explanation is just 7 minutes long:  
+[🎥 Watch on YouTube](https://www.youtube.com/watch?v=_XDkA_f8n08)  
+
+Learn about the different kinds of tracks and how to use them in Ableton Live:  
+[🎥 Watch on YouTube](https://www.youtube.com/watch?v=nFFYXMEG7NE)  
+
+Learn more about the Arrangement View in Ableton Live:  
+[🎥 Watch on YouTube](https://www.youtube.com/watch?v=riOD-fnyCsg)  
+
 
 **Ableton Learning Music**
 
@@ -72,5 +87,3 @@ I recommend you to go though the [Make Beats](https://learningmusic.ableton.com/
 Plan: explore Session view, continue making drums.
 
 Great video about Session View for beginners: https://www.youtube.com/watch?v=LLcKyoUPrZs
-
-
