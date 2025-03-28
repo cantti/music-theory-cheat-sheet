@@ -84,6 +84,6 @@ I recommend you to go though the [Make Beats](https://learningmusic.ableton.com/
 
 🗓️ *2 april, 16:30-18:00*
 
-Plan: explore Session view, continue making drums.
+Plan: examples of drum machines sounds in popular songs, continue with arrangement view exploration and drum making.
 
 Great video about Session View for beginners: https://www.youtube.com/watch?v=LLcKyoUPrZs
