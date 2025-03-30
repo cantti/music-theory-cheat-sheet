@@ -7,7 +7,23 @@ import Table from 'react-bootstrap/Table';
 import _, { parseInt } from 'lodash';
 import { ReactElement, useEffect, useState } from 'react';
 import { allScales } from '../theory-utils/getScalesByNotes';
-import { BsPlayFill, BsStopFill } from 'react-icons/bs';
+import { BsArrowsMove, BsPlayFill, BsStopFill } from 'react-icons/bs';
+import {
+  DndContext,
+  DragEndEvent,
+  useDraggable,
+  useDroppable,
+} from '@dnd-kit/core';
+import { RiDraggable } from 'react-icons/ri';
+
+function firstNotNullAfter<T>(
+  arr: (T | null | undefined)[],
+  startIndex: number,
+): T | undefined {
+  return arr
+    .slice(startIndex + 1)
+    .find((el): el is T => el !== null && el !== undefined);
+}
 
 interface Step {
   chord: Chord;
@@ -18,15 +34,83 @@ const defaultOctave = 4;
 
 const numberOfStepsOptions = [4, 8, 16, 32, 64, 128];
 
+interface DroppableProps {
+  id: string;
+  children: React.ReactNode;
+  iStep: number;
+}
+
+function DroppableTd(props: DroppableProps) {
+  const { isOver, setNodeRef } = useDroppable({
+    id: props.id,
+    data: {
+      iStep: props.iStep,
+    },
+  });
+  const style = {
+    color: isOver ? 'green' : undefined,
+  };
+
+  return (
+    <td ref={setNodeRef} style={style}>
+      {props.children}
+    </td>
+  );
+}
+
+interface DraggableData {
+  iStep: number;
+}
+
+interface DraggableProps {
+  id: string;
+  children: React.ReactNode;
+  iStep: number;
+  className?: string;
+}
+
+export function Draggable(props: DraggableProps) {
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: props.id,
+    data: {
+      iStep: props.iStep,
+    },
+  });
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+      }
+    : undefined;
+
+  return (
+    <div
+      className={props.className}
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+    >
+      {props.children}
+    </div>
+  );
+}
+
 export function ChordSequencer() {
   const [selectedScale, setSelectedScale] = useState<number>(0);
   const [stepsCount, setStepsCount] = useState<number>(32);
 
   const scale = allScales[selectedScale];
 
-  const [steps, setSteps] = useState<(Step | null)[]>(
-    _.fill(_.range(0, stepsCount), null),
-  );
+  const [steps, setSteps] = useState<(Step | null)[]>([
+    { length: 8, chord: scale.chords[0][0] },
+    ..._.fill(_.range(0, 7), null),
+    { length: 8, chord: scale.chords[0][0] },
+    ..._.fill(_.range(0, 7), null),
+    { length: 8, chord: scale.chords[0][0] },
+    ..._.fill(_.range(0, 7), null),
+    { length: 8, chord: scale.chords[0][0] },
+    ..._.fill(_.range(0, 7), null),
+  ]);
 
   const [activeStepIndex, setActiveStepIndex] = useState(0);
 
@@ -55,6 +139,8 @@ export function ChordSequencer() {
         }
       }
     }
+    console.log(newSteps);
+
     setSteps(newSteps);
   }
 
@@ -70,104 +156,156 @@ export function ChordSequencer() {
     setSteps(newSteps);
   }
 
+  function getDndColumns() {
+    const columns: ReactElement[] = [];
+    let notNullStep: Step | undefined;
+    for (const [iStep, step] of steps.entries()) {
+      if (step != null) {
+        notNullStep = step;
+      }
+      columns.push(
+        <DroppableTd id={`droppable-${iStep.toString()}`} iStep={iStep}>
+          <div className="d-flex justify-content-center">
+            {step !== null && (
+              <>
+                <Draggable
+                  id={`start-${iStep.toString()}`}
+                  iStep={iStep}
+                  className="me-auto"
+                >
+                  <RiDraggable />
+                </Draggable>
+                <Draggable
+                  id={`position-${iStep.toString()}`}
+                  iStep={iStep}
+                  className="mx-auto"
+                >
+                  <BsArrowsMove />
+                </Draggable>
+              </>
+            )}
+            {notNullStep != null &&
+              steps.indexOf(notNullStep) + notNullStep.length - 1 == iStep && (
+                <Draggable
+                  id={`end-${iStep.toString()}`}
+                  iStep={iStep}
+                  className="ms-auto"
+                >
+                  <RiDraggable />
+                </Draggable>
+              )}
+          </div>
+        </DroppableTd>,
+      );
+    }
+    return columns;
+  }
+
   function getColumns() {
     const columns: ReactElement[] = [];
-    let iCurrStep = 0;
+    let notNullStep: Step | null = null;
     for (const [iStep, step] of steps.entries()) {
-      if (iCurrStep + (steps[iCurrStep]?.length ?? 1) == iStep) {
-        iCurrStep = iStep;
+      if (step != null) {
+        notNullStep = step;
+      }
+      if (
+        step == null &&
+        notNullStep != null &&
+        iStep < steps.indexOf(notNullStep) + notNullStep.length
+      ) {
+        continue;
       }
       columns.push(
         <td
           key={iStep}
           className={
-            activeStepIndex >= iCurrStep &&
-            activeStepIndex < iCurrStep + (steps[iCurrStep]?.length ?? 1)
+            activeStepIndex >= iStep &&
+            activeStepIndex < iStep + (steps[iStep]?.length ?? 1)
               ? 'bg-secondary-subtle'
               : ''
           }
-          style={{
-            borderLeftStyle: iStep !== iCurrStep ? 'hidden' : undefined,
-          }}
+          colSpan={step?.length}
         >
-          <div className={iStep !== iCurrStep ? 'invisible' : ''}>
-            <div className="mb-3 h2">
-              {step?.chord.format('short') ?? <>&nbsp;</>}
-            </div>
-            <Form.Group className="mb-3">
-              <Form.Label>Chord</Form.Label>
-              <Form.Select
-                size="sm"
-                onChange={(e) => {
-                  const val = parseInt(e.target.value);
-                  setSteps(
-                    steps.map((step, i) =>
-                      i === iStep
-                        ? val == -1
-                          ? null
-                          : {
-                              chord:
-                                scale.chords[val][0].setOctave(defaultOctave),
-                              length: step?.length ?? 1,
-                            }
-                        : step,
-                    ),
-                  );
-                }}
-                value={
-                  step == null
-                    ? '-1'
-                    : scale.chords.findIndex((x) => x[0].equals(step!.chord))
-                }
-              >
-                <option value="-1">-</option>
-                {scale.chords.map((chord, i) => (
-                  <option value={i}>{chord[0].format('short')}</option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Octave</Form.Label>
-              <Form.Select
-                size="sm"
-                disabled={step == null}
-                onChange={(e) => {
-                  setSteps(
-                    steps.map((step, i) =>
-                      i === iStep && step != null
-                        ? {
-                            chord: step.chord.setOctave(
-                              parseInt(e.target.value),
-                            ),
+          <div className="mb-3 h2">
+            {step?.chord.format('short') ?? <>&nbsp;</>}
+          </div>
+          <Form.Group className="mb-3">
+            <Form.Label>Chord</Form.Label>
+            <Form.Select
+              size="sm"
+              onChange={(e) => {
+                const val = parseInt(e.target.value);
+                setSteps(
+                  steps.map((step, i) =>
+                    i === iStep
+                      ? val == -1
+                        ? null
+                        : {
+                            chord:
+                              scale.chords[val][0].setOctave(defaultOctave),
                             length: step?.length ?? 1,
                           }
-                        : step,
-                    ),
-                  );
-                }}
-                value={step?.chord.tonic.octave ?? defaultOctave}
-              >
-                {[2, 3, 4, 5].map((i) => (
-                  <option value={i}>{i}</option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Duration</Form.Label>
-              <Form.Select
-                size="sm"
-                disabled={step == null}
-                onChange={(e) =>
-                  handleStepDurationChange(iStep, parseInt(e.target.value))
-                }
-                value={step?.length ?? 1}
-              >
-                {_.range(1, steps.length + 1).map((i) => (
-                  <option value={i}>{i}</option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          </div>
+                      : step,
+                  ),
+                );
+              }}
+              value={
+                step == null
+                  ? '-1'
+                  : scale.chords.findIndex((x) => x[0].equals(step!.chord))
+              }
+            >
+              <option value="-1">-</option>
+              {scale.chords.map((chord, i) => (
+                <option value={i} key={i}>
+                  {chord[0].format('short')}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Octave</Form.Label>
+            <Form.Select
+              size="sm"
+              disabled={step == null}
+              onChange={(e) => {
+                setSteps(
+                  steps.map((step, i) =>
+                    i === iStep && step != null
+                      ? {
+                          chord: step.chord.setOctave(parseInt(e.target.value)),
+                          length: step?.length ?? 1,
+                        }
+                      : step,
+                  ),
+                );
+              }}
+              value={step?.chord.tonic.octave ?? defaultOctave}
+            >
+              {[2, 3, 4, 5].map((i) => (
+                <option value={i} key={i}>
+                  {i}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Duration</Form.Label>
+            <Form.Select
+              size="sm"
+              disabled={step == null}
+              onChange={(e) =>
+                handleStepDurationChange(iStep, parseInt(e.target.value))
+              }
+              value={step?.length ?? 1}
+            >
+              {_.range(1, steps.length + 1).map((i) => (
+                <option value={i} key={i}>
+                  {i}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
         </td>,
       );
     }
@@ -216,6 +354,24 @@ export function ChordSequencer() {
     }
   }
 
+  function handleDragEnd(event: DragEndEvent) {
+    const iActiveStep = event.active.data.current?.iStep as number;
+    const iTargetStep = event.over?.data.current?.iStep as number;
+    console.log(iActiveStep, iTargetStep);
+    const newSteps = [...steps];
+    [newSteps[iActiveStep], newSteps[iTargetStep]] = [
+      newSteps[iTargetStep],
+      newSteps[iActiveStep],
+    ];
+    if (
+      iTargetStep + (newSteps[iTargetStep]?.length ?? 1) >
+      newSteps.indexOf(firstNotNullAfter(newSteps, iTargetStep) ?? null)
+    ) {
+      newSteps[iTargetStep].length = 1;
+    }
+    setSteps(newSteps);
+  }
+
   return (
     <div>
       <h3>Chord Sequencer</h3>
@@ -230,7 +386,9 @@ export function ChordSequencer() {
           value={selectedScale}
         >
           {allScales.map((scale, index) => (
-            <option value={index}>{scale.format('long')}</option>
+            <option value={index} key={index}>
+              {scale.format('long')}
+            </option>
           ))}
         </Form.Select>
       </Form.Group>
@@ -242,8 +400,10 @@ export function ChordSequencer() {
           onChange={(e) => handleStepsCountChange(parseInt(e.target.value))}
           value={stepsCount}
         >
-          {numberOfStepsOptions.map((option) => (
-            <option value={option}>{option}</option>
+          {numberOfStepsOptions.map((option, index) => (
+            <option value={option} key={index}>
+              {option}
+            </option>
           ))}
         </Form.Select>
       </Form.Group>
@@ -260,40 +420,51 @@ export function ChordSequencer() {
       </Form.Group>
 
       <p>Sequencer</p>
-      <Table bordered responsive>
-        <tbody>
-          <tr>
-            <td className="text-nowrap text-muted">1 / 4</td>
-            {_.range(0, steps.length / 2).map((index) => (
-              <td
-                className={`text-nowrap text-center text-muted`}
-                key={index}
-                colSpan={2}
-              >
-                {index + 1}
-              </td>
-            ))}
-          </tr>
-          <tr>
-            <td className="text-nowrap text-muted">1 / 8</td>
-            {steps.map((_step, i) => (
-              <td
-                className={`text-nowrap text-center text-muted ${
-                  i === activeStepIndex ? 'bg-secondary-subtle' : ''
-                }`}
-                key={i}
-                style={{ minWidth: '50px' }}
-              >
-                {i + 1}
-              </td>
-            ))}
-          </tr>
-          <tr>
-            <td></td>
-            {getColumns()}
-          </tr>
-        </tbody>
-      </Table>
+      <DndContext onDragEnd={handleDragEnd}>
+        <Table
+          bordered
+          responsive
+          size="sm"
+          style={{ tableLayout: 'fixed', width: '200%' }}
+        >
+          <tbody>
+            <tr>
+              <td className="text-nowrap text-muted">1 / 4</td>
+              {_.range(0, steps.length / 2).map((index) => (
+                <td
+                  className={`text-nowrap text-center text-muted`}
+                  key={index}
+                  colSpan={2}
+                >
+                  {index + 1}
+                </td>
+              ))}
+            </tr>
+            <tr>
+              <td className="text-nowrap text-muted">1 / 8</td>
+              {steps.map((_step, i) => (
+                <td
+                  className={`text-nowrap text-center text-muted ${
+                    i === activeStepIndex ? 'bg-secondary-subtle' : ''
+                  }`}
+                  key={i}
+                  style={{ minWidth: '50px' }}
+                >
+                  {i + 1}
+                </td>
+              ))}
+            </tr>
+            <tr>
+              <td></td>
+              {getDndColumns()}
+            </tr>
+            <tr>
+              <td></td>
+              {getColumns()}
+            </tr>
+          </tbody>
+        </Table>
+      </DndContext>
       <div className="mt-3">
         <Button variant="dark" onClick={play}>
           {Tone.Transport.state !== 'started' ? (
