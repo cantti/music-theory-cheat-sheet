@@ -19,7 +19,7 @@ import "./index.scss";
 import { defaultScaleParam } from "./utils/url";
 import "react-toastify/dist/ReactToastify.css";
 import { ReadingTrainerGame } from "./components/games/ReadingTrainerGame";
-import { ChordSequencer } from "./components/ChordSequencer";
+import { ChordSequencer } from "./components/chord-sequencer/ChordSequencer";
 import Course from "./components/course/Course";
 
 const router = createBrowserRouter(
