@@ -7,21 +7,22 @@ export interface DroppableData {
 export interface DroppableProps {
   id: string;
   children: React.ReactNode;
+  className?: string;
   data: DroppableData;
+  style?: React.CSSProperties;
 }
 
-export function DroppableTd(props: DroppableProps) {
+export function Droppable(props: DroppableProps) {
   const { isOver, setNodeRef } = useDroppable({
     id: props.id,
     data: props.data,
   });
-  const style = {
-    color: isOver ? 'green' : undefined,
-  };
+
+  const style = { ...props.style, color: isOver ? 'green' : undefined };
 
   return (
-    <td ref={setNodeRef} style={style}>
+    <div ref={setNodeRef} style={style} className={props.className}>
       {props.children}
-    </td>
+    </div>
   );
 }

@@ -1,37 +1,39 @@
-import { useDraggable } from '@dnd-kit/core';
+import { PointerSensor, useDraggable, useSensor } from '@dnd-kit/core';
 
 export interface DraggableData {
-    index: number;
-    action: 'move' | 'resize';
+  index: number;
+  action: 'move' | 'resize';
 }
 interface DraggableProps {
-    id: string;
-    children: React.ReactNode;
-    className?: string;
-    data: DraggableData;
+  id: string;
+  children?: React.ReactNode;
+  className?: string;
+  data: DraggableData;
+  style?: React.CSSProperties;
 }
 
 export function Draggable(props: DraggableProps) {
-    const { attributes, listeners, setNodeRef, transform } = useDraggable({
-        id: props.id,
-        data: props.data,
-    });
-    const style = transform
-        ? {
-            transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-        }
-        : undefined;
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: props.id,
+    data: props.data,
+  });
 
-    return (
-        <div
-            className={props.className}
-            ref={setNodeRef}
-            style={style}
-            {...listeners}
-            {...attributes}
-        >
-            {props.children}
-        </div>
-    );
+  const style = {
+    ...props.style,
+    transform: transform
+      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+      : undefined,
+  };
+
+  return (
+    <div
+      className={props.className}
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+    >
+      {props.children}
+    </div>
+  );
 }
-

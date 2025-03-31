@@ -8,9 +8,16 @@ import _, { parseInt } from 'lodash';
 import { ReactElement, useEffect, useState } from 'react';
 import { allScales } from '../../theory-utils/getScalesByNotes';
 import { BsArrowsMove, BsPlayFill, BsStopFill } from 'react-icons/bs';
-import { DndContext, DragEndEvent } from '@dnd-kit/core';
+import {
+  DndContext,
+  DragEndEvent,
+  MouseSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
 import { RiDraggable } from 'react-icons/ri';
-import { DroppableData, DroppableTd } from './DroppableTd';
+import { DroppableData, Droppable } from './Droppable';
 import { Draggable, DraggableData } from './Draggable';
 
 interface Event {
@@ -109,7 +116,13 @@ export function ChordSequencer() {
   }
 
   function move(from: number, to: number) {
-    console.log(from, to);
+    const eventToMove = events.find((x) => x.start == from)!;
+    eventToMove.start = to;
+    eventToMove.end = eventToMove.end + to - from;
+    let newEvents = events.filter((x) => x.start != to && x.start != from);
+    newEvents.push(eventToMove);
+    newEvents = fixOverlaps(newEvents);
+    setEvents(newEvents);
   }
 
   function handleDragEnd(event: DragEndEvent) {
@@ -121,17 +134,18 @@ export function ChordSequencer() {
     return;
   }
 
-  // function fixOverlaps() {
-  //   let nn: number | undefined;
-  //   for (let i = 0; i < steps.length; i++) {
-  //     if (nn == null && steps[i] != null) {
-  //       nn = i;
-  //       continue;
-  //     }
-  //     if (steps[i] != null && nn + steps[nn]) {
-  //     }
-  //   }
-  // }
+  function fixOverlaps(events: Event[]) {
+    if (events.length < 2) return events;
+    events = _.orderBy(events, (x) => x.start);
+    for (let i = 1; i < events.length; i++) {
+      const prevEvent = events[i - 1];
+      const event = events[i];
+      if (prevEvent != null && prevEvent.end > event.start) {
+        prevEvent.end = event.start;
+      }
+    }
+    return events;
+  }
 
   function getColumns() {
     const columns: ReactElement[] = [];
@@ -191,37 +205,62 @@ export function ChordSequencer() {
     return columns;
   }
 
+  // https://github.com/clauderic/dnd-kit/issues/800
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: { distance: 5 },
+    }),
+  );
+
   function getDndColumns() {
     const columns: ReactElement[] = [];
-    let prevEvent: Event | undefined;
+    let event: Event | undefined;
     for (let i = 0; i < eventsCount; i++) {
-      let event = events.find((x) => x.start == i);
+      if (event != null && event.end <= i) {
+        event = undefined;
+      }
+      event = events.find((x) => x.start == i) ?? event;
       columns.push(
-        <DroppableTd id={`droppable-${i.toString()}`} data={{ index: i }}>
-          <div className="d-flex">
-            {event != null && (
+        <td className={event != null ? 'bg-primary-subtle p-0' : 'p-0'}>
+          <Droppable
+            id={`droppable-${i.toString()}`}
+            data={{ index: i }}
+            style={{ height: '70px' }}
+            className="d-flex"
+          >
+            {event != null ? (
               <>
-                <Draggable
-                  id={`position-${i.toString()}`}
-                  data={{ index: i, action: 'move' }}
-                >
-                  <BsArrowsMove />
-                </Draggable>
+                {event.start == i && (
+                  <Draggable
+                    id={`position-${i.toString()}`}
+                    data={{ index: i, action: 'move' }}
+                    className="m-2"
+                  >
+                    <Button
+                      variant="outline-primary"
+                      onClick={() => {
+                        console.log('click');
+                      }}
+                    >
+                      {event?.chord.format('short')}
+                    </Button>
+                  </Draggable>
+                )}
+                {event.end - 1 == i && (
+                  <Draggable
+                    id={`end-${i.toString()}`}
+                    className="ms-auto h-100 bg-secondary"
+                    style={{ width: '2px' }}
+                    data={{ index: i, action: 'resize' }}
+                  ></Draggable>
+                )}
               </>
+            ) : (
+              'choose'
             )}
-            {prevEvent != null && prevEvent.end - 1 == i && (
-              <Draggable
-                id={`end-${i.toString()}`}
-                className="ms-auto"
-                data={{ index: i, action: 'resize' }}
-              >
-                <RiDraggable />
-              </Draggable>
-            )}
-          </div>
-        </DroppableTd>,
+          </Droppable>
+        </td>,
       );
-      prevEvent = event ?? prevEvent;
     }
     return columns;
   }
@@ -273,7 +312,7 @@ export function ChordSequencer() {
       </Form.Group>
 
       <p>Sequencer</p>
-      <DndContext onDragEnd={handleDragEnd}>
+      <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
         <Table
           bordered
           responsive
@@ -311,10 +350,10 @@ export function ChordSequencer() {
               <td></td>
               {getDndColumns()}
             </tr>
-            <tr>
-              <td></td>
-              {getColumns()}
-            </tr>
+            {/* <tr> */}
+            {/*   <td></td> */}
+            {/*   {getColumns()} */}
+            {/* </tr> */}
           </tbody>
         </Table>
       </DndContext>
