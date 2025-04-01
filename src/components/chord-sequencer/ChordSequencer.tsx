@@ -7,12 +7,11 @@ import Table from 'react-bootstrap/Table';
 import _, { parseInt } from 'lodash';
 import { ReactElement, useEffect, useState } from 'react';
 import { allScales } from '../../theory-utils/getScalesByNotes';
-import { BsArrowsMove, BsPlayFill, BsStopFill } from 'react-icons/bs';
+import { BsPlayFill, BsStopFill } from 'react-icons/bs';
 import {
   DndContext,
   DragEndEvent,
   MouseSensor,
-  PointerSensor,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
@@ -77,19 +76,19 @@ export function ChordSequencer() {
   useEffect(() => {
     Tone.Transport.cancel();
     pianoSynth.releaseAll();
-    for (let i = 0; i <= events.length; i++) {
+    for (let i = 0; i <= eventsCount; i++) {
       Tone.Transport.schedule(
         () => {
-          if (i === events.length) {
+          if (i === eventsCount) {
             Tone.Transport.stop();
             setActiveStepIndex(0);
           } else {
-            const step = events[i];
-            if (step) {
-              const notes = step.chord.notes.map((x) => x.format(true));
+            const event = events.find((x) => x.start === i);
+            if (event) {
+              const notes = event.chord.notes.map((x) => x.format(true));
               pianoSynth.triggerAttack(notes);
               Tone.Transport.schedule(() => pianoSynth.triggerRelease(notes), {
-                // '8n': (i + step.length) * 0.99,
+                '8n': (event.end - event.start) * 0.99,
               });
             }
             setActiveStepIndex(i);
@@ -221,30 +220,39 @@ export function ChordSequencer() {
       }
       event = events.find((x) => x.start == i) ?? event;
       columns.push(
-        <td className={event != null ? 'bg-primary-subtle p-0' : 'p-0'}>
+        <td
+          className={event != null ? 'bg-secondary-subtle p-0' : 'p-0'}
+          style={{ height: '50px' }}
+        >
           <Droppable
             id={`droppable-${i.toString()}`}
             data={{ index: i }}
-            style={{ height: '70px' }}
-            className="d-flex"
+            style={{ height: '100%' }}
+            className="d-flex align-items-center justify-content-center"
           >
             {event != null ? (
               <>
                 {event.start == i && (
-                  <Draggable
-                    id={`position-${i.toString()}`}
-                    data={{ index: i, action: 'move' }}
-                    className="m-2"
-                  >
-                    <Button
-                      variant="outline-primary"
-                      onClick={() => {
-                        console.log('click');
-                      }}
+                  <>
+                    <Draggable
+                      id={`position-${i.toString()}`}
+                      data={{ index: i, action: 'move' }}
+                      className="m-2"
                     >
-                      {event?.chord.format('short')}
-                    </Button>
-                  </Draggable>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="rounded-0 d-flex flex-column align-items-center"
+                        onClick={() => {
+                          console.log('click');
+                        }}
+                      >
+                        <RiDraggable />
+                        <div>{event?.chord.format('long')}</div>
+                      </Button>
+                    </Draggable>
+                    <div></div>
+                  </>
                 )}
                 {event.end - 1 == i && (
                   <Draggable
@@ -317,7 +325,7 @@ export function ChordSequencer() {
           bordered
           responsive
           size="sm"
-          style={{ tableLayout: 'fixed', width: '200%' }}
+          style={{ tableLayout: 'fixed', width: `${90 * eventsCount}px` }}
         >
           <tbody>
             <tr>
