@@ -1,4 +1,4 @@
-import { PointerSensor, useDraggable, useSensor } from '@dnd-kit/core';
+import { useDraggable } from '@dnd-kit/core';
 
 export interface DraggableData {
   index: number;

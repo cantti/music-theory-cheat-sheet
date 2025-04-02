@@ -146,6 +146,7 @@ export function ChordSequencer() {
     return events;
   }
 
+  // @ts-ignore
   function getColumns() {
     const columns: ReactElement[] = [];
     let prevEvent: Event | undefined;
