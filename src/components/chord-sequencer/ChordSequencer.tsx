@@ -1,11 +1,11 @@
-import { Button, Form } from 'react-bootstrap';
+import { Button, Card, Form } from 'react-bootstrap';
 import { pianoSynth } from '../../audio/pianoSynth';
 import { Chord } from '../../theory-utils/chord';
 import * as Tone from 'tone';
 import { startTone } from '../../audio/startTone';
 import Table from 'react-bootstrap/Table';
 import _, { parseInt } from 'lodash';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import { allScales } from '../../theory-utils/getScalesByNotes';
 import { BsPlayFill, BsStopFill } from 'react-icons/bs';
 import {
@@ -15,7 +15,6 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { RiDraggable } from 'react-icons/ri';
 import { DroppableData, Droppable } from './Droppable';
 import { Draggable, DraggableData } from './Draggable';
 
@@ -31,48 +30,25 @@ export function ChordSequencer() {
   const [selectedScale, setSelectedScale] = useState<number>(0);
   const [eventsCount, setEventsCount] = useState<number>(32);
 
+  const [chordPicker, setChordPicker] = useState({
+    x: 0,
+    y: 0,
+    show: false,
+    at: 0,
+  });
+  const chordPickerRef = useRef<HTMLDivElement | null>(null);
+
   const scale = allScales[selectedScale];
-
   const [events, setEvents] = useState<Event[]>([
-    { start: 0, end: 4, chord: scale.chords[0][0] },
-    { start: 8, end: 16, chord: scale.chords[0][0] },
-    { start: 16, end: 24, chord: scale.chords[0][0] },
-    { start: 24, end: 32, chord: scale.chords[0][0] },
+    { start: 0, end: 7, chord: scale.chords[0][0] },
+    { start: 8, end: 15, chord: scale.chords[3][0] },
+    { start: 16, end: 23, chord: scale.chords[4][0] },
+    { start: 24, end: 31, chord: scale.chords[4][0] },
   ]);
-
   const [position, setActiveStepIndex] = useState(0);
-
   const [bpm, setBpm] = useState(120);
 
-  function handleStepsCountChange(newStepsCount: number) {
-    setEventsCount(newStepsCount);
-    let newSteps = events.slice(0, newStepsCount);
-    if (newStepsCount > events.length) {
-      newSteps = [
-        ...newSteps,
-        ...new Array(newStepsCount - events.length).fill(null),
-      ];
-    }
-    setEvents(newSteps);
-  }
-
-  function handleChordChange(at: number, chord: Chord) {
-    const newEvent: Event = {
-      start: at,
-      end: at + 1,
-      chord: chord,
-    };
-    const newEvents = [...events];
-    const oldEvent = events.find((x) => x.start == at);
-    if (oldEvent != null) {
-      newEvent.end = oldEvent.end;
-      newEvents[events.indexOf(oldEvent)] = newEvent;
-    } else {
-      newEvents.push(newEvent);
-    }
-    setEvents(newEvents);
-  }
-
+  //#region Transport
   useEffect(() => {
     Tone.Transport.cancel();
     pianoSynth.releaseAll();
@@ -88,7 +64,7 @@ export function ChordSequencer() {
               const notes = event.chord.notes.map((x) => x.format(true));
               pianoSynth.triggerAttack(notes);
               Tone.Transport.schedule(() => pianoSynth.triggerRelease(notes), {
-                '8n': (event.end - event.start) * 0.99,
+                '8n': (event.end + 1) * 0.99,
               });
             }
             setActiveStepIndex(i);
@@ -113,96 +89,75 @@ export function ChordSequencer() {
       Tone.Transport.start();
     }
   }
+  //#endregion
 
-  function move(from: number, to: number) {
-    const eventToMove = events.find((x) => x.start == from)!;
-    eventToMove.start = to;
-    eventToMove.end = eventToMove.end + to - from;
-    let newEvents = events.filter((x) => x.start != to && x.start != from);
-    newEvents.push(eventToMove);
+  //#region Change Events
+  function changeEventChord(start: number, chord?: Chord) {
+    let newEvents = _(events).cloneDeep();
+    const event = newEvents.find((x) => x.start === start);
+    if (chord == null) {
+      // remove event with chord
+      newEvents = newEvents.filter((x) => x !== event);
+    } else if (event != null) {
+      // change chord of event
+      event.chord = chord;
+    } else {
+      // add new event
+      newEvents.push({
+        start: start,
+        end: start,
+        chord: chord,
+      });
+    }
+    setEvents(newEvents);
+  }
+
+  function moveEventStart(start: number, newStart: number) {
+    let newEvents = _(events)
+      // remove existing event
+      .filter((x) => x.start !== newStart)
+      .cloneDeep();
+    const event = newEvents.find((x) => x.start === start)!;
+    event.start = newStart;
+    event.end = event.end + newStart - start;
     newEvents = fixOverlaps(newEvents);
     setEvents(newEvents);
   }
 
+  function moveEventEnd(start: number, newEnd: number) {
+    if (newEnd < start) return;
+    let newEvents = _(events).cloneDeep();
+    const event = newEvents.find((x) => x.start === start)!;
+    event.end = newEnd;
+    newEvents = fixOverlaps(newEvents);
+    setEvents(newEvents);
+  }
+  //#endregion
+
   function handleDragEnd(event: DragEndEvent) {
     const draggableData = event.active.data.current as DraggableData;
     const droppableData = event.over?.data.current as DroppableData;
-    if (draggableData.action == 'move') {
-      move(draggableData.index, droppableData.index);
+    if (draggableData.action === 'moveStart') {
+      moveEventStart(draggableData.eventStart, droppableData.index);
+    } else if (draggableData.action === 'moveEnd') {
+      moveEventEnd(draggableData.eventStart, droppableData.index);
     }
     return;
   }
 
   function fixOverlaps(events: Event[]) {
     if (events.length < 2) return events;
-    events = _.orderBy(events, (x) => x.start);
+    events = _(events)
+      .orderBy((x) => x.start)
+      .cloneDeep();
     for (let i = 1; i < events.length; i++) {
       const prevEvent = events[i - 1];
       const event = events[i];
-      if (prevEvent != null && prevEvent.end > event.start) {
-        prevEvent.end = event.start;
+      if (prevEvent != null && prevEvent.end >= event.start) {
+        prevEvent.end = event.start - 1;
       }
     }
     return events;
-  }
-
-  // @ts-ignore
-  function getColumns() {
-    const columns: ReactElement[] = [];
-    let prevEvent: Event | undefined;
-    for (let i = 0; i < eventsCount; i++) {
-      let event = events.find((x) => x.start == i);
-      if (prevEvent != null && prevEvent.end > i) continue;
-      columns.push(
-        <td key={i} colSpan={event != null ? event.end - event.start : 1}>
-          <div className="mb-3 h2">
-            {event?.chord.format('short') ?? <>&nbsp;</>}
-          </div>
-          <Form.Group className="mb-3">
-            <Form.Label>Chord</Form.Label>
-            <Form.Select
-              size="sm"
-              onChange={(e) =>
-                handleChordChange(i, scale.chords[parseInt(e.target.value)][0])
-              }
-              value={
-                event == null
-                  ? '-1'
-                  : scale.chords.findIndex((x) => x[0].equals(event!.chord))
-              }
-            >
-              <option value="-1">-</option>
-              {scale.chords.map((chord, i) => (
-                <option value={i} key={i}>
-                  {chord[0].format('short')}
-                </option>
-              ))}
-            </Form.Select>
-          </Form.Group>
-          {/*
-          <Form.Group className="mb-3">
-            <Form.Label>Duration</Form.Label>
-            <Form.Select
-              size="sm"
-              disabled={step == null}
-              onChange={(e) =>
-                handleStepDurationChange(iStep, parseInt(e.target.value))
-              }
-              value={step?.length ?? 1}
-            >
-              {_.range(1, steps.length + 1).map((i) => (
-                <option value={i} key={i}>
-                  {i}
-                </option>
-              ))}
-            </Form.Select>
-          </Form.Group>
-          */}
-        </td>,
-      );
-      prevEvent = event ?? prevEvent;
-    }
-    return columns;
   }
 
   // https://github.com/clauderic/dnd-kit/issues/800
@@ -212,16 +167,56 @@ export function ChordSequencer() {
     }),
   );
 
-  function getDndColumns() {
+  function showChordPicker(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    at: number,
+  ) {
+    const pickerW = chordPickerRef.current
+      ? chordPickerRef.current.getBoundingClientRect().width
+      : 0;
+    const pickerH = chordPickerRef.current
+      ? chordPickerRef.current.getBoundingClientRect().height
+      : 0;
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    const offset = 10;
+    const x = Math.min(e.clientX - offset, screenWidth - pickerW); // Prevent going off the right side
+    const y = Math.min(e.clientY - offset, screenHeight - pickerH); // Prevent going off the bottom side
+    setChordPicker({
+      x: x,
+      y: y,
+      show: true,
+      at: at,
+    });
+  }
+
+  const splitterWidth = 2;
+  const eventWidth = 60;
+
+  function getColumns() {
     const columns: ReactElement[] = [];
     let event: Event | undefined;
     for (let i = 0; i < eventsCount; i++) {
-      if (event != null && event.end <= i) {
+      if (event != null && event.end < i) {
         event = undefined;
       }
       event = events.find((x) => x.start == i) ?? event;
+
+      const chordButton = (
+        <Button
+          variant="secondary"
+          className="rounded-0"
+          size="sm"
+          onClick={(e) => showChordPicker(e, i)}
+          style={{ maxWidth: `${eventWidth - splitterWidth * 2 - 20}px` }}
+        >
+          {event?.chord.format('short')}
+        </Button>
+      );
+
       columns.push(
         <td
+          key={i}
           className={event != null ? 'bg-secondary-subtle p-0' : 'p-0'}
           style={{ height: '50px' }}
         >
@@ -229,43 +224,38 @@ export function ChordSequencer() {
             id={`droppable-${i.toString()}`}
             data={{ index: i }}
             style={{ height: '100%' }}
-            className="d-flex align-items-center justify-content-center"
+            className="d-flex align-items-center justify-content-between"
           >
+            <div style={{ width: `${splitterWidth}px` }} />
             {event != null ? (
               <>
                 {event.start == i && (
                   <>
                     <Draggable
                       id={`position-${i.toString()}`}
-                      data={{ index: i, action: 'move' }}
+                      data={{ eventStart: event.start, action: 'moveStart' }}
                       className="m-2"
                     >
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        className="rounded-0 d-flex flex-column align-items-center"
-                        onClick={() => {
-                          console.log('click');
-                        }}
-                      >
-                        <RiDraggable />
-                        <div>{event?.chord.format('long')}</div>
-                      </Button>
+                      {chordButton}
                     </Draggable>
-                    <div></div>
                   </>
                 )}
-                {event.end - 1 == i && (
+                {event.end == i ? (
                   <Draggable
                     id={`end-${i.toString()}`}
-                    className="ms-auto h-100 bg-secondary"
-                    style={{ width: '2px' }}
-                    data={{ index: i, action: 'resize' }}
-                  ></Draggable>
+                    className="h-100 bg-secondary"
+                    style={{ width: `${splitterWidth}px` }}
+                    data={{ eventStart: event.start, action: 'moveEnd' }}
+                  />
+                ) : (
+                  <div style={{ width: `${splitterWidth}px` }} />
                 )}
               </>
             ) : (
-              'choose'
+              <>
+                {chordButton}
+                <div style={{ width: `${splitterWidth}px` }} />
+              </>
             )}
           </Droppable>
         </td>,
@@ -273,9 +263,52 @@ export function ChordSequencer() {
     }
     return columns;
   }
+
   return (
     <div>
       <h3>Chord Sequencer</h3>
+
+      <Card
+        body
+        style={{
+          position: 'fixed',
+          left: `${chordPicker.x}px`,
+          top: `${chordPicker.y}px`,
+          visibility: chordPicker.show ? 'visible' : 'hidden',
+        }}
+        onMouseLeave={() => setChordPicker({ ...chordPicker, show: false })}
+        ref={chordPickerRef}
+      >
+        <div className="mb-2 d-flex flex-column gap-1">
+          <Button
+            variant="outline-danger"
+            onClick={() => {
+              changeEventChord(chordPicker.at, undefined);
+              setChordPicker({ ...chordPicker, show: false });
+            }}
+          >
+            x
+          </Button>
+          {scale.chords.map((chord, i) => (
+            <Button
+              key={i}
+              variant="outline-secondary"
+              active={
+                events.find((x) => x.start == chordPicker.at) &&
+                chord[0].equals(
+                  events.find((x) => x.start == chordPicker.at)!.chord,
+                )
+              }
+              onClick={() => {
+                changeEventChord(chordPicker.at, chord[0]);
+                setChordPicker({ ...chordPicker, show: false });
+              }}
+            >
+              {chord[0].format('long')}
+            </Button>
+          ))}
+        </div>
+      </Card>
 
       <Form.Group className="mb-3">
         <Form.Label>Scale</Form.Label>
@@ -298,7 +331,7 @@ export function ChordSequencer() {
         <Form.Label>Steps (1/8)</Form.Label>
         <Form.Select
           size="sm"
-          onChange={(e) => handleStepsCountChange(parseInt(e.target.value))}
+          onChange={(e) => setEventsCount(parseInt(e.target.value))}
           value={eventsCount}
         >
           {numberOfStepsOptions.map((option, index) => (
@@ -326,7 +359,10 @@ export function ChordSequencer() {
           bordered
           responsive
           size="sm"
-          style={{ tableLayout: 'fixed', width: `${90 * eventsCount}px` }}
+          style={{
+            tableLayout: 'fixed',
+            width: `${eventWidth * eventsCount}px`,
+          }}
         >
           <tbody>
             <tr>
@@ -346,10 +382,9 @@ export function ChordSequencer() {
               {_.range(0, eventsCount).map((_step, i) => (
                 <td
                   className={`text-nowrap text-center text-muted ${
-                    i === position ? 'bg-secondary-subtle' : ''
+                    i === position ? 'bg-danger-subtle' : ''
                   }`}
                   key={i}
-                  style={{ minWidth: '50px' }}
                 >
                   {i}
                 </td>
@@ -357,12 +392,8 @@ export function ChordSequencer() {
             </tr>
             <tr>
               <td></td>
-              {getDndColumns()}
+              {getColumns()}
             </tr>
-            {/* <tr> */}
-            {/*   <td></td> */}
-            {/*   {getColumns()} */}
-            {/* </tr> */}
           </tbody>
         </Table>
       </DndContext>

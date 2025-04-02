@@ -1,8 +1,8 @@
 import { useDraggable } from '@dnd-kit/core';
 
 export interface DraggableData {
-  index: number;
-  action: 'move' | 'resize';
+  eventStart: number;
+  action: 'moveStart' | 'moveEnd';
 }
 interface DraggableProps {
   id: string;
