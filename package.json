@@ -12,6 +12,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
     "bootstrap": "^5.2.3",
     "framer-motion": "^8.4.3",
     "gh-pages": "^3.2.3",
@@ -19,9 +20,8 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.0",
     "react-dom": "^18.2.0",
-    "react-icons": "^4.11.0",
+    "react-icons": "^5.5.0",
     "react-markdown": "^10.1.0",
-    "react-router-dom": "^6.6.2",
     "react-toastify": "^9.1.1",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-external-links": "^3.0.0",
@@ -31,7 +31,8 @@
     "remark-toc": "^9.0.0",
     "sass": "^1.57.1",
     "tone": "^14.7.77",
-    "vexflow": "^4.1.0"
+    "vexflow": "^4.1.0",
+    "wouter": "^3.6.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.167",

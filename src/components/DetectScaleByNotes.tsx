@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { Button, Col, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { Note } from "../theory-utils/note";
-import { getScalesByNotes } from "../theory-utils/getScalesByNotes";
-import Piano from "./Piano";
-import { AnimatePresence, motion } from "framer-motion";
-import { Scale } from "../theory-utils/scale";
+import { useState } from 'react';
+import { Button, Col, Row } from 'react-bootstrap';
+import { Note } from '../theory-utils/note';
+import { getScalesByNotes } from '../theory-utils/getScalesByNotes';
+import Piano from './Piano';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Scale } from '../theory-utils/scale';
+import { Link } from 'wouter';
 
 interface ScaleButtonProps {
   scale: Scale;
@@ -20,12 +20,12 @@ function ScaleButton({ scale, index }: ScaleButtonProps) {
       transition={{ duration: 0.3, delay: index * 0.025 }}
       exit={{ opacity: 0, scale: 0.5 }}
     >
-      <Link to={"/circle/" + encodeURIComponent(scale.format())}>
+      <Link href={'/circle/' + encodeURIComponent(scale.format())}>
         <Button
-          variant={scale.shortName === "m" ? "info" : "warning"}
+          variant={scale.shortName === 'm' ? 'info' : 'warning'}
           className="w-100 text-truncate mb-2"
         >
-          {scale.format("long")}
+          {scale.format('long')}
         </Button>
       </Link>
     </motion.div>
@@ -63,11 +63,11 @@ export function DetectScaleByNotes() {
             <b>Major</b>
             <AnimatePresence>
               {possibleScales
-                .filter((x) => x.shortName !== "m")
+                .filter((x) => x.shortName !== 'm')
                 .map((scale, index) => (
                   <ScaleButton
                     scale={scale}
-                    key={scale.format("short")}
+                    key={scale.format('short')}
                     index={index}
                   />
                 ))}
@@ -77,11 +77,11 @@ export function DetectScaleByNotes() {
             <b>Parallel minor</b>
             <AnimatePresence>
               {possibleScales
-                .filter((x) => x.shortName === "m")
+                .filter((x) => x.shortName === 'm')
                 .map((scale, index) => (
                   <ScaleButton
                     scale={scale}
-                    key={scale.format("short")}
+                    key={scale.format('short')}
                     index={index}
                   />
                 ))}

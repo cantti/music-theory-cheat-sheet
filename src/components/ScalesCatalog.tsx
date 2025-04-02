@@ -1,56 +1,51 @@
-import { motion } from "framer-motion";
-import { ChangeEvent, useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import {
-  Navigate,
-  useNavigate,
-  useParams,
-  useRouteError,
-} from "react-router-dom";
-import { Letter } from "../theory-utils/letter";
-import { Note } from "../theory-utils/note";
-import { getScaleFormUrlParams, ScaleParamError } from "../utils/url";
-import Piano from "./Piano";
-import { ScaleInfo } from "./ScaleInfo";
-import { ScaleName } from "../theory-utils/scale";
+import { motion } from 'framer-motion';
+import { ChangeEvent, useState } from 'react';
+import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Letter } from '../theory-utils/letter';
+import { Note } from '../theory-utils/note';
+import { getScaleFormUrlParams } from '../utils/url';
+import Piano from './Piano';
+import { ScaleInfo } from './ScaleInfo';
+import { ScaleName } from '../theory-utils/scale';
+import { useLocation, useParams } from 'wouter';
 
 const allScaleNames: ScaleName[] = [
-  "Major",
-  "Natural Minor",
-  "Harmonic Minor",
-  "Melodic Minor",
-  "Major Pentatonic",
-  "Minor Pentatonic",
+  'Major',
+  'Natural Minor',
+  'Harmonic Minor',
+  'Melodic Minor',
+  'Major Pentatonic',
+  'Minor Pentatonic',
 ];
 
 export function ScalesCatalog() {
-  const navigate = useNavigate();
+  const [, navigate] = useLocation();
 
   const urlParams = useParams<{ scale: string }>();
 
   const activeScale = getScaleFormUrlParams(urlParams.scale!);
 
-  const [useFlat, setUseFlat] = useState(activeScale.tonic.accidental === "b");
+  const [useFlat, setUseFlat] = useState(activeScale.tonic.accidental === 'b');
 
   function handleUseFlatChange(e: ChangeEvent<HTMLInputElement>) {
     const checked = e.target.checked;
     setUseFlat(checked);
-    if (activeScale.tonic.accidental !== "") {
+    if (activeScale.tonic.accidental !== '') {
       const letters: Letter[][] = [
-        ["C", "D"],
-        ["D", "E"],
-        ["F", "G"],
-        ["G", "A"],
-        ["A", "B"],
+        ['C', 'D'],
+        ['D', 'E'],
+        ['F', 'G'],
+        ['G', 'A'],
+        ['A', 'B'],
       ];
       const newLetter = letters.filter(
         (x) => x[checked ? 0 : 1] === activeScale.tonic.letter,
       )[0][checked ? 1 : 0];
       navigate(
-        "/scales/" +
+        '/scales/' +
           encodeURIComponent(
-            new Note(newLetter, checked ? "b" : "#").format(false) +
-              " " +
+            new Note(newLetter, checked ? 'b' : '#').format(false) +
+              ' ' +
               activeScale.name,
           ),
       );
@@ -70,9 +65,9 @@ export function ScalesCatalog() {
                 useFlats={useFlat}
                 onNoteClick={(note) =>
                   navigate(
-                    "/scales/" +
+                    '/scales/' +
                       encodeURIComponent(
-                        note.format(false) + " " + activeScale.name,
+                        note.format(false) + ' ' + activeScale.name,
                       ),
                   )
                 }
@@ -84,13 +79,13 @@ export function ScalesCatalog() {
                 <Button
                   key={scaleName}
                   className="w-100 mb-1"
-                  variant={scaleName.includes("Minor") ? "info" : "warning"}
+                  variant={scaleName.includes('Minor') ? 'info' : 'warning'}
                   disabled={activeScale.name === scaleName}
                   onClick={() =>
                     navigate(
-                      "/scales/" +
+                      '/scales/' +
                         encodeURIComponent(
-                          activeScale.tonic.format(false) + " " + scaleName,
+                          activeScale.tonic.format(false) + ' ' + scaleName,
                         ),
                     )
                   }
@@ -126,12 +121,4 @@ export function ScalesCatalog() {
       </Row>
     </>
   );
-}
-
-export function ScaleInfoErrorElement() {
-  const error = useRouteError();
-  if (error instanceof ScaleParamError) {
-    return <Navigate to="/scales" />;
-  }
-  return null;
 }
