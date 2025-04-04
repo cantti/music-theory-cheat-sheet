@@ -12,6 +12,7 @@ import {
   DndContext,
   DragEndEvent,
   MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
@@ -163,6 +164,9 @@ export function ChordSequencer() {
   // https://github.com/clauderic/dnd-kit/issues/800
   const sensors = useSensors(
     useSensor(MouseSensor, {
+      activationConstraint: { distance: 5 },
+    }),
+    useSensor(TouchSensor, {
       activationConstraint: { distance: 5 },
     }),
   );
