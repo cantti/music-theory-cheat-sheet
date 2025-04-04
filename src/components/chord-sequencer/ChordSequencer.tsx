@@ -1,4 +1,4 @@
-import { Button, Card, Form } from 'react-bootstrap';
+import { Button, Card, Container, Form } from 'react-bootstrap';
 import { pianoSynth } from '../../audio/pianoSynth';
 import { Chord } from '../../theory-utils/chord';
 import * as Tone from 'tone';
@@ -48,6 +48,15 @@ export function ChordSequencer() {
   ]);
   const [position, setActiveStepIndex] = useState(0);
   const [bpm, setBpm] = useState(120);
+  const [dragStarted, setDragStarted] = useState(false);
+
+  // event width (zoom)
+  const [eventWidthPercent, setEventWidthPercentValue] = useState(50);
+  const eventMinWidth = 50;
+  const eventMaxWidth = 150;
+  const eventWidth =
+    (eventWidthPercent / 100) * (eventMaxWidth - eventMinWidth) + eventMinWidth;
+  const splitterWidth = 2;
 
   //#region Transport
   useEffect(() => {
@@ -136,6 +145,7 @@ export function ChordSequencer() {
   //#endregion
 
   function handleDragEnd(event: DragEndEvent) {
+    setDragStarted(false);
     const draggableData = event.active.data.current as DraggableData;
     const droppableData = event.over?.data.current as DroppableData;
     if (draggableData.action === 'moveStart') {
@@ -144,6 +154,10 @@ export function ChordSequencer() {
       moveEventEnd(draggableData.eventStart, droppableData.index);
     }
     return;
+  }
+
+  function handleDragStart() {
+    setDragStarted(true);
   }
 
   function fixOverlaps(events: Event[]) {
@@ -193,9 +207,6 @@ export function ChordSequencer() {
       at: at,
     });
   }
-
-  const splitterWidth = 2;
-  const eventWidth = 60;
 
   function getColumns() {
     const columns: ReactElement[] = [];
@@ -269,9 +280,7 @@ export function ChordSequencer() {
   }
 
   return (
-    <div>
-      <h3>Chord Sequencer</h3>
-
+    <>
       <Card
         body
         style={{
@@ -314,106 +323,129 @@ export function ChordSequencer() {
         </div>
       </Card>
 
-      <Form.Group className="mb-3">
-        <Form.Label>Scale</Form.Label>
-        <Form.Select
-          size="sm"
-          onChange={(e) => {
-            setSelectedScale(parseInt(e.target.value));
-          }}
-          value={selectedScale}
-        >
-          {allScales.map((scale, index) => (
-            <option value={index} key={index}>
-              {scale.format('long')}
-            </option>
-          ))}
-        </Form.Select>
-      </Form.Group>
+      <Container>
+        <h3>Chord Sequencer</h3>
+        <Form.Group className="mb-3">
+          <Form.Label>Scale</Form.Label>
+          <Form.Select
+            size="sm"
+            onChange={(e) => {
+              setSelectedScale(parseInt(e.target.value));
+            }}
+            value={selectedScale}
+          >
+            {allScales.map((scale, index) => (
+              <option value={index} key={index}>
+                {scale.format('long')}
+              </option>
+            ))}
+          </Form.Select>
+        </Form.Group>
 
-      <Form.Group className="mb-3">
-        <Form.Label>Steps (1/8)</Form.Label>
-        <Form.Select
-          size="sm"
-          onChange={(e) => setEventsCount(parseInt(e.target.value))}
-          value={eventsCount}
-        >
-          {numberOfStepsOptions.map((option, index) => (
-            <option value={option} key={index}>
-              {option}
-            </option>
-          ))}
-        </Form.Select>
-      </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Steps (1/8)</Form.Label>
+          <Form.Select
+            size="sm"
+            onChange={(e) => setEventsCount(parseInt(e.target.value))}
+            value={eventsCount}
+          >
+            {numberOfStepsOptions.map((option, index) => (
+              <option value={option} key={index}>
+                {option}
+              </option>
+            ))}
+          </Form.Select>
+        </Form.Group>
 
-      <Form.Group className="mb-3">
-        <Form.Label>BPM</Form.Label>
-        <Form.Range
-          min="1"
-          max="300"
-          value={bpm}
-          onChange={(e) => setBpm(parseInt(e.target.value))}
-        />
-        <Form.Text>{bpm}</Form.Text>
-      </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>BPM</Form.Label>
+          <Form.Range
+            min="1"
+            max="300"
+            value={bpm}
+            onChange={(e) => setBpm(parseInt(e.target.value))}
+          />
+          <Form.Text>{bpm}</Form.Text>
+        </Form.Group>
 
-      <p>Sequencer</p>
-      <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
-        <Table
-          bordered
-          responsive
-          size="sm"
-          style={{
-            tableLayout: 'fixed',
-            width: `${eventWidth * eventsCount}px`,
-          }}
+        <Form.Group className="mb-3">
+          <Form.Label>Zoom</Form.Label>
+          <Form.Range
+            min="0"
+            max="100"
+            value={eventWidthPercent}
+            onChange={(e) =>
+              setEventWidthPercentValue(parseInt(e.target.value))
+            }
+          />
+          <Form.Text>{eventWidthPercent}</Form.Text>
+        </Form.Group>
+
+        <div className="mt-3">
+          <Button variant="dark" onClick={play}>
+            {Tone.Transport.state !== 'started' ? (
+              <>
+                <BsPlayFill /> Play
+              </>
+            ) : (
+              <>
+                <BsStopFill /> Stop
+              </>
+            )}
+          </Button>
+        </div>
+      </Container>
+
+      <div className="m-3">
+        <p>Sequencer</p>
+        <DndContext
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          sensors={sensors}
         >
-          <tbody>
-            <tr>
-              <td className="text-nowrap text-muted">1 / 4</td>
-              {_.range(0, eventsCount / 2).map((index) => (
-                <td
-                  className={`text-nowrap text-center text-muted`}
-                  key={index}
-                  colSpan={2}
-                >
-                  {index}
-                </td>
-              ))}
-            </tr>
-            <tr>
-              <td className="text-nowrap text-muted">1 / 8</td>
-              {_.range(0, eventsCount).map((_step, i) => (
-                <td
-                  className={`text-nowrap text-center text-muted ${
-                    i === position ? 'bg-danger-subtle' : ''
-                  }`}
-                  key={i}
-                >
-                  {i}
-                </td>
-              ))}
-            </tr>
-            <tr>
-              <td></td>
-              {getColumns()}
-            </tr>
-          </tbody>
-        </Table>
-      </DndContext>
-      <div className="mt-3">
-        <Button variant="dark" onClick={play}>
-          {Tone.Transport.state !== 'started' ? (
-            <>
-              <BsPlayFill /> Play
-            </>
-          ) : (
-            <>
-              <BsStopFill /> Stop
-            </>
-          )}
-        </Button>
+          <Table
+            bordered
+            responsive={!dragStarted}
+            size="sm"
+            style={{
+              tableLayout: 'fixed',
+              width: `${eventWidth * eventsCount}px`,
+            }}
+          >
+            <tbody>
+              <tr>
+                <td className="text-nowrap text-muted">1 / 4</td>
+                {_.range(0, eventsCount / 2).map((index) => (
+                  <td
+                    className={`text-nowrap text-center text-muted`}
+                    key={index}
+                    colSpan={2}
+                  >
+                    {index}
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <td className="text-nowrap text-muted">1 / 8</td>
+                {_.range(0, eventsCount).map((_step, i) => (
+                  <td
+                    className={`text-nowrap text-center text-muted ${
+                      i === position ? 'bg-danger-subtle' : ''
+                    }`}
+                    key={i}
+                  >
+                    {i}
+                  </td>
+                ))}
+              </tr>
+              <tr>
+                <td></td>
+                {getColumns()}
+              </tr>
+            </tbody>
+          </Table>
+        </DndContext>
       </div>
-    </div>
+    </>
   );
 }

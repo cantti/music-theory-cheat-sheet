@@ -131,11 +131,9 @@ function App() {
           </Route>
         </Container>
 
-        <Container fluid>
-          <Route path="/chord-sequencer">
-            <ChordSequencer />
-          </Route>
-        </Container>
+        <Route path="/chord-sequencer">
+          <ChordSequencer />
+        </Route>
       </Suspense>
     </Router>
   );
