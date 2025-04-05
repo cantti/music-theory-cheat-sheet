@@ -11,12 +11,7 @@ $keySize: $fontSize * 1.6;
   //compensate key size
   padding-top: $keySize * 0.5;
   padding-bottom: $keySize * 0.5;
-
-  @include media-breakpoint-up(lg) {
-    width: 70%;
-    margin-left: auto;
-    margin-right: auto;
-  }
+  width: 100%;
 }
 
 .circle {

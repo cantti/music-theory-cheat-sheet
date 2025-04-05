@@ -5,12 +5,12 @@ import * as Tone from 'tone';
 import { startTone } from '../../audio/startTone';
 import _, { parseInt } from 'lodash';
 import { ReactElement, useEffect, useRef, useState } from 'react';
-import { allScales } from '../../theory-utils/getScalesByNotes';
 import {
   BsGrid3X3Gap,
   BsPlayFill,
   BsSpeedometer2,
   BsStopFill,
+  BsXLg,
   BsZoomIn,
 } from 'react-icons/bs';
 import {
@@ -28,7 +28,9 @@ import { DraggableData } from './Draggable';
 import { Cell, EventCell } from './Cell';
 import { SequencerEvent } from './SequencerEvent';
 import { SequencerRow } from './SequencerRow';
-import { GiMusicalScore } from 'react-icons/gi';
+import { CircleOfFifths } from '../CircleOfFifths';
+import { Scale } from '../../theory-utils/scale';
+import { n } from '../../theory-utils/note';
 
 const customCollisionDetection: CollisionDetection = ({
   collisionRect,
@@ -57,7 +59,6 @@ const customCollisionDetection: CollisionDetection = ({
 const numberOfStepsOptions = [4, 8, 16, 32, 64, 128];
 
 export function ChordSequencer() {
-  const [selectedScale, setSelectedScale] = useState<number>(0);
   const [duration, setDuration] = useState<number>(32);
 
   const [chordPicker, setChordPicker] = useState({
@@ -68,20 +69,19 @@ export function ChordSequencer() {
   });
   const chordPickerRef = useRef<HTMLDivElement | null>(null);
 
-  const scale = allScales[selectedScale];
   const [events, setEvents] = useState<SequencerEvent[]>([
-    { start: 0, end: 7, chord: scale.chords[0][0] },
-    { start: 8, end: 15, chord: scale.chords[3][0] },
-    { start: 16, end: 23, chord: scale.chords[4][0] },
-    { start: 24, end: 31, chord: scale.chords[4][0] },
+    { start: 0, end: 7, chord: new Chord(n('C'), 'Major') },
+    { start: 8, end: 15, chord: new Chord(n('F'), 'Major') },
+    { start: 16, end: 23, chord: new Chord(n('G'), 'Major') },
+    { start: 24, end: 31, chord: new Chord(n('G'), 'Major') },
   ]);
   const [position, setPosition] = useState(0);
   const [bpm, setBpm] = useState(120);
 
   // event width (zoom)
   const [cellWidthPercent, setCellWidthPercentValue] = useState(50);
-  const cellMinWidth = 50;
-  const cellMaxWidth = 150;
+  const cellMinWidth = 30;
+  const cellMaxWidth = 100;
   const cellWidth =
     (cellWidthPercent / 100) * (cellMaxWidth - cellMinWidth) + cellMinWidth;
   const cellEventHeight = 70;
@@ -193,11 +193,6 @@ export function ChordSequencer() {
       }
     }
     return events;
-  }
-
-  function handleScaleChange(index: number) {
-    setSelectedScale(index);
-    setEvents([]);
   }
 
   function handleDurationChange(newValue: number) {
@@ -316,21 +311,24 @@ export function ChordSequencer() {
     );
   }
 
+  const currChord = events.find((x) => x.start == chordPicker.at)?.chord;
+
   return (
     <>
       <Card
         body
         style={{
+          width: 420,
           position: 'fixed',
           left: `${chordPicker.x}px`,
           top: `${chordPicker.y}px`,
           visibility: chordPicker.show ? 'visible' : 'hidden',
-          zIndex: 100,
+          zIndex: 1,
         }}
         onMouseLeave={() => setChordPicker({ ...chordPicker, show: false })}
         ref={chordPickerRef}
       >
-        <div className="mb-2 d-flex flex-column gap-1">
+        <Card.Body className="d-flex flex-column align-items-center gap-2 p-0">
           <Button
             variant="outline-danger"
             onClick={() => {
@@ -338,52 +336,33 @@ export function ChordSequencer() {
               setChordPicker({ ...chordPicker, show: false });
             }}
           >
-            x
+            <BsXLg /> Clear chord
           </Button>
-          {scale.chords.map((chord, i) => (
-            <Button
-              key={i}
-              variant="outline-secondary"
-              active={
-                events.find((x) => x.start == chordPicker.at) &&
-                chord[0].equals(
-                  events.find((x) => x.start == chordPicker.at)!.chord,
-                )
-              }
-              onClick={() => {
-                changeEventChord(chordPicker.at, chord[0]);
-                setChordPicker({ ...chordPicker, show: false });
-              }}
-            >
-              {chord[0].format('long')}
-            </Button>
-          ))}
-        </div>
+          <CircleOfFifths
+            scale={
+              currChord != null
+                ? new Scale(
+                    currChord?.tonic,
+                    currChord?.name === 'Major' ? 'Major' : 'Natural Minor',
+                  )
+                : undefined
+            }
+            onScaleClick={(scale) => {
+              changeEventChord(
+                chordPicker.at,
+                new Chord(
+                  scale.tonic,
+                  scale.name === 'Major' ? 'Major' : 'Minor',
+                ),
+              );
+              setChordPicker({ ...chordPicker, show: false });
+            }}
+          />
+        </Card.Body>
       </Card>
 
       <Container fluid>
         <h3>Chord Sequencer</h3>
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column>
-            <GiMusicalScore /> Scale
-          </Form.Label>
-          <Col sm="10">
-            <Form.Select
-              size="sm"
-              onChange={(e) => {
-                handleScaleChange(parseInt(e.target.value));
-              }}
-              value={selectedScale}
-            >
-              {allScales.map((scale, index) => (
-                <option value={index} key={index}>
-                  {scale.format('long')}
-                </option>
-              ))}
-            </Form.Select>
-          </Col>
-        </Form.Group>
-
         <Form.Group as={Row} className="mb-3">
           <Form.Label column>
             <BsGrid3X3Gap /> Duration
