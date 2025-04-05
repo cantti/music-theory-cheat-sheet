@@ -9,7 +9,7 @@ export class Chord {
   constructor(
     readonly tonic: Note,
     readonly name: ChordName,
-    readonly inversion: number = 0,
+    public inversion: number = 0,
   ) {}
 
   get shortName() {
@@ -51,7 +51,7 @@ export class Chord {
   }
 
   invert(number: number) {
-    return new Chord(this.tonic, this.name, this.inversion + number);
+    this.inversion = this.inversion + number;
   }
 
   setOctave(octave: number) {

@@ -6,7 +6,7 @@ export interface DroppableData {
 
 export interface DroppableProps {
   id: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   data: DroppableData;
   style?: React.CSSProperties;

@@ -1,4 +1,4 @@
-import { Button, Card, Container, Form } from 'react-bootstrap';
+import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import { pianoSynth } from '../../audio/pianoSynth';
 import { Chord } from '../../theory-utils/chord';
 import * as Tone from 'tone';
@@ -6,8 +6,16 @@ import { startTone } from '../../audio/startTone';
 import _, { parseInt } from 'lodash';
 import { ReactElement, useEffect, useRef, useState } from 'react';
 import { allScales } from '../../theory-utils/getScalesByNotes';
-import { BsPlayFill, BsStopFill } from 'react-icons/bs';
 import {
+  BsGrid3X3Gap,
+  BsPlayFill,
+  BsSpeedometer2,
+  BsStopFill,
+  BsZoomIn,
+} from 'react-icons/bs';
+import {
+  Collision,
+  CollisionDetection,
   DndContext,
   DragEndEvent,
   MouseSensor,
@@ -15,17 +23,42 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { DroppableData } from './Droppable';
+import { Droppable, DroppableData } from './Droppable';
 import { DraggableData } from './Draggable';
-import { Column } from './Column';
 import { Cell, EventCell } from './Cell';
 import { SequencerEvent } from './SequencerEvent';
+import { SequencerRow } from './SequencerRow';
+import { GiMusicalScore } from 'react-icons/gi';
+
+const customCollisionDetection: CollisionDetection = ({
+  collisionRect,
+  droppableRects,
+  droppableContainers,
+}) => {
+  const collisions: Collision[] = [];
+  for (const droppable of droppableContainers.values()) {
+    const rect = droppableRects.get(droppable.id);
+    if (!rect) continue;
+    const isWithinBounds =
+      collisionRect.left >= rect.left && collisionRect.left <= rect.right;
+    if (isWithinBounds) {
+      collisions.push({
+        id: droppable.id,
+        data: {
+          droppable,
+        },
+      });
+    }
+  }
+
+  return collisions;
+};
 
 const numberOfStepsOptions = [4, 8, 16, 32, 64, 128];
 
 export function ChordSequencer() {
   const [selectedScale, setSelectedScale] = useState<number>(0);
-  const [eventsCount, setEventsCount] = useState<number>(32);
+  const [duration, setDuration] = useState<number>(32);
 
   const [chordPicker, setChordPicker] = useState({
     x: 0,
@@ -42,40 +75,38 @@ export function ChordSequencer() {
     { start: 16, end: 23, chord: scale.chords[4][0] },
     { start: 24, end: 31, chord: scale.chords[4][0] },
   ]);
-  const [position, setActiveStepIndex] = useState(0);
+  const [position, setPosition] = useState(0);
   const [bpm, setBpm] = useState(120);
 
   // event width (zoom)
-  const [eventWidthPercent, setEventWidthPercentValue] = useState(50);
-  const eventMinWidth = 50;
-  const eventMaxWidth = 150;
-  const eventWidth =
-    (eventWidthPercent / 100) * (eventMaxWidth - eventMinWidth) + eventMinWidth;
+  const [cellWidthPercent, setCellWidthPercentValue] = useState(50);
+  const cellMinWidth = 50;
+  const cellMaxWidth = 150;
+  const cellWidth =
+    (cellWidthPercent / 100) * (cellMaxWidth - cellMinWidth) + cellMinWidth;
+  const cellEventHeight = 70;
+  const cellHeight = 40;
 
   //#region Transport
   useEffect(() => {
     Tone.Transport.cancel();
-    pianoSynth.releaseAll();
-    for (let i = 0; i <= eventsCount; i++) {
-      Tone.Transport.schedule(
-        () => {
-          if (i === eventsCount) {
-            Tone.Transport.stop();
-            setActiveStepIndex(0);
-          } else {
-            const event = events.find((x) => x.start === i);
-            if (event) {
-              const notes = event.chord.notes.map((x) => x.format(true));
-              pianoSynth.triggerAttack(notes);
-              Tone.Transport.schedule(() => pianoSynth.triggerRelease(notes), {
-                '8n': (event.end + 1) * 0.99,
-              });
-            }
-            setActiveStepIndex(i);
-          }
-        },
-        { '8n': i },
-      );
+    Tone.Transport.loop = true;
+    Tone.Transport.loopStart = 0;
+    Tone.Transport.loopEnd = { '8n': duration };
+    for (let i = 0; i < events.length; i++) {
+      const event = events[i];
+      const notes = event.chord.notes.map((x) => x.format(true));
+      Tone.Transport.schedule(() => pianoSynth.triggerAttack(notes), {
+        '8n': event.start,
+      });
+      Tone.Transport.schedule(() => pianoSynth.releaseAll(), {
+        '8n': (event.end + 1) * 0.99,
+      });
+    }
+    for (let i = 0; i < duration; i++) {
+      Tone.Transport.schedule(() => setPosition(i), {
+        '8n': i,
+      });
     }
   }, [events]);
 
@@ -88,7 +119,7 @@ export function ChordSequencer() {
     if (Tone.Transport.state === 'started') {
       Tone.Transport.stop();
       pianoSynth.releaseAll();
-      setActiveStepIndex(0);
+      setPosition(0);
     } else {
       Tone.Transport.start();
     }
@@ -117,6 +148,7 @@ export function ChordSequencer() {
   }
 
   function moveEventStart(start: number, newStart: number) {
+    if (start == newStart) return;
     let newEvents = _(events)
       // remove existing event
       .filter((x) => x.start !== newStart)
@@ -163,6 +195,16 @@ export function ChordSequencer() {
     return events;
   }
 
+  function handleScaleChange(index: number) {
+    setSelectedScale(index);
+    setEvents([]);
+  }
+
+  function handleDurationChange(newValue: number) {
+    setDuration(newValue);
+    setEvents([]);
+  }
+
   // https://github.com/clauderic/dnd-kit/issues/800
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -196,30 +238,82 @@ export function ChordSequencer() {
     });
   }
 
-  function getColumns() {
-    const columns: ReactElement[] = [];
-    columns.push(
-      <Column width={eventWidth}>
-        <Cell>1 / 4</Cell>
-        <Cell>1 / 8</Cell>
-        <Cell fill></Cell>
-      </Column>,
+  function getQuarterNotesRow() {
+    const cells: ReactElement[] = [];
+    cells.push(
+      <Cell width={cellWidth} padding>
+        1 / 4
+      </Cell>,
     );
-    let event: SequencerEvent | undefined;
-    for (let i = 0; i < eventsCount; i++) {
-      if (event != null && event.end < i) {
-        event = undefined;
-      }
-      event = events.find((x) => x.start == i) ?? event;
-      columns.push(
-        <Column key={i} width={eventWidth}>
-          <Cell>{i % 2 === 0 ? <>{i}</> : <>&nbsp;</>}</Cell>
-          <Cell highlight={i === position}>{i}</Cell>
-          <EventCell index={i} onClick={showChordPicker} event={event} />
-        </Column>,
+    for (let i = 0; i < duration; i++) {
+      cells.push(
+        <Cell width={cellWidth} padding>
+          {i % 2 === 0 ? i / 2 : ''}
+        </Cell>,
       );
     }
-    return columns;
+    return <SequencerRow height={cellHeight}>{cells}</SequencerRow>;
+  }
+
+  function getEighthsNotesRow() {
+    const cells: ReactElement[] = [];
+    cells.push(
+      <Cell width={cellWidth} padding>
+        1 / 8
+      </Cell>,
+    );
+    for (let i = 0; i < duration; i++) {
+      cells.push(
+        <Cell width={cellWidth} highlight={i === position} padding>
+          {i}
+        </Cell>,
+      );
+    }
+    return <SequencerRow height={cellHeight}>{cells}</SequencerRow>;
+  }
+
+  function getEventCells() {
+    const cells: ReactElement[] = [];
+    for (let i = 0; i < events.length; i++) {
+      const event = events[i];
+      cells.push(
+        <EventCell width={cellWidth} onClick={showChordPicker} event={event} />,
+      );
+    }
+    return cells;
+  }
+
+  function getEventsRow() {
+    const cells: ReactElement[] = [];
+    cells.push(<Cell width={cellWidth}></Cell>);
+    for (let i = 0; i < duration; i++) {
+      cells.push(
+        <Cell width={cellWidth}>
+          <Droppable
+            id={`droppable-${i.toString()}`}
+            data={{ index: i }}
+            style={{
+              width: '100%',
+              height: '100%',
+            }}
+            className="d-flex align-items-center justify-content-center"
+          >
+            <Button
+              variant="secondary"
+              className="rounded-0"
+              size="sm"
+              onClick={(e) => showChordPicker(e, i)}
+            ></Button>
+          </Droppable>
+        </Cell>,
+      );
+    }
+    return (
+      <SequencerRow height={cellEventHeight}>
+        {cells}
+        {getEventCells()}
+      </SequencerRow>
+    );
   }
 
   return (
@@ -231,6 +325,7 @@ export function ChordSequencer() {
           left: `${chordPicker.x}px`,
           top: `${chordPicker.y}px`,
           visibility: chordPicker.show ? 'visible' : 'hidden',
+          zIndex: 100,
         }}
         onMouseLeave={() => setChordPicker({ ...chordPicker, show: false })}
         ref={chordPickerRef}
@@ -266,66 +361,83 @@ export function ChordSequencer() {
         </div>
       </Card>
 
-      <Container>
+      <Container fluid>
         <h3>Chord Sequencer</h3>
-        <Form.Group className="mb-3">
-          <Form.Label>Scale</Form.Label>
-          <Form.Select
-            size="sm"
-            onChange={(e) => {
-              setSelectedScale(parseInt(e.target.value));
-            }}
-            value={selectedScale}
-          >
-            {allScales.map((scale, index) => (
-              <option value={index} key={index}>
-                {scale.format('long')}
-              </option>
-            ))}
-          </Form.Select>
+        <Form.Group as={Row} className="mb-3">
+          <Form.Label column>
+            <GiMusicalScore /> Scale
+          </Form.Label>
+          <Col sm="10">
+            <Form.Select
+              size="sm"
+              onChange={(e) => {
+                handleScaleChange(parseInt(e.target.value));
+              }}
+              value={selectedScale}
+            >
+              {allScales.map((scale, index) => (
+                <option value={index} key={index}>
+                  {scale.format('long')}
+                </option>
+              ))}
+            </Form.Select>
+          </Col>
         </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Steps (1/8)</Form.Label>
-          <Form.Select
-            size="sm"
-            onChange={(e) => setEventsCount(parseInt(e.target.value))}
-            value={eventsCount}
-          >
-            {numberOfStepsOptions.map((option, index) => (
-              <option value={option} key={index}>
-                {option}
-              </option>
-            ))}
-          </Form.Select>
+        <Form.Group as={Row} className="mb-3">
+          <Form.Label column>
+            <BsGrid3X3Gap /> Duration
+          </Form.Label>
+          <Col sm="10">
+            <Form.Select
+              size="sm"
+              onChange={(e) => handleDurationChange(parseInt(e.target.value))}
+              value={duration}
+            >
+              {numberOfStepsOptions.map((option, index) => (
+                <option value={option} key={index}>
+                  {option}
+                </option>
+              ))}
+            </Form.Select>
+          </Col>
         </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>BPM</Form.Label>
-          <Form.Range
-            min="1"
-            max="300"
-            value={bpm}
-            onChange={(e) => setBpm(parseInt(e.target.value))}
-          />
-          <Form.Text>{bpm}</Form.Text>
+        <Form.Group as={Row} className="mb-3">
+          <Form.Label column>
+            <BsSpeedometer2 /> BPM
+          </Form.Label>
+          <Col sm="10">
+            <Form.Text>{bpm}</Form.Text>
+            <Form.Range
+              min="1"
+              max="300"
+              value={bpm}
+              onChange={(e) => setBpm(parseInt(e.target.value))}
+            />
+          </Col>
         </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Zoom</Form.Label>
-          <Form.Range
-            min="0"
-            max="100"
-            value={eventWidthPercent}
-            onChange={(e) =>
-              setEventWidthPercentValue(parseInt(e.target.value))
-            }
-          />
-          <Form.Text>{eventWidthPercent}</Form.Text>
+        <Form.Group as={Row} className="mb-3">
+          <Form.Label column>
+            <BsZoomIn /> Zoom
+          </Form.Label>
+          <Col sm="10">
+            <Form.Text>{cellWidthPercent}%</Form.Text>
+            <Form.Range
+              min="0"
+              max="100"
+              value={cellWidthPercent}
+              onChange={(e) =>
+                setCellWidthPercentValue(parseInt(e.target.value))
+              }
+            />
+          </Col>
         </Form.Group>
 
-        <div className="mt-3">
-          <Button variant="dark" onClick={play}>
+        <div className="d-flex align-items-center gap-3 mb-3">
+          <div>Sequencer</div>
+          <Button variant="dark" size="sm" onClick={play}>
             {Tone.Transport.state !== 'started' ? (
               <>
                 <BsPlayFill /> Play
@@ -337,19 +449,22 @@ export function ChordSequencer() {
             )}
           </Button>
         </div>
-      </Container>
-
-      <div className="m-3">
-        <p>Sequencer</p>
-        <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
+        <DndContext
+          collisionDetection={customCollisionDetection}
+          onDragEnd={handleDragEnd}
+          sensors={sensors}
+        >
+          {/* 1 px is border-start compensation  */}
           <div
-            className="d-flex overflow-x-auto border"
-            style={{ height: 150 }}
+            className="overflow-x-auto border-start border-top"
+            style={{ width: cellWidth * (duration + 1) + 1 }}
           >
-            {getColumns()}
+            {getQuarterNotesRow()}
+            {getEighthsNotesRow()}
+            {getEventsRow()}
           </div>
         </DndContext>
-      </div>
+      </Container>
     </>
   );
 }

@@ -71,7 +71,11 @@ function App() {
                     Reading trainer
                   </NavDropdown.Item>
                 </NavDropdown>
-                <Nav.Link as={NavLink} href="/chord-sequencer">
+                <Nav.Link
+                  as={NavLink}
+                  href="/chord-sequencer"
+                  active={location.startsWith('/chord-sequencer')}
+                >
                   Chord Sequencer
                 </Nav.Link>
                 <Nav.Link

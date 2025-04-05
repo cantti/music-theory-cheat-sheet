@@ -14,16 +14,16 @@ interface DraggableProps {
 }
 
 export function Draggable(props: DraggableProps) {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: props.id,
-    data: props.data,
-  });
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: props.id,
+      data: props.data,
+    });
 
   const style = {
     ...props.style,
-    transform: transform
-      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
-      : undefined,
+    zIndex: isDragging ? 1 : 0,
+    transform: transform ? `translate3d(${transform.x}px, 0, 0)` : undefined,
   };
 
   return (
