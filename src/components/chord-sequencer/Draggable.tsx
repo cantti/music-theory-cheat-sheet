@@ -4,6 +4,7 @@ export interface DraggableData {
   eventStart: number;
   action: 'moveStart' | 'moveEnd';
 }
+
 interface DraggableProps {
   id: string;
   children?: React.ReactNode;

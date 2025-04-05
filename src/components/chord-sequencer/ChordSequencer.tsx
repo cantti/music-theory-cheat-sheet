@@ -3,7 +3,6 @@ import { pianoSynth } from '../../audio/pianoSynth';
 import { Chord } from '../../theory-utils/chord';
 import * as Tone from 'tone';
 import { startTone } from '../../audio/startTone';
-import Table from 'react-bootstrap/Table';
 import _, { parseInt } from 'lodash';
 import { ReactElement, useEffect, useRef, useState } from 'react';
 import { allScales } from '../../theory-utils/getScalesByNotes';
@@ -16,14 +15,11 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { DroppableData, Droppable } from './Droppable';
-import { Draggable, DraggableData } from './Draggable';
-
-interface Event {
-  chord: Chord;
-  start: number;
-  end: number;
-}
+import { DroppableData } from './Droppable';
+import { DraggableData } from './Draggable';
+import { Column } from './Column';
+import { Cell, EventCell } from './Cell';
+import { SequencerEvent } from './SequencerEvent';
 
 const numberOfStepsOptions = [4, 8, 16, 32, 64, 128];
 
@@ -40,7 +36,7 @@ export function ChordSequencer() {
   const chordPickerRef = useRef<HTMLDivElement | null>(null);
 
   const scale = allScales[selectedScale];
-  const [events, setEvents] = useState<Event[]>([
+  const [events, setEvents] = useState<SequencerEvent[]>([
     { start: 0, end: 7, chord: scale.chords[0][0] },
     { start: 8, end: 15, chord: scale.chords[3][0] },
     { start: 16, end: 23, chord: scale.chords[4][0] },
@@ -48,7 +44,6 @@ export function ChordSequencer() {
   ]);
   const [position, setActiveStepIndex] = useState(0);
   const [bpm, setBpm] = useState(120);
-  const [dragStarted, setDragStarted] = useState(false);
 
   // event width (zoom)
   const [eventWidthPercent, setEventWidthPercentValue] = useState(50);
@@ -56,7 +51,6 @@ export function ChordSequencer() {
   const eventMaxWidth = 150;
   const eventWidth =
     (eventWidthPercent / 100) * (eventMaxWidth - eventMinWidth) + eventMinWidth;
-  const splitterWidth = 2;
 
   //#region Transport
   useEffect(() => {
@@ -145,7 +139,6 @@ export function ChordSequencer() {
   //#endregion
 
   function handleDragEnd(event: DragEndEvent) {
-    setDragStarted(false);
     const draggableData = event.active.data.current as DraggableData;
     const droppableData = event.over?.data.current as DroppableData;
     if (draggableData.action === 'moveStart') {
@@ -153,14 +146,9 @@ export function ChordSequencer() {
     } else if (draggableData.action === 'moveEnd') {
       moveEventEnd(draggableData.eventStart, droppableData.index);
     }
-    return;
   }
 
-  function handleDragStart() {
-    setDragStarted(true);
-  }
-
-  function fixOverlaps(events: Event[]) {
+  function fixOverlaps(events: SequencerEvent[]) {
     if (events.length < 2) return events;
     events = _(events)
       .orderBy((x) => x.start)
@@ -210,70 +198,25 @@ export function ChordSequencer() {
 
   function getColumns() {
     const columns: ReactElement[] = [];
-    let event: Event | undefined;
+    columns.push(
+      <Column width={eventWidth}>
+        <Cell>1 / 4</Cell>
+        <Cell>1 / 8</Cell>
+        <Cell fill></Cell>
+      </Column>,
+    );
+    let event: SequencerEvent | undefined;
     for (let i = 0; i < eventsCount; i++) {
       if (event != null && event.end < i) {
         event = undefined;
       }
       event = events.find((x) => x.start == i) ?? event;
-
-      const chordButton = (
-        <Button
-          variant="secondary"
-          className="rounded-0"
-          size="sm"
-          onClick={(e) => showChordPicker(e, i)}
-          style={{ maxWidth: `${eventWidth - splitterWidth * 2 - 20}px` }}
-        >
-          {event?.chord.format('short')}
-        </Button>
-      );
-
       columns.push(
-        <td
-          key={i}
-          className={event != null ? 'bg-secondary-subtle p-0' : 'p-0'}
-          style={{ height: '50px' }}
-        >
-          <Droppable
-            id={`droppable-${i.toString()}`}
-            data={{ index: i }}
-            style={{ height: '100%' }}
-            className="d-flex align-items-center justify-content-between"
-          >
-            <div style={{ width: `${splitterWidth}px` }} />
-            {event != null ? (
-              <>
-                {event.start == i && (
-                  <>
-                    <Draggable
-                      id={`position-${i.toString()}`}
-                      data={{ eventStart: event.start, action: 'moveStart' }}
-                      className="m-2"
-                    >
-                      {chordButton}
-                    </Draggable>
-                  </>
-                )}
-                {event.end == i ? (
-                  <Draggable
-                    id={`end-${i.toString()}`}
-                    className="h-100 bg-secondary"
-                    style={{ width: `${splitterWidth}px` }}
-                    data={{ eventStart: event.start, action: 'moveEnd' }}
-                  />
-                ) : (
-                  <div style={{ width: `${splitterWidth}px` }} />
-                )}
-              </>
-            ) : (
-              <>
-                {chordButton}
-                <div style={{ width: `${splitterWidth}px` }} />
-              </>
-            )}
-          </Droppable>
-        </td>,
+        <Column key={i} width={eventWidth}>
+          <Cell>{i % 2 === 0 ? <>{i}</> : <>&nbsp;</>}</Cell>
+          <Cell highlight={i === position}>{i}</Cell>
+          <EventCell index={i} onClick={showChordPicker} event={event} />
+        </Column>,
       );
     }
     return columns;
@@ -398,52 +341,13 @@ export function ChordSequencer() {
 
       <div className="m-3">
         <p>Sequencer</p>
-        <DndContext
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-          sensors={sensors}
-        >
-          <Table
-            bordered
-            responsive={!dragStarted}
-            size="sm"
-            style={{
-              tableLayout: 'fixed',
-              width: `${eventWidth * eventsCount}px`,
-            }}
+        <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
+          <div
+            className="d-flex overflow-x-auto border"
+            style={{ height: 150 }}
           >
-            <tbody>
-              <tr>
-                <td className="text-nowrap text-muted">1 / 4</td>
-                {_.range(0, eventsCount / 2).map((index) => (
-                  <td
-                    className={`text-nowrap text-center text-muted`}
-                    key={index}
-                    colSpan={2}
-                  >
-                    {index}
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                <td className="text-nowrap text-muted">1 / 8</td>
-                {_.range(0, eventsCount).map((_step, i) => (
-                  <td
-                    className={`text-nowrap text-center text-muted ${
-                      i === position ? 'bg-danger-subtle' : ''
-                    }`}
-                    key={i}
-                  >
-                    {i}
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                <td></td>
-                {getColumns()}
-              </tr>
-            </tbody>
-          </Table>
+            {getColumns()}
+          </div>
         </DndContext>
       </div>
     </>
