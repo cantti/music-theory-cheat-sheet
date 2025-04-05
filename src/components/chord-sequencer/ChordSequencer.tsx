@@ -457,7 +457,7 @@ export function ChordSequencer() {
           {/* 1 px is border-start compensation  */}
           <div
             className="overflow-x-auto border-start border-top"
-            style={{ width: cellWidth * (duration + 1) + 1 }}
+            style={{ width: cellWidth * (duration + 1) + 1, maxWidth: '100%' }}
           >
             {getQuarterNotesRow()}
             {getEighthsNotesRow()}
