@@ -53,7 +53,11 @@ function App() {
                 >
                   Scales
                 </Nav.Link>
-                <Nav.Link as={NavLink} href="/detect-scale-by-notes">
+                <Nav.Link
+                  as={NavLink}
+                  href="/detect-scale-by-notes"
+                  active={location.startsWith('/detect-scale-by-notes')}
+                >
                   Scale by notes
                 </Nav.Link>
                 <NavDropdown
@@ -86,7 +90,11 @@ function App() {
                 >
                   Course
                 </Nav.Link>
-                <Nav.Link as={NavLink} href="/discography">
+                <Nav.Link
+                  as={NavLink}
+                  href="/about"
+                  active={location.startsWith('/about')}
+                >
                   About me
                 </Nav.Link>
               </Nav>
@@ -102,7 +110,7 @@ function App() {
             <DetectScaleByNotes />
           </Route>
 
-          <Route path="/discography">
+          <Route path="/about">
             <AboutMe />
           </Route>
 
