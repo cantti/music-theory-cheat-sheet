@@ -1,4 +1,4 @@
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { Alert, Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { pianoSynth } from '../../audio/pianoSynth';
 import { Chord } from '../../theory-utils/chord';
 import * as Tone from 'tone';
@@ -24,13 +24,12 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { Droppable, DroppableData } from './Droppable';
-import { Draggable, DraggableData } from './Draggable';
-import { Cell } from './Cell';
+import { DraggableData } from './Draggable';
+import { Cell, EventCell } from './Cell';
 import { SequencerEvent } from './SequencerEvent';
 import { SequencerRow } from './SequencerRow';
 import { n } from '../../theory-utils/note';
 import { ChordPicker } from './ChordPicker';
-import { RiPlayMiniFill } from 'react-icons/ri';
 import { AnimatePresence, motion } from 'motion/react';
 
 const customCollisionDetection: CollisionDetection = ({
@@ -78,13 +77,11 @@ export function ChordSequencer() {
   const [bpm, setBpm] = useState(120);
 
   // event width (zoom)
-  const [cellWidthPercent, setCellWidthPercentValue] = useState(50);
-  const cellMinWidth = 40;
-  const cellMaxWidth = 100;
-  const cellWidth =
-    (cellWidthPercent / 100) * (cellMaxWidth - cellMinWidth) + cellMinWidth;
-  const cellEventHeight = 70;
-  const cellHeight = 40;
+  const [minZoom, maxZoom] = [50, 200]; // %
+  const [zoom, setZoom] = useState(100); // %
+  const cellWidth = 100 / (duration + 1); // %
+  const cellEventHeight = 70; // px
+  const cellHeight = 40; // px
 
   //#region Transport
   useEffect(() => {
@@ -204,13 +201,13 @@ export function ChordSequencer() {
   function getQuarterNotesRow() {
     const cells: ReactElement[] = [];
     cells.push(
-      <Cell width={cellWidth} padding>
+      <Cell key={0} cellWidth={cellWidth} col={0}>
         1 / 4
       </Cell>,
     );
     for (let i = 0; i < duration; i++) {
       cells.push(
-        <Cell width={cellWidth} padding>
+        <Cell key={i} cellWidth={cellWidth} col={i + 1}>
           {i % 2 === 0 ? i / 2 : ''}
         </Cell>,
       );
@@ -221,15 +218,28 @@ export function ChordSequencer() {
   function getEighthsNotesRow() {
     const cells: ReactElement[] = [];
     cells.push(
-      <Cell width={cellWidth} padding>
+      <Cell key={0} cellWidth={cellWidth} col={0}>
         1 / 8
       </Cell>,
     );
     for (let i = 0; i < duration; i++) {
       cells.push(
-        <Cell key={i} width={cellWidth} padding>
+        <Cell key={i} cellWidth={cellWidth} col={i + 1}>
+          {i}
+        </Cell>,
+      );
+    }
+    return <SequencerRow height={cellHeight}>{cells}</SequencerRow>;
+  }
+
+  function getPlayHeadRow() {
+    const cells: ReactElement[] = [];
+    cells.push(<Cell key={0} cellWidth={cellWidth} col={0}></Cell>);
+    for (let i = 1; i < duration + 1; i++) {
+      cells.push(
+        <Cell key={i} cellWidth={cellWidth} col={i}>
           <AnimatePresence>
-            {i === position ? (
+            {i === position && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{
@@ -239,72 +249,29 @@ export function ChordSequencer() {
                   opacity: 0,
                 }}
                 transition={{ duration: Tone.Time('8n').toSeconds() * 2 }}
-                className="text-danger"
-              >
-                <RiPlayMiniFill />
-              </motion.div>
-            ) : (
-              i
+                style={{ width: '100%', height: '100%' }}
+                className="bg-danger"
+              ></motion.div>
             )}
           </AnimatePresence>
         </Cell>,
       );
     }
-    return <SequencerRow height={cellHeight}>{cells}</SequencerRow>;
+    return <SequencerRow height={10}>{cells}</SequencerRow>;
   }
 
   function getEventCells() {
     const cells: ReactElement[] = [];
-    for (let i = 0; i < events.length; i++) {
-      const event = events[i];
+    for (let pos = 0; pos < events.length; pos++) {
+      const event = events[pos];
       cells.push(
-        <Draggable
-          id={`draggable-${event.start.toString()}`}
-          data={{ eventStart: event.start, action: 'moveStart' }}
-          className="d-flex align-items-center bg-info-subtle border border-end-0 border-secondary border-2 ps-1"
-          style={{
-            width: cellWidth * (event.end - event.start + 1),
-            left: cellWidth + event.start * cellWidth,
-            position: 'absolute',
-            height: '100%',
-            fontSize: '0.9em',
-          }}
+        <EventCell
+          key={pos}
+          edited={editedEvent === event.start}
           onClick={() => setEditedPosition(event.start)}
-        >
-          <div className="d-flex flex-column align-items-center gap-1 flex-fill overflow-hidden text-nowrap fw-bold">
-            <motion.div
-              key={event?.chord.format()}
-              initial={{ scale: 0 }}
-              animate={{
-                scale: 1,
-                transition: { duration: 0.3 },
-              }}
-            >
-              {event?.chord.format('short')}
-            </motion.div>
-            {editedEvent === event.start && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{
-                  scale: 1,
-                  transition: { duration: 0.3 },
-                }}
-              >
-                <BsPencilFill />
-              </motion.div>
-            )}
-          </div>
-          <Draggable
-            id={`end-${event.start.toString()}`}
-            className="bg-secondary"
-            style={{
-              width: 2,
-              height: '100%',
-              cursor: 'col-resize',
-            }}
-            data={{ eventStart: event.start, action: 'moveEnd' }}
-          />
-        </Draggable>,
+          cellWidth={cellWidth}
+          event={event}
+        />,
       );
     }
     return cells;
@@ -312,24 +279,23 @@ export function ChordSequencer() {
 
   function getEventsRow() {
     const cells: ReactElement[] = [];
-    cells.push(<Cell width={cellWidth}></Cell>);
-    for (let i = 0; i < duration; i++) {
+    cells.push(<Cell cellWidth={cellWidth} col={0}></Cell>);
+    for (let pos = 0; pos < duration; pos++) {
       cells.push(
-        <Cell width={cellWidth}>
+        <Cell key={pos} cellWidth={cellWidth} col={pos + 1}>
           <Droppable
-            id={`droppable-${i.toString()}`}
-            data={{ index: i }}
+            id={`droppable-${pos.toString()}`}
+            data={{ index: pos }}
             style={{
               width: '100%',
               height: '100%',
               cursor: 'pointer',
             }}
             className="d-flex align-items-center justify-content-center"
-            onClick={() => setEditedPosition(i)}
+            onClick={() => setEditedPosition(pos)}
           >
-            {editedEvent === i && events.find((x) => x.start === i) == null && (
-              <BsPencilFill />
-            )}
+            {editedEvent === pos &&
+              events.find((x) => x.start === pos) == null && <BsPencilFill />}
           </Droppable>
         </Cell>,
       );
@@ -394,14 +360,12 @@ export function ChordSequencer() {
             <BsZoomIn /> Zoom
           </Form.Label>
           <Col sm="10">
-            <Form.Text>{cellWidthPercent}%</Form.Text>
+            <Form.Text>{zoom}%</Form.Text>
             <Form.Range
-              min="0"
-              max="100"
-              value={cellWidthPercent}
-              onChange={(e) =>
-                setCellWidthPercentValue(parseInt(e.target.value))
-              }
+              min={minZoom}
+              max={maxZoom}
+              value={zoom}
+              onChange={(e) => setZoom(parseInt(e.target.value))}
             />
           </Col>
         </Form.Group>
@@ -426,22 +390,33 @@ export function ChordSequencer() {
           onDragEnd={handleDragEnd}
           sensors={dndSensors}
         >
-          <div
-            className="d-inline-flex flex-column overflow-x-auto border-start border-top mb-3 noselect"
-            style={{ maxWidth: '100%' }}
-          >
-            {getQuarterNotesRow()}
-            {getEighthsNotesRow()}
-            {getEventsRow()}
+          {/* div with scrollbar */}
+          <div className="overflow-x-auto mb-3 noselect">
+            {/* sequencer */}
+            <div
+              className="d-flex flex-column border-top border-start"
+              style={{ width: `${zoom}%` }}
+            >
+              {getPlayHeadRow()}
+              {getQuarterNotesRow()}
+              {getEighthsNotesRow()}
+              {getEventsRow()}
+            </div>
           </div>
         </DndContext>
 
-        <p>Edit selected chord:</p>
-        {editedEvent != null && (
-          <ChordPicker
-            editedChord={editedChord}
-            onChordClick={(chord) => changeEventChord(editedEvent, chord)}
-          />
+        {editedEvent == null ? (
+          <Alert variant="info">
+            Click on a cell in the grid to edit or create a chord.
+          </Alert>
+        ) : (
+          <>
+            <p>Edit selected chord:</p>
+            <ChordPicker
+              editedChord={editedChord}
+              onChordClick={(chord) => changeEventChord(editedEvent, chord)}
+            />
+          </>
         )}
       </Container>
     </>

@@ -69,6 +69,7 @@ export function ChordPicker(props: ChordPickerProps) {
             <ButtonGroup size="sm">
               {[-2, -1, 0, 1, 2].map((inversion) => (
                 <Button
+                  key={inversion}
                   variant="outline-secondary"
                   className={`${props.editedChord != null && props.editedChord.inversion === inversion ? 'bg-secondary text-light' : ''}`}
                   onClick={() => handleInvertClick(inversion)}
@@ -83,6 +84,7 @@ export function ChordPicker(props: ChordPickerProps) {
             <ButtonGroup size="sm">
               {[2, 3, 4, 5, 6].map((octave) => (
                 <Button
+                  key={octave}
                   variant="outline-secondary"
                   className={`${props.editedChord != null && props.editedChord.tonic.octave === octave ? 'bg-secondary text-light' : ''}`}
                   onClick={() => handleOctaveClick(octave)}
