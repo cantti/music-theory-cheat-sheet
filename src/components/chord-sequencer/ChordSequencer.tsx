@@ -30,8 +30,8 @@ import { SequencerEvent } from './SequencerEvent';
 import { SequencerRow } from './SequencerRow';
 import { n } from '../../theory-utils/note';
 import { ChordPicker } from './ChordPicker';
-import { motion } from 'framer-motion';
 import { RiPlayMiniFill } from 'react-icons/ri';
+import { AnimatePresence, motion } from 'motion/react';
 
 const customCollisionDetection: CollisionDetection = ({
   collisionRect,
@@ -228,19 +228,25 @@ export function ChordSequencer() {
     for (let i = 0; i < duration; i++) {
       cells.push(
         <Cell key={i} width={cellWidth} padding>
-          {i === position ? (
-            <motion.div
-              initial={{ scale: 2 }}
-              animate={{
-                scale: 1,
-                transition: { duration: 0.3 },
-              }}
-            >
-              <RiPlayMiniFill />
-            </motion.div>
-          ) : (
-            i
-          )}
+          <AnimatePresence>
+            {i === position ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: 1,
+                }}
+                exit={{
+                  opacity: 0,
+                }}
+                transition={{ duration: Tone.Time('8n').toSeconds() * 2 }}
+                className="text-danger"
+              >
+                <RiPlayMiniFill />
+              </motion.div>
+            ) : (
+              i
+            )}
+          </AnimatePresence>
         </Cell>,
       );
     }

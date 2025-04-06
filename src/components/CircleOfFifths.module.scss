@@ -49,15 +49,17 @@ $keySize: $fontSize * 1.6;
 
 .key {
   position: absolute;
+  //to make key in the middle of circle board (based on width and height property
+  margin-left: -$keySize * 0.5;
+  margin-top: -$keySize * 0.5;
+}
+
+.key button {
   width: $keySize;
   height: $keySize;
   line-height: 1 !important;
   padding: 0 !important;
   border-radius: 50% !important;
-
-  //to make key in the middle of circle board (based on width and height property
-  margin-left: -$keySize * 0.5;
-  margin-top: -$keySize * 0.5;
 }
 
 @for $i from 0 through 11 {

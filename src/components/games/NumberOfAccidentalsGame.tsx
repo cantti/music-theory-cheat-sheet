@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import _ from 'lodash';
 import { useRef, useState } from 'react';
 import { Button, ButtonGroup, Card } from 'react-bootstrap';
@@ -7,6 +6,7 @@ import { Accidental } from '../../theory-utils/accidental';
 import { Note } from '../../theory-utils/note';
 import { Scale } from '../../theory-utils/scale';
 import { Link } from 'wouter';
+import { motion } from 'motion/react';
 
 class Question {
   constructor(public scale: Scale) {}

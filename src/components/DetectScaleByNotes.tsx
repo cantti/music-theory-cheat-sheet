@@ -3,9 +3,9 @@ import { Button, Col, Row } from 'react-bootstrap';
 import { Note } from '../theory-utils/note';
 import { getScalesByNotes } from '../theory-utils/getScalesByNotes';
 import Piano from './Piano';
-import { AnimatePresence, motion } from 'framer-motion';
 import { Scale } from '../theory-utils/scale';
 import { Link } from 'wouter';
+import { AnimatePresence, motion } from 'motion/react';
 
 interface ScaleButtonProps {
   scale: Scale;

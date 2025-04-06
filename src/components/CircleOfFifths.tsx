@@ -1,11 +1,9 @@
-import { motion } from 'framer-motion';
 import _ from 'lodash';
 import { Button } from 'react-bootstrap';
 import { n } from '../theory-utils/note';
 import { Scale, scale } from '../theory-utils/scale';
 import styles from './CircleOfFifths.module.scss';
-
-const MotionButton = motion(Button);
+import { motion } from 'motion/react';
 
 const scalesInCircle: { scale: Scale; clickable: boolean }[][] = [
   [{ scale: scale(n('C'), 'Major'), clickable: true }],
@@ -93,42 +91,45 @@ export function CircleOfFifths(props: CircleOfFifthsProps) {
   ) {
     return scalesInCircleButtons.map((circleItem, idx) => {
       return (
-        <MotionButton
+        <motion.div
+          key={idx}
+          className={styles.key}
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.3 }}
-          className={styles.key}
-          key={idx}
-          variant={
-            circleItem.filter((x) => x.clickable)[0].scale.format() ===
-            props.scale?.format()
-              ? 'danger'
-              : props.highlightNear &&
-                  _.intersection(
-                    _.flatten(props.scale?.chords).map((x) =>
-                      x.format('short'),
-                    ),
-                    circleItem.map((x) => x.scale.format('short')),
-                  ).length > 0
-                ? 'secondary'
-                : 'light border border-2'
-          }
-          onClick={() => {
-            if (props.onScaleClick != null) {
-              props.onScaleClick(
-                circleItem.filter((x) => x.clickable)[0].scale,
-              );
-            }
-          }}
-          active={
-            circleItem.filter((x) => x.clickable)[0].scale.format() ===
-            props.scale?.format()
-          }
         >
-          {circleItem.map((x, idx) => (
-            <div key={idx}>{x.scale.format('short')}</div>
-          ))}
-        </MotionButton>
+          <Button
+            variant={
+              circleItem.filter((x) => x.clickable)[0].scale.format() ===
+              props.scale?.format()
+                ? 'danger'
+                : props.highlightNear &&
+                    _.intersection(
+                      _.flatten(props.scale?.chords).map((x) =>
+                        x.format('short'),
+                      ),
+                      circleItem.map((x) => x.scale.format('short')),
+                    ).length > 0
+                  ? 'secondary'
+                  : 'light border border-2'
+            }
+            onClick={() => {
+              if (props.onScaleClick != null) {
+                props.onScaleClick(
+                  circleItem.filter((x) => x.clickable)[0].scale,
+                );
+              }
+            }}
+            active={
+              circleItem.filter((x) => x.clickable)[0].scale.format() ===
+              props.scale?.format()
+            }
+          >
+            {circleItem.map((x, idx) => (
+              <div key={idx}>{x.scale.format('short')}</div>
+            ))}
+          </Button>
+        </motion.div>
       );
     });
   }

@@ -1,15 +1,15 @@
-import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import _ from "lodash";
-import { Button, ButtonGroup, Card, Col, Row } from "react-bootstrap";
-import { BsArrowRight, BsClock, BsFlag } from "react-icons/bs";
-import { GiFClef, GiGClef } from "react-icons/gi";
-import { Vex } from "vexflow";
-import { Letter } from "../../theory-utils/letter";
-import { Note } from "../../theory-utils/note";
-import Piano from "../Piano";
+import { useEffect, useRef, useState } from 'react';
+import _ from 'lodash';
+import { Button, ButtonGroup, Card, Col, Row } from 'react-bootstrap';
+import { BsArrowRight, BsClock, BsFlag } from 'react-icons/bs';
+import { GiFClef, GiGClef } from 'react-icons/gi';
+import { Vex } from 'vexflow';
+import { Letter } from '../../theory-utils/letter';
+import { Note } from '../../theory-utils/note';
+import Piano from '../Piano';
+import { motion } from 'motion/react';
 
-type Clef = "treble" | "bass";
+type Clef = 'treble' | 'bass';
 
 interface Question {
   note: Note;
@@ -25,9 +25,9 @@ function questionIsRight(question: Question) {
 
 const allNotes: Note[] = [];
 
-for (const letterChar of new Array<Letter>("C", "D", "E", "F", "G", "A", "B")) {
+for (const letterChar of new Array<Letter>('C', 'D', 'E', 'F', 'G', 'A', 'B')) {
   for (const octave of _.range(2, 6)) {
-    allNotes.push(new Note(letterChar, "", octave));
+    allNotes.push(new Note(letterChar, '', octave));
   }
 }
 
@@ -50,7 +50,7 @@ function drawNote(elementId: string, note: Note, clef: string) {
   factory
     .System()
     .addStave({
-      voices: [score.voice(score.notes(note.format(true) + "/w", { clef }))],
+      voices: [score.voice(score.notes(note.format(true) + '/w', { clef }))],
     })
     .addClef(clef);
   factory.draw();
@@ -58,11 +58,11 @@ function drawNote(elementId: string, note: Note, clef: string) {
 }
 
 export function ReadingTrainerGame() {
-  const [gameState, setGameState] = useState<"welcome" | "started" | "results">(
-    "welcome",
+  const [gameState, setGameState] = useState<'welcome' | 'started' | 'results'>(
+    'welcome',
   );
 
-  const [clefSetting, setClefSetting] = useState<Clef | "both">("both");
+  const [clefSetting, setClefSetting] = useState<Clef | 'both'>('both');
 
   const [questionsCountSetting, setQuestionsCountSetting] = useState(10);
   const [timeLimitSetting, setTimeLimitSetting] = useState(5);
@@ -107,19 +107,19 @@ export function ReadingTrainerGame() {
         note,
         clef:
           note.octave < 4
-            ? "bass"
+            ? 'bass'
             : // C4 can be in both bass or treble
-              note.octave === 4 && note.letter === "C"
-              ? _.sample(["bass", "treble"])!
-              : "treble",
+              note.octave === 4 && note.letter === 'C'
+              ? _.sample(['bass', 'treble'])!
+              : 'treble',
       }))
       .filter(
-        (question) => clefSetting === "both" || question.clef === clefSetting,
+        (question) => clefSetting === 'both' || question.clef === clefSetting,
       )
       .sampleSize(questionsCountSetting)
       .value();
     setQuestions(questions);
-    setGameState("started");
+    setGameState('started');
     startTimer();
   }
 
@@ -127,15 +127,15 @@ export function ReadingTrainerGame() {
     stopTimer();
     setControlsDisabled(true);
     if (questionIsRight(questions[currentQuestionIndex])) {
-      questionRef.current?.classList.add("bg-success");
+      questionRef.current?.classList.add('bg-success');
     } else {
-      questionRef.current?.classList.add("bg-danger");
+      questionRef.current?.classList.add('bg-danger');
     }
     setTimeout(() => {
-      questionRef.current?.classList.remove("bg-success", "bg-danger");
+      questionRef.current?.classList.remove('bg-success', 'bg-danger');
       setControlsDisabled(false);
       if (currentQuestionIndex === questionsCountSetting - 1) {
-        setGameState("results");
+        setGameState('results');
       } else {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
         startTimer();
@@ -154,15 +154,15 @@ export function ReadingTrainerGame() {
   }
 
   useEffect(() => {
-    if (gameState === "started") {
+    if (gameState === 'started') {
       drawNote(
-        "staff-question",
+        'staff-question',
         questions[currentQuestionIndex].note,
         questions[currentQuestionIndex].clef,
       );
-    } else if (gameState === "results") {
+    } else if (gameState === 'results') {
       for (let i = 0; i < questions.length; i++) {
-        drawNote("staff-" + i, questions[i].note, questions[i].clef);
+        drawNote('staff-' + i, questions[i].note, questions[i].clef);
       }
     }
   }, [currentQuestionIndex, gameState, questions]);
@@ -170,12 +170,12 @@ export function ReadingTrainerGame() {
   return (
     <div>
       <h3>Reading trainer game</h3>
-      {gameState === "welcome" && (
+      {gameState === 'welcome' && (
         <div className="vstack gap-3">
           <div>
             <p className="fw-bold">Clefs</p>
             <ButtonGroup>
-              {new Array<Clef | "both">("treble", "bass", "both").map(
+              {new Array<Clef | 'both'>('treble', 'bass', 'both').map(
                 (option) => (
                   <Button
                     key={option}
@@ -183,13 +183,13 @@ export function ReadingTrainerGame() {
                     active={clefSetting === option}
                     onClick={() => setClefSetting(option)}
                   >
-                    {option === "treble" ? (
+                    {option === 'treble' ? (
                       <GiGClef />
-                    ) : option === "bass" ? (
+                    ) : option === 'bass' ? (
                       <GiFClef />
                     ) : (
-                      ""
-                    )}{" "}
+                      ''
+                    )}{' '}
                     {_.startCase(option)}
                   </Button>
                 ),
@@ -221,7 +221,7 @@ export function ReadingTrainerGame() {
                   active={timeLimitSetting === option}
                   onClick={() => setTimeLimitSetting(option)}
                 >
-                  {option === 0 ? "No limit" : option}
+                  {option === 0 ? 'No limit' : option}
                 </Button>
               ))}
             </ButtonGroup>
@@ -233,14 +233,14 @@ export function ReadingTrainerGame() {
           </div>
         </div>
       )}
-      {gameState === "started" && (
+      {gameState === 'started' && (
         <motion.div
           key={currentQuestionIndex}
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.3 }}
           style={{
-            pointerEvents: controlsDisabled ? "none" : "auto",
+            pointerEvents: controlsDisabled ? 'none' : 'auto',
           }}
         >
           <Card ref={questionRef}>
@@ -267,7 +267,7 @@ export function ReadingTrainerGame() {
             </Card.Body>
             <Card.Footer>
               <Button onClick={handleNextQuestionClick} variant="dark">
-                Next{" "}
+                Next{' '}
                 {timeLimitSetting > 0 && (
                   <motion.span
                     key={remainingTime}
@@ -283,10 +283,10 @@ export function ReadingTrainerGame() {
           </Card>
         </motion.div>
       )}
-      {gameState === "results" && (
+      {gameState === 'results' && (
         <div className="vstack gap-3 mb-3">
           <div>
-            <Button onClick={() => setGameState("welcome")} variant="success">
+            <Button onClick={() => setGameState('welcome')} variant="success">
               Play again <BsArrowRight />
             </Button>
           </div>
@@ -294,7 +294,7 @@ export function ReadingTrainerGame() {
             <Card key={questionIndex}>
               <Card.Header
                 className={
-                  questionIsRight(question) ? "bg-success" : "bg-danger"
+                  questionIsRight(question) ? 'bg-success' : 'bg-danger'
                 }
               >
                 Question {questionIndex + 1}
@@ -302,7 +302,7 @@ export function ReadingTrainerGame() {
               <Card.Body>
                 <div>
                   <b>Note: </b>
-                  <div id={"staff-" + questionIndex}></div>
+                  <div id={'staff-' + questionIndex}></div>
                 </div>
                 <div>
                   <b>Right answer: </b>
@@ -310,7 +310,7 @@ export function ReadingTrainerGame() {
                 </div>
                 <div>
                   <b>Your answer: </b>
-                  {question.noteAnswer ? question.noteAnswer.format(false) : ""}
+                  {question.noteAnswer ? question.noteAnswer.format(false) : ''}
                 </div>
               </Card.Body>
             </Card>

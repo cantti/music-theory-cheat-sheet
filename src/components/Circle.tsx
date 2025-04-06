@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import _ from 'lodash';
 import { useState } from 'react';
 import { Button, Col, Modal, Row } from 'react-bootstrap';
@@ -7,6 +6,7 @@ import { getScaleFormUrlParams } from '../utils/url';
 import { ScaleInfo } from './ScaleInfo';
 import { useLocation, useParams } from 'wouter';
 import { CircleOfFifths } from './CircleOfFifths';
+import { motion } from 'motion/react';
 
 export function Circle() {
   const [showHelp, setShowHelp] = useState(false);

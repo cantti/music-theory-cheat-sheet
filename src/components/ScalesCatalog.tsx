@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { ChangeEvent, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { Letter } from '../theory-utils/letter';
@@ -8,6 +7,7 @@ import Piano from './Piano';
 import { ScaleInfo } from './ScaleInfo';
 import { ScaleName } from '../theory-utils/scale';
 import { useLocation, useParams } from 'wouter';
+import { motion } from 'motion/react';
 
 const allScaleNames: ScaleName[] = [
   'Major',
