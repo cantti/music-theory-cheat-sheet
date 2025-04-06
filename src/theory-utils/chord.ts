@@ -7,8 +7,8 @@ export type ChordName = 'Minor' | 'Major' | 'Diminished' | 'Augmented';
 
 export class Chord {
   constructor(
-    readonly tonic: Note,
-    readonly name: ChordName,
+    public tonic: Note,
+    public name: ChordName,
     public inversion: number = 0,
   ) {}
 
@@ -21,16 +21,20 @@ export class Chord {
   }
 
   get notes() {
-    return getNotesByIntervals(this.tonic, this.intervals).map(
-      (note, i) =>
-        new Note(
-          note.letter,
-          note.accidental,
-          (i < this.inversion % this.intervals.length
-            ? note.octave + 1
-            : note.octave) + Math.floor(this.inversion / this.intervals.length),
-        ),
-    );
+    const notes = getNotesByIntervals(this.tonic, this.intervals);
+    if (this.inversion > 0) {
+      for (let i = 0; i < this.inversion; i++) {
+        const minNote = _.minBy(notes, (x) => x.index)!;
+        minNote.octave += 1;
+      }
+    }
+    if (this.inversion < 0) {
+      for (let i = 0; i > this.inversion; i--) {
+        const minNote = _.maxBy(notes, (x) => x.index)!;
+        minNote.octave -= 1;
+      }
+    }
+    return _.orderBy(notes, (x) => x.index);
   }
 
   format(kind: 'short' | 'long' = 'long', showOctave = false) {
@@ -48,14 +52,6 @@ export class Chord {
       chord.tonic.letter === this.tonic.letter &&
       chord.tonic.accidental == this.tonic.accidental
     );
-  }
-
-  invert(number: number) {
-    this.inversion = this.inversion + number;
-  }
-
-  setOctave(octave: number) {
-    return new Chord(this.tonic.setOctave(octave), this.name);
   }
 }
 

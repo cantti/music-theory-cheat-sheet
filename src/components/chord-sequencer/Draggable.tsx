@@ -11,6 +11,7 @@ interface DraggableProps {
   className?: string;
   data: DraggableData;
   style?: React.CSSProperties;
+  onClick?: () => void;
 }
 
 export function Draggable(props: DraggableProps) {
@@ -31,6 +32,7 @@ export function Draggable(props: DraggableProps) {
       className={props.className}
       ref={setNodeRef}
       style={style}
+      onClick={props.onClick}
       {...listeners}
       {...attributes}
     >

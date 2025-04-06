@@ -84,6 +84,7 @@ interface CircleOfFifthsProps {
   scale?: Scale;
   highlightNear?: boolean;
   onScaleClick?: (scale: Scale) => void;
+  style?: React.CSSProperties;
 }
 
 export function CircleOfFifths(props: CircleOfFifthsProps) {
@@ -133,7 +134,7 @@ export function CircleOfFifths(props: CircleOfFifthsProps) {
   }
 
   return (
-    <div className={styles.circleOfFifths}>
+    <div className={styles.circleOfFifths} style={props.style}>
       <div className={styles.circle + ' ' + styles.majorCircle}>
         {formatCircleButtons(scalesInCircle.slice(0, 12))}
         <div className={styles.circle + ' ' + styles.minorCircle}>

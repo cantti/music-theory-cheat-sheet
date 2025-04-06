@@ -1,16 +1,16 @@
-import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { pianoSynth } from '../../audio/pianoSynth';
 import { Chord } from '../../theory-utils/chord';
 import * as Tone from 'tone';
 import { startTone } from '../../audio/startTone';
 import _, { parseInt } from 'lodash';
-import { ReactElement, useEffect, useRef, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import {
   BsGrid3X3Gap,
+  BsPencilFill,
   BsPlayFill,
   BsSpeedometer2,
   BsStopFill,
-  BsXLg,
   BsZoomIn,
 } from 'react-icons/bs';
 import {
@@ -24,13 +24,14 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { Droppable, DroppableData } from './Droppable';
-import { DraggableData } from './Draggable';
-import { Cell, EventCell } from './Cell';
+import { Draggable, DraggableData } from './Draggable';
+import { Cell } from './Cell';
 import { SequencerEvent } from './SequencerEvent';
 import { SequencerRow } from './SequencerRow';
-import { CircleOfFifths } from '../CircleOfFifths';
-import { Scale } from '../../theory-utils/scale';
 import { n } from '../../theory-utils/note';
+import { ChordPicker } from './ChordPicker';
+import { motion } from 'framer-motion';
+import { RiPlayMiniFill } from 'react-icons/ri';
 
 const customCollisionDetection: CollisionDetection = ({
   collisionRect,
@@ -61,26 +62,24 @@ const numberOfStepsOptions = [4, 8, 16, 32, 64, 128];
 export function ChordSequencer() {
   const [duration, setDuration] = useState<number>(32);
 
-  const [chordPicker, setChordPicker] = useState({
-    x: 0,
-    y: 0,
-    show: false,
-    at: 0,
-  });
-  const chordPickerRef = useRef<HTMLDivElement | null>(null);
-
   const [events, setEvents] = useState<SequencerEvent[]>([
     { start: 0, end: 7, chord: new Chord(n('C'), 'Major') },
-    { start: 8, end: 15, chord: new Chord(n('F'), 'Major') },
-    { start: 16, end: 23, chord: new Chord(n('G'), 'Major') },
-    { start: 24, end: 31, chord: new Chord(n('G'), 'Major') },
+    { start: 8, end: 15, chord: new Chord(n('F'), 'Major', -1) },
+    { start: 16, end: 23, chord: new Chord(n('G'), 'Major', -1) },
+    { start: 24, end: 31, chord: new Chord(n('G'), 'Major', -1) },
   ]);
+
+  const [editedEvent, setEditedPosition] = useState<number | undefined>(
+    undefined,
+  );
+  const editedChord = events.find((x) => x.start == editedEvent)?.chord;
+
   const [position, setPosition] = useState(0);
   const [bpm, setBpm] = useState(120);
 
   // event width (zoom)
   const [cellWidthPercent, setCellWidthPercentValue] = useState(50);
-  const cellMinWidth = 30;
+  const cellMinWidth = 40;
   const cellMaxWidth = 100;
   const cellWidth =
     (cellWidthPercent / 100) * (cellMaxWidth - cellMinWidth) + cellMinWidth;
@@ -133,6 +132,7 @@ export function ChordSequencer() {
     if (chord == null) {
       // remove event with chord
       newEvents = newEvents.filter((x) => x !== event);
+      setEditedPosition(undefined);
     } else if (event != null) {
       // change chord of event
       event.chord = chord;
@@ -158,6 +158,7 @@ export function ChordSequencer() {
     event.end = event.end + newStart - start;
     newEvents = fixOverlaps(newEvents);
     setEvents(newEvents);
+    setEditedPosition(event.start);
   }
 
   function moveEventEnd(start: number, newEnd: number) {
@@ -200,39 +201,6 @@ export function ChordSequencer() {
     setEvents([]);
   }
 
-  // https://github.com/clauderic/dnd-kit/issues/800
-  const sensors = useSensors(
-    useSensor(MouseSensor, {
-      activationConstraint: { distance: 5 },
-    }),
-    useSensor(TouchSensor, {
-      activationConstraint: { distance: 5 },
-    }),
-  );
-
-  function showChordPicker(
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    at: number,
-  ) {
-    const pickerW = chordPickerRef.current
-      ? chordPickerRef.current.getBoundingClientRect().width
-      : 0;
-    const pickerH = chordPickerRef.current
-      ? chordPickerRef.current.getBoundingClientRect().height
-      : 0;
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-    const offset = 10;
-    const x = Math.min(e.clientX - offset, screenWidth - pickerW); // Prevent going off the right side
-    const y = Math.min(e.clientY - offset, screenHeight - pickerH); // Prevent going off the bottom side
-    setChordPicker({
-      x: x,
-      y: y,
-      show: true,
-      at: at,
-    });
-  }
-
   function getQuarterNotesRow() {
     const cells: ReactElement[] = [];
     cells.push(
@@ -259,8 +227,20 @@ export function ChordSequencer() {
     );
     for (let i = 0; i < duration; i++) {
       cells.push(
-        <Cell width={cellWidth} highlight={i === position} padding>
-          {i}
+        <Cell key={i} width={cellWidth} padding>
+          {i === position ? (
+            <motion.div
+              initial={{ scale: 2 }}
+              animate={{
+                scale: 1,
+                transition: { duration: 0.3 },
+              }}
+            >
+              <RiPlayMiniFill />
+            </motion.div>
+          ) : (
+            i
+          )}
         </Cell>,
       );
     }
@@ -272,7 +252,53 @@ export function ChordSequencer() {
     for (let i = 0; i < events.length; i++) {
       const event = events[i];
       cells.push(
-        <EventCell width={cellWidth} onClick={showChordPicker} event={event} />,
+        <Draggable
+          id={`draggable-${event.start.toString()}`}
+          data={{ eventStart: event.start, action: 'moveStart' }}
+          className="d-flex align-items-center bg-info-subtle border border-end-0 border-secondary border-2 ps-1"
+          style={{
+            width: cellWidth * (event.end - event.start + 1),
+            left: cellWidth + event.start * cellWidth,
+            position: 'absolute',
+            height: '100%',
+            fontSize: '0.9em',
+          }}
+          onClick={() => setEditedPosition(event.start)}
+        >
+          <div className="d-flex flex-column align-items-center gap-1 flex-fill overflow-hidden text-nowrap fw-bold">
+            <motion.div
+              key={event?.chord.format()}
+              initial={{ scale: 0 }}
+              animate={{
+                scale: 1,
+                transition: { duration: 0.3 },
+              }}
+            >
+              {event?.chord.format('short')}
+            </motion.div>
+            {editedEvent === event.start && (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{
+                  scale: 1,
+                  transition: { duration: 0.3 },
+                }}
+              >
+                <BsPencilFill />
+              </motion.div>
+            )}
+          </div>
+          <Draggable
+            id={`end-${event.start.toString()}`}
+            className="bg-secondary"
+            style={{
+              width: 2,
+              height: '100%',
+              cursor: 'col-resize',
+            }}
+            data={{ eventStart: event.start, action: 'moveEnd' }}
+          />
+        </Draggable>,
       );
     }
     return cells;
@@ -290,15 +316,14 @@ export function ChordSequencer() {
             style={{
               width: '100%',
               height: '100%',
+              cursor: 'pointer',
             }}
             className="d-flex align-items-center justify-content-center"
+            onClick={() => setEditedPosition(i)}
           >
-            <Button
-              variant="secondary"
-              className="rounded-0"
-              size="sm"
-              onClick={(e) => showChordPicker(e, i)}
-            ></Button>
+            {editedEvent === i && events.find((x) => x.start === i) == null && (
+              <BsPencilFill />
+            )}
           </Droppable>
         </Cell>,
       );
@@ -311,56 +336,17 @@ export function ChordSequencer() {
     );
   }
 
-  const currChord = events.find((x) => x.start == chordPicker.at)?.chord;
+  const dndSensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: { distance: 5 },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: { distance: 5 },
+    }),
+  );
 
   return (
     <>
-      <Card
-        body
-        style={{
-          width: 420,
-          position: 'fixed',
-          left: `${chordPicker.x}px`,
-          top: `${chordPicker.y}px`,
-          visibility: chordPicker.show ? 'visible' : 'hidden',
-          zIndex: 1,
-        }}
-        onMouseLeave={() => setChordPicker({ ...chordPicker, show: false })}
-        ref={chordPickerRef}
-      >
-        <Card.Body className="d-flex flex-column align-items-center gap-2 p-0">
-          <Button
-            variant="outline-danger"
-            onClick={() => {
-              changeEventChord(chordPicker.at, undefined);
-              setChordPicker({ ...chordPicker, show: false });
-            }}
-          >
-            <BsXLg /> Clear chord
-          </Button>
-          <CircleOfFifths
-            scale={
-              currChord != null
-                ? new Scale(
-                    currChord?.tonic,
-                    currChord?.name === 'Major' ? 'Major' : 'Natural Minor',
-                  )
-                : undefined
-            }
-            onScaleClick={(scale) => {
-              changeEventChord(
-                chordPicker.at,
-                new Chord(
-                  scale.tonic,
-                  scale.name === 'Major' ? 'Major' : 'Minor',
-                ),
-              );
-              setChordPicker({ ...chordPicker, show: false });
-            }}
-          />
-        </Card.Body>
-      </Card>
-
       <Container fluid>
         <h3>Chord Sequencer</h3>
         <Form.Group as={Row} className="mb-3">
@@ -428,13 +414,14 @@ export function ChordSequencer() {
             )}
           </Button>
         </div>
+
         <DndContext
           collisionDetection={customCollisionDetection}
           onDragEnd={handleDragEnd}
-          sensors={sensors}
+          sensors={dndSensors}
         >
           <div
-            className="d-inline-flex flex-column overflow-x-auto border-start border-top"
+            className="d-inline-flex flex-column overflow-x-auto border-start border-top mb-3 noselect"
             style={{ maxWidth: '100%' }}
           >
             {getQuarterNotesRow()}
@@ -442,6 +429,14 @@ export function ChordSequencer() {
             {getEventsRow()}
           </div>
         </DndContext>
+
+        <p>Edit selected chord:</p>
+        {editedEvent != null && (
+          <ChordPicker
+            editedChord={editedChord}
+            onChordClick={(chord) => changeEventChord(editedEvent, chord)}
+          />
+        )}
       </Container>
     </>
   );

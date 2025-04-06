@@ -10,6 +10,7 @@ export interface DroppableProps {
   className?: string;
   data: DroppableData;
   style?: React.CSSProperties;
+  onClick?: () => void;
 }
 
 export function Droppable(props: DroppableProps) {
@@ -21,7 +22,12 @@ export function Droppable(props: DroppableProps) {
   const style = { ...props.style, color: isOver ? 'green' : undefined };
 
   return (
-    <div ref={setNodeRef} style={style} className={props.className}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={props.className}
+      onClick={props.onClick}
+    >
       {props.children}
     </div>
   );
