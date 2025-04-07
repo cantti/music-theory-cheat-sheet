@@ -1,12 +1,12 @@
 import { ChangeEvent, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { Letter } from '../theory-utils/letter';
-import { Note } from '../theory-utils/note';
-import { getScaleFormUrlParams } from '../utils/url';
+import { Note, n } from '../theory-utils/note';
+import { getScaleFromUrlParams } from '../utils/url';
 import Piano from './Piano';
 import { ScaleInfo } from './ScaleInfo';
-import { ScaleName } from '../theory-utils/scale';
-import { useLocation, useParams } from 'wouter';
+import { Scale, ScaleName } from '../theory-utils/scale';
+import { useSearchParams } from 'wouter';
 import { motion } from 'motion/react';
 
 const allScaleNames: ScaleName[] = [
@@ -19,11 +19,11 @@ const allScaleNames: ScaleName[] = [
 ];
 
 export function ScalesCatalog() {
-  const [, navigate] = useLocation();
-
-  const urlParams = useParams<{ scale: string }>();
-
-  const activeScale = getScaleFormUrlParams(urlParams.scale!);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const scaleParam = searchParams.get('scale');
+  const activeScale = scaleParam
+    ? getScaleFromUrlParams(scaleParam)
+    : new Scale(n('C'), 'Major');
 
   const [useFlat, setUseFlat] = useState(activeScale.tonic.accidental === 'b');
 
@@ -41,14 +41,12 @@ export function ScalesCatalog() {
       const newLetter = letters.filter(
         (x) => x[checked ? 0 : 1] === activeScale.tonic.letter,
       )[0][checked ? 1 : 0];
-      navigate(
-        '/scales/' +
-          encodeURIComponent(
-            new Note(newLetter, checked ? 'b' : '#').format(false) +
-              ' ' +
-              activeScale.name,
-          ),
-      );
+      setSearchParams({
+        scale:
+          new Note(newLetter, checked ? 'b' : '#').format(false) +
+          ' ' +
+          activeScale.name,
+      });
     }
   }
 
@@ -64,12 +62,9 @@ export function ScalesCatalog() {
                 highlightedNotes={[activeScale.tonic]}
                 useFlats={useFlat}
                 onNoteClick={(note) =>
-                  navigate(
-                    '/scales/' +
-                      encodeURIComponent(
-                        note.format(false) + ' ' + activeScale.name,
-                      ),
-                  )
+                  setSearchParams({
+                    scale: note.format(false) + ' ' + activeScale.name,
+                  })
                 }
                 playSounds={true}
               />
@@ -82,12 +77,9 @@ export function ScalesCatalog() {
                   variant={scaleName.includes('Minor') ? 'info' : 'warning'}
                   disabled={activeScale.name === scaleName}
                   onClick={() =>
-                    navigate(
-                      '/scales/' +
-                        encodeURIComponent(
-                          activeScale.tonic.format(false) + ' ' + scaleName,
-                        ),
-                    )
+                    setSearchParams({
+                      scale: activeScale.tonic.format(false) + ' ' + scaleName,
+                    })
                   }
                 >
                   {scaleName}

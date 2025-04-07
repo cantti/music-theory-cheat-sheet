@@ -2,7 +2,6 @@ import { Suspense } from 'react';
 import { Container, Nav, Navbar, NavDropdown, NavLink } from 'react-bootstrap';
 import { GiMusicalNotes } from 'react-icons/gi';
 import { Link, Redirect, Route, Router, useLocation } from 'wouter';
-import { defaultScaleParam } from '../utils/url';
 import { DetectScaleByNotes } from './DetectScaleByNotes';
 import { AboutMe } from './AboutMe';
 import { Circle } from './Circle';
@@ -39,11 +38,7 @@ function App() {
             <Navbar.Toggle />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav>
-                <Nav.Link
-                  as={NavLink}
-                  href="/circle"
-                  active={location.startsWith('/circle')}
-                >
+                <Nav.Link href="/circle" active={location === '/circle'}>
                   Circle of fifths
                 </Nav.Link>
                 <Nav.Link
@@ -103,7 +98,7 @@ function App() {
         </Navbar>
         <Container>
           <Route path="/">
-            <Redirect href={`/circle/${defaultScaleParam}`} />
+            <Redirect href="/circle" />
           </Route>
 
           <Route path="/detect-scale-by-notes">
@@ -115,18 +110,15 @@ function App() {
           </Route>
 
           <Route path="/circle">
-            <Redirect href={`/circle/${defaultScaleParam}`} />
-          </Route>
-
-          <Route path="/circle/:scale">
             <Circle />
           </Route>
 
-          <Route path="/scales">
-            <Redirect href={`/scales/${defaultScaleParam}`} />
+          {/* old redirect */}
+          <Route path="/circle/:scale">
+            <Redirect href="/circle" />
           </Route>
 
-          <Route path="/scales/:scale">
+          <Route path="/scales">
             <ScalesCatalog />
           </Route>
 

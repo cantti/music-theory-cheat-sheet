@@ -2,19 +2,21 @@ import _ from 'lodash';
 import { useState } from 'react';
 import { Button, Col, Modal, Row } from 'react-bootstrap';
 import { BsQuestionCircle } from 'react-icons/bs';
-import { getScaleFormUrlParams } from '../utils/url';
+import { getScaleFromUrlParams } from '../utils/url';
 import { ScaleInfo } from './ScaleInfo';
-import { useLocation, useParams } from 'wouter';
+import { useSearchParams } from 'wouter';
 import { CircleOfFifths } from './CircleOfFifths';
 import { motion } from 'motion/react';
+import { Scale } from '../theory-utils/scale';
+import { n } from '../theory-utils/note';
 
 export function Circle() {
   const [showHelp, setShowHelp] = useState(false);
-  const [, navigate] = useLocation();
-
-  const urlParams = useParams<{ scale: string }>();
-
-  const activeScale = getScaleFormUrlParams(urlParams.scale!);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const scaleParam = searchParams.get('scale');
+  const activeScale = scaleParam
+    ? getScaleFromUrlParams(scaleParam)
+    : new Scale(n('C'), 'Major');
 
   return (
     <Row>
@@ -36,9 +38,7 @@ export function Circle() {
           </p>
         </div>
         <CircleOfFifths
-          onScaleClick={(scale) =>
-            navigate('/circle/' + encodeURIComponent(scale.format()))
-          }
+          onScaleClick={(scale) => setSearchParams({ scale: scale.format() })}
           scale={activeScale}
           highlightNear
         />
