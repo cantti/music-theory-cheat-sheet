@@ -10,7 +10,7 @@ import { motion } from 'motion/react';
 import { Scale } from '../theory-utils/scale';
 import { n } from '../theory-utils/note';
 
-export function Circle() {
+export default function Circle() {
   const [showHelp, setShowHelp] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const scaleParam = searchParams.get('scale');

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export const AboutMe = () => {
+export default function AboutMe() {
   const canttiReleases = [
     'track=379330236',
     'track=3883024499',
@@ -77,4 +77,4 @@ export const AboutMe = () => {
       ))}
     </>
   );
-};
+}

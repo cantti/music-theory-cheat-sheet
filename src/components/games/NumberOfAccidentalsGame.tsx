@@ -61,7 +61,7 @@ const allScales: Scale[] = [
   new Scale(new Note('D'), 'Natural Minor'),
 ];
 
-export function NumberOfAccidentalsGame() {
+export default function NumberOfAccidentalsGame() {
   const [gameState, setGameState] = useState<'welcome' | 'started' | 'results'>(
     'welcome',
   );

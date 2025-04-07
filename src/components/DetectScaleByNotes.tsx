@@ -32,7 +32,7 @@ function ScaleButton({ scale, index }: ScaleButtonProps) {
   );
 }
 
-export function DetectScaleByNotes() {
+export default function DetectScaleByNotes() {
   const [notes, setNotes] = useState<Note[]>([]);
 
   const possibleScales = getScalesByNotes(notes);

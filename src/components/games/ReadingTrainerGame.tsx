@@ -57,7 +57,7 @@ function drawNote(elementId: string, note: Note, clef: string) {
   factory.getContext().scale(1.5, 1.5);
 }
 
-export function ReadingTrainerGame() {
+export default function ReadingTrainerGame() {
   const [gameState, setGameState] = useState<'welcome' | 'started' | 'results'>(
     'welcome',
   );

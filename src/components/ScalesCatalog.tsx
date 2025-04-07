@@ -18,7 +18,7 @@ const allScaleNames: ScaleName[] = [
   'Minor Pentatonic',
 ];
 
-export function ScalesCatalog() {
+export default function ScalesCatalog() {
   const [searchParams, setSearchParams] = useSearchParams();
   const scaleParam = searchParams.get('scale');
   const activeScale = scaleParam

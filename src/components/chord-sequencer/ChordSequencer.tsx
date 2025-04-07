@@ -58,7 +58,7 @@ const customCollisionDetection: CollisionDetection = ({
 
 const numberOfStepsOptions = [4, 8, 16, 32, 64, 128];
 
-export function ChordSequencer() {
+export default function ChordSequencer() {
   const [duration, setDuration] = useState<number>(32);
 
   const [events, setEvents] = useState<SequencerEvent[]>([

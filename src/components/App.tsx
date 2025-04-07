@@ -1,15 +1,18 @@
-import { Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { Container, Nav, Navbar, NavDropdown, NavLink } from 'react-bootstrap';
 import { GiMusicalNotes } from 'react-icons/gi';
 import { Link, Redirect, Route, Router, useLocation } from 'wouter';
-import { DetectScaleByNotes } from './DetectScaleByNotes';
-import { AboutMe } from './AboutMe';
-import { Circle } from './Circle';
-import { ScalesCatalog } from './ScalesCatalog';
-import { NumberOfAccidentalsGame } from './games/NumberOfAccidentalsGame';
-import { ReadingTrainerGame } from './games/ReadingTrainerGame';
-import { ChordSequencer } from './chord-sequencer/ChordSequencer';
-import Course from './course/Course';
+
+const ScalesCatalog = lazy(() => import('./ScalesCatalog'));
+const ChordSequencer = lazy(() => import('./chord-sequencer/ChordSequencer'));
+const ReadingTrainerGame = lazy(() => import('./games/ReadingTrainerGame'));
+const NumberOfAccidentalsGame = lazy(
+  () => import('./games/NumberOfAccidentalsGame'),
+);
+const DetectScaleByNotes = lazy(() => import('./DetectScaleByNotes'));
+const Course = lazy(() => import('./course/Course'));
+const Circle = lazy(() => import('./Circle'));
+const AboutMe = lazy(() => import('./AboutMe'));
 
 function App() {
   const [location] = useLocation();
@@ -44,14 +47,14 @@ function App() {
                 <Nav.Link
                   as={NavLink}
                   href="/scales"
-                  active={location.startsWith('/scales')}
+                  active={location === '/scales'}
                 >
                   Scales
                 </Nav.Link>
                 <Nav.Link
                   as={NavLink}
                   href="/detect-scale-by-notes"
-                  active={location.startsWith('/detect-scale-by-notes')}
+                  active={location === '/detect-scale-by-notes'}
                 >
                   Scale by notes
                 </Nav.Link>
@@ -73,14 +76,14 @@ function App() {
                 <Nav.Link
                   as={NavLink}
                   href="/chord-sequencer"
-                  active={location.startsWith('/chord-sequencer')}
+                  active={location === '/chord-sequencer'}
                 >
                   Chord Sequencer
                 </Nav.Link>
                 <Nav.Link
                   as={NavLink}
                   href="/course"
-                  active={location.startsWith('/course')}
+                  active={location === '/course'}
                   className="text-warning"
                 >
                   Course
@@ -88,7 +91,7 @@ function App() {
                 <Nav.Link
                   as={NavLink}
                   href="/about"
-                  active={location.startsWith('/about')}
+                  active={location === '/about'}
                 >
                   About me
                 </Nav.Link>
