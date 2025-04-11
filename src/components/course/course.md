@@ -154,7 +154,7 @@ If you find more interesting lesson online, please share with me, so I can share
 Listen:
 
 <audio controls>
-  <source src="/course/song-with-chords.wav" type="audio/wav">
+  <source src="/course/song-with-chords.mp3" type="audio/wav">
   Your browser does not support the audio tag.
 </audio>
 
