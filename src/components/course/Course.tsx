@@ -19,7 +19,7 @@ export default function Course() {
       ]}
       components={{
         img: ({ node, ...props }) => (
-          <img style={{ maxWidth: '50%' }} {...props} />
+          <img style={{ maxWidth: '100%' }} {...props} />
         ),
       }}
     >

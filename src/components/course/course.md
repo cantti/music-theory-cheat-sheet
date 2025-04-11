@@ -8,7 +8,7 @@ Write your questions to cantti@outlook.com
 
 ## Lesson 1. Get started with music software
 
-🗓️ ~~19 march, 16:30-18:00~~ ✅
+🗓️ ~~19 March, 16:30-18:00~~ ✅
 
 **✨ Summary of the lesson**
 
@@ -26,7 +26,7 @@ https://help.ableton.com/hc/en-us/articles/211476789-Setting-up-an-Audio-Interfa
 
 ## Lesson 2. Drums & Rhythm Pt. 1
 
-🗓️ ~~26 march, 16:30-18:00~~ ✅
+🗓️ ~~26 March, 16:30-18:00~~ ✅
 
 **✨ Summary of the lesson**
 
@@ -126,14 +126,69 @@ Next time, we will be creating chords for our song, so please review the followi
 - [Notes and Scales](https://learningmusic.ableton.com/notes-and-scales/notes-and-scales.html)  
 - [Chords](https://learningmusic.ableton.com/notes-and-scales/notes-and-scales.html)
 
-You can also explore other pages on my website to get more familiar with the piano keyboard.
+You c>jkjan also explore other pages on my website to get more familiar with the piano keyboard.
 
 If you'd like to review drums, I recommend watching this video:  
 [Fundamentals of Rhythm for Electronic Music](https://www.youtube.com/watch?v=JE3QM_9sljI)
 
 
-## Lesson 4. Chords & Instruments
+## Lesson 4. Keys, Chords
 
-🗓️ **9 april, 17:00-18:30** 
+~~🗓️ **9 april, 17:00-18:30**~~✅
 
-Planned lesson on Chords.
+**✨ Lesson Summary**
+
+We discussed keys, scales, chords and progression.
+
+**Learning Materials**
+
+- [🎥 music theory for music producers (you'll actually use this) ](https://www.youtube.com/watch?v=CluuHrr7HG4)
+- [🎥 Learn music theory in half an hour by ](https://www.youtube.com/watch?v=rgaTLrZGlk0)
+- [Notes and Scales on Learning Music Portal](https://learningmusic.ableton.com/notes-and-scales/notes-and-scales.html)  
+- [Chords on Learning Music Portal](https://learningmusic.ableton.com/notes-and-scales/notes-and-scales.html)
+
+If you find more interesting lesson online, please share with me, so I can share them with the rest of group.
+
+**✨ Our Song**
+
+Listen:
+
+<audio controls>
+  <source src="/course/song-with-chords.wav" type="audio/wav">
+  Your browser does not support the audio tag.
+</audio>
+
+Download:
+
+https://1drv.ms/u/c/ff4258c71b6522ef/EScVcXQJg_NAhqmz-AtsMeABZokWLilh83kXKGnC9TM9EA?e=09CI4h
+
+I simplified the chords we use, (use only triads) and added bass notes to each.
+
+The intro and outro section play just bass note.
+
+Verse:
+
+Am – F – C – G
+
+i – VI – III – VII
+
+Chorus:
+
+C – G – Am – F
+
+III – VII – i – VI
+
+![Song with chords](/course/song-with-chords.jpg)
+
+You can download project here: https://1drv.ms/u/s!Au8iZRvHWEL_mM5n47KpBW45DjjDzg?e=JH7WVb
+
+**✨ Home work**
+
+Use learning material above to get familiar with scales, keys, chords!
+
+Download our song and experiment!
+
+## Lesson 5. Instruments
+
+🗓️ 16 April, 17:00-18:30
+
