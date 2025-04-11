@@ -158,9 +158,9 @@ Listen:
   Your browser does not support the audio tag.
 </audio>
 
-Download:
+Download Project:
 
-https://1drv.ms/u/c/ff4258c71b6522ef/EScVcXQJg_NAhqmz-AtsMeABZokWLilh83kXKGnC9TM9EA?e=09CI4h
+https://1drv.ms/u/c/ff4258c71b6522ef/EU1y2jKgj5lNqp7mgmVAM4kB6wO_zpAtD2LGlHq_YsR2HA?e=d2X4TH
 
 I simplified the chords we use, (use only triads) and added bass notes to each.
 
@@ -174,13 +174,11 @@ i – VI – III – VII
 
 Chorus:
 
-C – G – Am – F
+F – G – Am – Em
 
-III – VII – i – VI
+VI – VII – i – v
 
 ![Song with chords](/course/song-with-chords.jpg)
-
-You can download project here: https://1drv.ms/u/s!Au8iZRvHWEL_mM5n47KpBW45DjjDzg?e=JH7WVb
 
 **✨ Home work**
 
