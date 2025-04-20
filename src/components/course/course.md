@@ -186,7 +186,31 @@ Use learning material above to get familiar with scales, keys, chords!
 
 Download our song and experiment!
 
-## Lesson 5. Instruments
+## Lesson 5. Synthesiers & Bassline
 
-🗓️ 16 April, 17:00-18:30
+~~🗓️ 16 April, 17:00-18:30~~
+
+**✨ Lesson Summary**
+
+We covered the fundamentals of synthesizer blocks, explored Ableton's Wavetable instrument, and created a bassline for our song.
+
+**Learning Materials**
+
+It doesn’t matter which synthesizer you use—whether it’s sample-based or a traditional synth—the core building blocks are the same: oscillators, filters, and modulation (LFO, ADSR). I recommend watching this video to better understand these essential components:
+
+[🎥 Synth Basics (Everything You Need to Know)](https://www.youtube.com/watch?v=XmI33zP51Us)
+
+Alternatively, if you prefer a more hands-on lesson focused on Ableton’s Wavetable, this video covers both synth basics and practical application. You can skip the first video if you're looking for an Ableton-specific tutorial:
+
+[🎥 A Guide to the Ableton WAVETABLE SYNTH Tutorial](https://www.youtube.com/watch?v=Hvb-IquTTsA)
+
+**✨ Our Song**
+
+Download Project:
+
+https://1drv.ms/u/c/ff4258c71b6522ef/ERr6gpcjn6pNrdemZFKqkV8B4Ry20qfSEhz98u982JX_Ow?e=cg4Wf7
+
+## Lesson 6. Sound Effects 
+
+🗓️ 23 April, 17:00-18:30
 
