@@ -68,10 +68,8 @@ export default function ChordSequencer() {
     { start: 24, end: 31, chord: new Chord(n('G'), 'Major', -1) },
   ]);
 
-  const [editedEvent, setEditedPosition] = useState<number | undefined>(
-    undefined,
-  );
-  const editedChord = events.find((x) => x.start == editedEvent)?.chord;
+  const [editIndex, setEditIndex] = useState<number | undefined>(undefined);
+  const editedChord = events.find((x) => x.start == editIndex)?.chord;
 
   const [position, setPosition] = useState(0);
   const [bpm, setBpm] = useState(120);
@@ -129,7 +127,7 @@ export default function ChordSequencer() {
     if (chord == null) {
       // remove event with chord
       newEvents = newEvents.filter((x) => x !== event);
-      setEditedPosition(undefined);
+      setEditIndex(undefined);
     } else if (event != null) {
       // change chord of event
       event.chord = chord;
@@ -155,7 +153,7 @@ export default function ChordSequencer() {
     event.end = event.end + newStart - start;
     newEvents = fixOverlaps(newEvents);
     setEvents(newEvents);
-    setEditedPosition(event.start);
+    setEditIndex(event.start);
   }
 
   function moveEventEnd(start: number, newEnd: number) {
@@ -262,13 +260,13 @@ export default function ChordSequencer() {
 
   function getEventCells() {
     const cells: ReactElement[] = [];
-    for (let pos = 0; pos < events.length; pos++) {
-      const event = events[pos];
+    for (let i = 0; i < events.length; i++) {
+      const event = events[i];
       cells.push(
         <EventCell
-          key={pos}
-          edited={editedEvent === event.start}
-          onClick={() => setEditedPosition(event.start)}
+          key={i}
+          edited={editIndex === event.start}
+          onClick={() => setEditIndex(event.start)}
           cellWidth={cellWidth}
           event={event}
         />,
@@ -280,22 +278,22 @@ export default function ChordSequencer() {
   function getEventsRow() {
     const cells: ReactElement[] = [];
     cells.push(<Cell cellWidth={cellWidth} col={0}></Cell>);
-    for (let pos = 0; pos < duration; pos++) {
+    for (let i = 0; i < duration; i++) {
       cells.push(
-        <Cell key={pos} cellWidth={cellWidth} col={pos + 1}>
+        <Cell key={i} cellWidth={cellWidth} col={i + 1}>
           <Droppable
-            id={`droppable-${pos.toString()}`}
-            data={{ index: pos }}
+            id={`droppable-${i.toString()}`}
+            data={{ index: i }}
             style={{
               width: '100%',
               height: '100%',
               cursor: 'pointer',
             }}
             className="d-flex align-items-center justify-content-center"
-            onClick={() => setEditedPosition(pos)}
+            onClick={() => setEditIndex(i)}
           >
-            {editedEvent === pos &&
-              events.find((x) => x.start === pos) == null && <BsPencilFill />}
+            {editIndex === i &&
+              events.find((x) => x.start === i) == null && <BsPencilFill />}
           </Droppable>
         </Cell>,
       );
@@ -405,7 +403,7 @@ export default function ChordSequencer() {
           </div>
         </DndContext>
 
-        {editedEvent == null ? (
+        {editIndex == null ? (
           <Alert variant="info">
             Click on a cell in the grid to edit or create a chord.
           </Alert>
@@ -414,7 +412,7 @@ export default function ChordSequencer() {
             <p>Edit selected chord:</p>
             <ChordPicker
               editedChord={editedChord}
-              onChordClick={(chord) => changeEventChord(editedEvent, chord)}
+              onChordClick={(chord) => changeEventChord(editIndex, chord)}
             />
           </>
         )}
