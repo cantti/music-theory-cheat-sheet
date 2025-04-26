@@ -212,5 +212,20 @@ https://1drv.ms/u/c/ff4258c71b6522ef/ERr6gpcjn6pNrdemZFKqkV8B4Ry20qfSEhz98u982JX
 
 ## Lesson 6. Sound Effects 
 
-🗓️ 23 April, 17:00-18:30
+~~🗓️ 23 April, 17:00-18:30~~
 
+In the lesson we discuseed basic Ableton Live effects: EQ, Reverb and Delay.
+
+**Learning Materials**
+
+Useful videos:
+
+[🎥 All About EQ Eight](https://www.youtube.com/watch?v=P-zYXpc2-9I)
+
+[🎥 All About Reverb](https://www.youtube.com/watch?v=vwDD6NLqaAI)
+
+[🎥 Learn Live: Delay ](https://www.youtube.com/watch?v=Ss5yOq8nQK4)
+
+**✨ Home work**
+
+Experiment and try add more effects to you song!
