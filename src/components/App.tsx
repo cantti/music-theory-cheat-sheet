@@ -17,7 +17,6 @@ const NumberOfAccidentalsGame = lazy(
   () => import('./games/NumberOfAccidentalsGame'),
 );
 const DetectScaleByNotes = lazy(() => import('./DetectScaleByNotes'));
-const Course = lazy(() => import('./course/Course'));
 const Circle = lazy(() => import('./Circle'));
 const AboutMe = lazy(() => import('./AboutMe'));
 
@@ -85,14 +84,6 @@ function App() {
               </Nav.Link>
               <Nav.Link
                 as={NavLink}
-                href="/course"
-                active={location === '/course'}
-                className="text-warning"
-              >
-                Course
-              </Nav.Link>
-              <Nav.Link
-                as={NavLink}
                 href="/about"
                 active={location === '/about'}
               >
@@ -143,10 +134,6 @@ function App() {
 
           <Route path="/games/reading-trainer">
             <ReadingTrainerGame />
-          </Route>
-
-          <Route path="/course">
-            <Course />
           </Route>
         </Container>
 
